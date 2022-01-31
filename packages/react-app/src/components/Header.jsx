@@ -5,12 +5,12 @@ import React from "react";
 
 export default function Header() {
   return (
-    <a href="https://github.com/austintgriffith/scaffold-eth" target="_blank" rel="noopener noreferrer">
+    <a href="/" /*target="_blank" rel="noopener noreferrer"*/>
       <PageHeader
-        title="🏗 scaffold-eth"
-        subTitle="forkable Ethereum dev stack focused on fast product iteration"
+        title="🌳 Koywe 🌳"
+        //subTitle="Pledge your commitment to save the planet, put your money where your mouth is."
         style={{ cursor: "pointer" }}
-      />
+        />
     </a>
   );
 }
