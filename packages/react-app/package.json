@@ -38,6 +38,7 @@
     "chart.js": "^3.7.0",
     "dotenv": "^8.2.0",
     "eth-hooks": "2.3.16",
+    "ethereum-emissions-calculator": "^2.1.0",
     "ethers": "^5.4.1",
     "fortmatic": "^2.2.1",
     "graphiql": "^1.4.7",

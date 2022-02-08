@@ -1,14 +1,14 @@
 require('dotenv').config()
 // MY INFURA_ID, SWAP IN YOURS FROM https://infura.io/dashboard/ethereum
-export const INFURA_ID = process.env.INFURA_ID || "7b0e75d38d424750b92791477924d133";
+export const INFURA_ID = process.env.REACT_APP_INFURA_ID || "7b0e75d38d424750b92791477924d133";
 
 // MY ETHERSCAN_ID, SWAP IN YOURS FROM https://etherscan.io/myapikey
-export const ETHERSCAN_KEY = process.env.ETHERSCAN_KEY || "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW";
+export const ETHERSCAN_KEY = process.env.REACT_APP_ETHERSCAN_KEY || "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW";
 
 // BLOCKNATIVE ID FOR Notify.js:
 export const BLOCKNATIVE_DAPPID = "0b58206a-f3c0-4701-a62f-73c7243e8c77";
 
-export const ALCHEMY_KEY = process.env.ALCHEMY_KEY || "oKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
+export const ALCHEMY_KEY = process.env.REACT_APP_ALCHEMY_KEY || "oKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
 
 export const NETWORKS = {
   localhost: {
@@ -55,7 +55,7 @@ export const NETWORKS = {
     chainId: 5,
     faucet: "https://goerli-faucet.slock.it/",
     blockExplorer: "https://goerli.etherscan.io/",
-    rpcUrl: `https://goerli.infura.io/v3/${INFURA_ID}`,
+    rpcUrl: `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_KEY}`,
   },
   xdai: {
     name: "xdai",
@@ -73,7 +73,7 @@ export const NETWORKS = {
     chainId: 137,
     price: 1,
     gasPrice: 1000000000,
-    rpcUrl: "https://rpc-mainnet.maticvigil.com",
+    rpcUrl: process.env.REACT_APP_ALCHEMY_POLYGON ? "https://polygon-mainnet.g.alchemy.com/v2/"+process.env.REACT_APP_ALCHEMY_POLYGON : "https://polygon-rpc.com/",
     blockExplorer: "https://polygonscan.com/",
   },
   mumbai: {
@@ -82,7 +82,7 @@ export const NETWORKS = {
     chainId: 80001,
     price: 1,
     gasPrice: 1000000000,
-    rpcUrl: "https://rpc-mumbai.maticvigil.com",
+    rpcUrl: process.env.REACT_APP_ALCHEMY_MUMBAI ? "https://polygon-mumbai.g.alchemy.com/v2/"+process.env.REACT_APP_ALCHEMY_MUMBAI : "https://rpc-mumbai.maticvigil.com",
     faucet: "https://faucet.polygon.technology/",
     blockExplorer: "https://mumbai.polygonscan.com/",
   },

@@ -12,6 +12,7 @@ contract KoywePledge is Ownable{
     //maybe add a duration, count or indexes to this. TODO
   }
   mapping ( address => Pledge ) private pledges;
+  uint64 decimals = 9 ;
   
   event NewPledge(address indexed pledger, uint64 commitment, uint64 pledgeTime);
   event Unpledge(address indexed pledger);

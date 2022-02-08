@@ -9151,6 +9151,11 @@ ethereum-cryptography@^0.1.2, ethereum-cryptography@^0.1.3:
     secp256k1 "^4.0.1"
     setimmediate "^1.0.5"
 
+ethereum-emissions-calculator@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/ethereum-emissions-calculator/-/ethereum-emissions-calculator-2.1.0.tgz#ebfb03bdca380829cad6b15f6ed288e0ad099c63"
+  integrity sha512-1iXG94VYlH7QbgppZ/C92PC2rt5WQaf0H0dKukFReEZhMcFRoF9eE52j+ZYYSnVkT3nU8vITRpl2kZbjt1LCqA==
+
 ethereum-private-key-to-address@0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/ethereum-private-key-to-address/-/ethereum-private-key-to-address-0.0.3.tgz#1f1dccaefd1198c2dcde55501f331a846bd0aad0"

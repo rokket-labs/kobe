@@ -34,10 +34,14 @@ export default function TreejerGraph(props) {
           // const response = 
           data.data.trees.forEach(async (tree) => {
             const tree_id = parseInt(tree.id,16);
-            const jsonResponse = await fetch(TREEJER_BASE_URL+tree_id);
-            const json = await jsonResponse.json();
-            if(data.data.trees.length >= treejerCollection.length)
-              setTreejerCollection(treejerCollection=>[...treejerCollection,json]);
+            try{
+              const jsonResponse = await fetch(TREEJER_BASE_URL+tree_id);
+              const json = await jsonResponse.json();
+              if(data.data.trees.length >= treejerCollection.length)
+                setTreejerCollection(treejerCollection=>[...treejerCollection,json]);
+            } catch(e){
+              console.log("Error loading Treejer json. "+e);
+            }
           });
           // console.log("response ");
           // console.log(response);
@@ -49,22 +53,14 @@ export default function TreejerGraph(props) {
       }
     }
     getTreejerCollection();
-  }, [props.address, setTreejerCollection]);
+  }, [props.address]);
   
   // console.log(treejerCollection);
 
   return (
     <div style={{ width: 900, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
       <List
-        grid={{
-          gutter: 16,
-          xs: 1,
-          sm: 2,
-          md: 4,
-          lg: 4,
-          xl: 6,
-          xxl: 3,
-        }}
+        grid={3}
         bordered
         dataSource={treejerCollection}
         renderItem={item => {

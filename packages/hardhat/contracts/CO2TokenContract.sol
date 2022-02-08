@@ -29,7 +29,7 @@ interface IKoywePledge {
 contract CO2TokenContract is Ownable{
 
   mapping(address => uint256) public accruedSince;
-  /// @dev A lower bound of the total supply. Does not take into account tokens minted as UBI by an address before it moves those (transfer or burn).  
+  /// @dev A lower bound of the total supply. Does not take into account tokens minted as CO2 by an address
   uint256 public totalSupply;
 
   /// @dev Name of the token.
@@ -41,6 +41,7 @@ contract CO2TokenContract is Ownable{
   /// @dev Number of decimals of the token.
   uint8 public decimals;
 
+  //Interface for koywe pledge
   IKoywePledge public koywePledge;
 
   using SafeMath for uint64;
@@ -63,7 +64,7 @@ contract CO2TokenContract is Ownable{
   function getEmittedCO2(address _pledger) public view returns (uint256 emitted) {
     if (accruedSince[_pledger] == 0 || !koywePledge.isPledged(_pledger)) return 0;
     else {
-      uint256 accruedPerSecond = koywePledge.getCommitment(_pledger).mul(10**18).div(31556952);
+      uint256 accruedPerSecond = koywePledge.getCommitment(_pledger).mul(10**9).div(31556952);
       return accruedPerSecond.mul(block.timestamp.sub(accruedSince[_pledger]));
     }
   }

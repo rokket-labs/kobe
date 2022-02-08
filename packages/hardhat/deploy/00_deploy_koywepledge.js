@@ -21,7 +21,6 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   // console.log("\n 🤹  Sending ownership to frontend address...\n")
   // const ownershipTransaction = await koywePledge.transferOwnership("0x40f9bf922c23c43acdad71Ab4425280C0ffBD697" );
   // console.log("\n    ✅ confirming...\n");
-  
   // const ownershipResult = await ownershipTransaction.wait();
 
   // const yourContract = await ethers.getContractAt('YourContract', "0xaAC799eC2d00C013f1F11c37E654e59B0429DF6A") //<-- if you want to instantiate a version of a contract at a specific address!
@@ -45,19 +44,23 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   // });
 
   // todo: uncomment to verify your contract
-  // if (chainId !== "31337") {
-  //   try {
-  //     console.log(" 🎫 Verifing Contract on Etherscan... ");
-  //     await sleep(3000); // wait 3 seconds for deployment to propagate bytecode
-  //      await run("verify:verify", {
-  //        address: KoywePledge.address,
-  //        contract: "contracts/KoywePledge.sol:KoywePledge",
-  //        contractArguments: [],
-  //      });
-  //   } catch (e) {
-  //     console.log(" ⚠️ Failed to verify contract on Etherscan ");
-  //   }
-  // }
+  if (chainId !== "31337") {
+    try {
+      console.log(" 🎫 Verifing Contract on Etherscan... ");
+      await sleep(3000); // wait 3 seconds for deployment to propagate bytecode
+       await run("verify:verify", {
+         address: koywePledge.address,
+         contract: "contracts/KoywePledge.sol:KoywePledge",
+         constructorArguments: [],
+       });
+    } catch (error) {
+      console.log("⚠️ Contract Verification Failed: ", error);
+    }
+  }
 };
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 module.exports.tags = ["KoywePledge"];

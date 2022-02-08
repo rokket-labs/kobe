@@ -26,7 +26,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 // Select the network you want to deploy to here:
 //
-const defaultNetwork = "goerli";
+const defaultNetwork = "polygon";
 
 const mainnetGwei = 21;
 
@@ -167,21 +167,21 @@ module.exports = {
       },
     },
     polygon: {
-      url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXx/polygon/mainnet", // <---- YOUR MORALIS ID! (not limited to infura)
-      gasPrice: 1000000000,
+      url: "https://polygon-mainnet.g.alchemy.com/v2/"+process.env.ALCHEMY_PROD, // <---- YOUR MORALIS ID! (not limited to infura)
+      gasPrice: 8000000000,
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     mumbai: {
-      url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXX/polygon/mumbai", // <---- YOUR MORALIS ID! (not limited to infura)
-      gasPrice: 1000000000,
+      url: "https://polygon-mumbai.g.alchemy.com/v2/"+process.env.ALCHEMY_TEST, // <---- YOUR MORALIS ID! (not limited to infura)
+      gasPrice: 8000000000,
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     matic: {
-      url: "https://rpc-mainnet.maticvigil.com/",
+      url: "https://polygon-rpc.com/",
       gasPrice: 1000000000,
       accounts: {
         mnemonic: mnemonic(),
@@ -326,7 +326,7 @@ module.exports = {
     },
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_KEY || "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW",
+    apiKey: defaultNetwork == "polygon" ? process.env.POLYGONSCAN_KEY : process.env.ETHERSCAN_KEY || "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW",
   },
 };
 

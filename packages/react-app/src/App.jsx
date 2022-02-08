@@ -18,6 +18,7 @@ import {
   Address,
   AddressInput,
   Balance,
+  CarbonFYI,
   Contract,
   DexSwapper,
   DexSwapperLP,
@@ -31,7 +32,10 @@ import {
   FaucetHint,
   NetworkSwitch,
   TokenBalance,
-  TreejerGraph
+  TreejerGraph,
+  GreenTokenTable,
+  PositionChart,
+  BCTVendor
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
@@ -40,11 +44,6 @@ import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
 import { Home, ExampleUI, Hints, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
-
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
-
-ChartJS.register(ArcElement, Tooltip, Legend);
 
 const { ethers } = require("ethers");
 /*
@@ -67,13 +66,13 @@ const { ethers } = require("ethers");
 */
 
 /// 📡 What chain are your contracts deployed to?
-const initialNetwork = NETWORKS.goerli; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const initialNetwork = NETWORKS.polygon; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 const polyNetwork = NETWORKS.polygon;
 
 // 😬 Sorry for all the console logging
-const DEBUG = true;
+const DEBUG = false;
 const NETWORKCHECK = true;
-const USE_BURNER_WALLET = true; // toggle burner wallet feature
+const USE_BURNER_WALLET = false; // toggle burner wallet feature
 const USE_NETWORK_SELECTOR = false;
 
 const web3Modal = Web3ModalSetup();
@@ -204,7 +203,7 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
     address,
   ]);
 
-  const koyweTokenBalance = useContractReader(readContracts, "KoyweToken", "balanceOf", [address]);
+  // const koyweTokenBalance = useContractReader(readContracts, "KoyweToken", "balanceOf", [address]);
 
   //keep track of contract balance to know how much has been staked total:
   const kpledgeContractBalance = useBalance(
@@ -218,7 +217,7 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
   console.log("💸 pledged:", pledged);
 
   // ** keep track of a variable from the contract in the local React state:
-  const tonsPledged = useContractReader(readContracts, "KoywePledge", "getCommitment", [address]);
+  const tonsPledged = useContractReader(readContracts, "KoywePledge", "getCommitment", [address])/(10**9);
   console.log("💸 tons pledged:", tonsPledged ? tonsPledged.toString() : "...");
 
   // ** 📟 Listen for broadcast events
@@ -228,36 +227,10 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
   const CO2TokenBalance = useContractReader(readContracts, "CO2TokenContract", "balanceOf", [address]);
   console.log("🏵 CO2TokenBalance:", CO2TokenBalance ? ethers.utils.formatEther(CO2TokenBalance) : "...");
 
-  const vendorAddress = readContracts && readContracts.KoyweVendor && readContracts.KoyweVendor.address;
-
-  const vendorTokenBalance = useContractReader(readContracts, "KoyweToken", "balanceOf", [vendorAddress]);
-  console.log("🏵 vendorTokenBalance:", vendorTokenBalance ? ethers.utils.formatEther(vendorTokenBalance) : "...");
-
-  const tokensPerEth = useContractReader(readContracts, "KoyweVendor", "tokensPerEth");
-  console.log("🏦 tokensPerEth:", tokensPerEth ? tokensPerEth.toString() : "...");
-
-
-  const [tokenBuyAmount, setTokenBuyAmount] = useState();
-  const [tokenSellAmount, setTokenSellAmount] = useState();
   
-  const [isSellAmountApproved, setIsSellAmountApproved] = useState();
-  const ethCostToPurchaseTokens =
-    tokenBuyAmount && tokensPerEth && ethers.utils.parseEther("" + tokenBuyAmount / parseFloat(tokensPerEth));
-  const ethCostToSellTokens =
-    tokenSellAmount && tokensPerEth && ethers.utils.parseEther("" + tokenSellAmount / parseFloat(tokensPerEth));
 
-  const vendorApproval = useContractReader(readContracts, "KoyweToken", "allowance", [
-    address, vendorAddress
-  ]);
 
-  useEffect(()=>{
-    const tokenSellAmountBN = tokenSellAmount && ethers.utils.parseEther("" + tokenSellAmount)
-    setIsSellAmountApproved(vendorApproval && tokenSellAmount && vendorApproval.gte(tokenSellAmountBN))
-  },[tokenSellAmount, readContracts])
-
-  const [buying, setBuying] = useState();
-  const [selling, setSelling] = useState();
-
+  
   const [tonsCommitted, setTonsCommitted] = useState();
   const [pledging, setPledging] = useState();
   const [dripping, setDripping] = useState();
@@ -288,7 +261,7 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
         loading={pledging}
         onClick={async () => {
           setPledging(true);
-          await tx(writeContracts.KoywePledge.newPledge(tonsCommitted));
+          await tx(writeContracts.KoywePledge.newPledge(tonsCommitted*10**9));
           setPledging(false);
         }}
       >
@@ -345,7 +318,7 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
         <div style={{ padding: 8, marginTop: 32, width: 300, margin: "auto" }}>
           <Card title="🔥 Your CO2e Tons🔥" >
             <div style={{ padding: 8 }}>
-              <Balance balance={CO2TokenBalance} fontSize={64} /> CO2e Tons emitted since pledging; the share of the problem you own
+              <TokenBalance balance={CO2TokenBalance} fontSize={64} /> CO2e Tons emitted since pledging; the share of the problem you own
             </div>
           </Card>
         </div>
@@ -353,145 +326,22 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
     }
   }
 
-  const buyTokensEvents = useEventListener(readContracts, "KoyweVendor", "BuyTokens", localProvider, 1);
-
   const { Step } = Steps;
 
   const [prices, setPrices] = useState(null);
 
   // read prices from coingecko
   useEffect(() => {
-    getData();
-
     // we will use async/await to fetch this data
     async function getData() {
       const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=toucan-protocol-base-carbon-tonne,moss-carbon-credit,klima-dao,staked-klima&vs_currencies=usd");
       const data = await response.json();
 
-      // store the data into our books variable
+      // store the data into our prices variable
       setPrices(data) ;
     }
-  }, [setPrices]);
-
-  const tokenColumns = [
-    {
-      title: 'Token',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Holding',
-      dataIndex: 'hold',
-    },
-    {
-      title: 'CO2 Value (Tons)',
-      dataIndex: 'co2',
-    },
-    {
-      title: 'Description',
-      dataIndex: 'desc',
-    },
-    
-  ];
-  
-  const tokenData = [
-    {
-      key: '1',
-      name: 'Moss CO2 Token (MCO2)',
-      hold: <TokenBalance 
-              contracts = {polyContracts}
-              name = {"PMCO2"}
-              address = {address}
-              dollarMultiplier = {prices && prices["moss-carbon-credit"] && prices["moss-carbon-credit"].usd}
-            />,
-      desc: 'Moss Certified CO2 Token on Polygon',
-      co2: <TokenBalance 
-              contracts = {polyContracts}
-              name = {"PMCO2"}
-              address = {address}
-            />,
-    },
-    {
-      key: '2',
-      name: 'Toucan CO2 Tokens (BCT)',
-      hold: <TokenBalance 
-              contracts = {polyContracts}
-              name = {"PBCT"}
-              address = {address}
-              dollarMultiplier = {prices && prices["toucan-protocol-base-carbon-tonne"] && prices["toucan-protocol-base-carbon-tonne"].usd}
-            />,
-      desc: 'Toucan credits bridged to blockchain on Polygon',
-      co2: <TokenBalance 
-              contracts = {polyContracts}
-              name = {"PBCT"}
-              address = {address}
-            />,
-    },
-    {
-      key: '3',
-      name: 'Koywe CO2 Tokens (KOY)',
-      hold: <TokenBalance 
-              contracts = {readContracts}
-              name = {"KoyweToken"}
-              address = {address}
-              dollarMultiplier = {7}
-            />,
-      desc: 'Koywe certified CO2 Tokens on Göerli',
-      co2: <TokenBalance 
-              contracts = {readContracts}
-              name = {"KoyweToken"}
-              address = {address}
-            />,
-    },
-    {
-      key: '4',
-      name: 'Klima Tokens (KLIMA)',
-      hold: <TokenBalance 
-              contracts = {polyContracts}
-              name = {"KLIMA"}
-              address = {address}
-              dollarMultiplier = {prices && prices["klima-dao"] && prices["klima-dao"].usd}
-            />,
-      desc: 'Klima DAO Tokens, unstaked on Polygon',
-      co2: "N/A",
-    },
-    {
-      key: '5',
-      name: 'Staked Klima (sKLIMA)',
-      hold: <TokenBalance 
-              contracts = {polyContracts}
-              name = {"sKLIMA"}
-              address = {address}
-              dollarMultiplier = {prices && prices["staked-klima"] && prices["staked-klima"].usd}
-            />,
-      desc: 'Staked Klima DAO Tokens on Polygon',
-      co2: "N/A",
-    },
-  ];
-
-  const chartData = {
-    labels: ['Plight', 'Fight'],
-    datasets: [
-      {
-        label: 'CO2 tons',
-        data: [tonsPledged > 0 ? (CO2TokenBalance/Math.pow(10,18)).toFixed(2) : 0,
-          (
-            (myPolyBCTBalance && myPolyBCTBalance > 0 ? myPolyBCTBalance : 0)/(Math.pow(10,18))
-          + (myPolyMCO2Balance && myPolyMCO2Balance > 0 ? myPolyMCO2Balance : 0)/(Math.pow(10,18))
-          + (koyweTokenBalance && koyweTokenBalance > 0 ? koyweTokenBalance : 0)/(Math.pow(10,18))
-          ).toFixed(2)
-          ],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(75, 192, 192, 1)',
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
+    getData();
+  }, []);
 
   /*
   const addressFromENS = useResolveName(mainnetProvider, "austingriffith.eth");
@@ -610,25 +460,20 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
               
               <Card title="Your Fight" style={{ width: 400, textAlign: "left" }}>
                 <p>🌳 0 trees planted</p>
-                <p>💨 {((myPolyBCTBalance && myPolyBCTBalance > 0 ? myPolyBCTBalance : 0)/(Math.pow(10,18)) + (myPolyMCO2Balance && myPolyMCO2Balance > 0 ? myPolyMCO2Balance : 0)/(Math.pow(10,18)) + (koyweTokenBalance && koyweTokenBalance > 0 ? koyweTokenBalance : 0)/(Math.pow(10,18)) ).toFixed(2)} CO2e tons secuestered</p>
-                <h2>🤑 {((myPolyBCTBalance && myPolyBCTBalance > 0 ? myPolyBCTBalance : 0)/(Math.pow(10,18))*(prices && prices["toucan-protocol-base-carbon-tonne"] && prices["toucan-protocol-base-carbon-tonne"].usd) + (myPolyMCO2Balance && myPolyMCO2Balance > 0 ? myPolyMCO2Balance : 0)/(Math.pow(10,18))*(prices && prices["moss-carbon-credit"] && prices["moss-carbon-credit"].usd) + (koyweTokenBalance && koyweTokenBalance > 0 ? koyweTokenBalance : 0)/(Math.pow(10,18))*7 ).toFixed(2)} USD invested</h2>
+                <p>💨 {(myPolyBCTBalance && myPolyBCTBalance > 0 ? myPolyBCTBalance : 0)/(Math.pow(10,18)) + (myPolyMCO2Balance && myPolyMCO2Balance > 0 ? myPolyMCO2Balance : 0)/(Math.pow(10,18)).toFixed(2)} CO2e tons secuestered</p>
+                <h2>🤑 {((myPolyBCTBalance && myPolyBCTBalance > 0 ? myPolyBCTBalance : 0)/(Math.pow(10,18))*(prices && prices["toucan-protocol-base-carbon-tonne"] && prices["toucan-protocol-base-carbon-tonne"].usd) + (myPolyMCO2Balance && myPolyMCO2Balance > 0 ? myPolyMCO2Balance : 0)/(Math.pow(10,18))*(prices && prices["moss-carbon-credit"] && prices["moss-carbon-credit"].usd)  ).toFixed(2)} USD invested</h2>
               </Card>
               <Card title="Your Plight" style={{ width: 400, textAlign: "right" }}>
-                <p>🏭 1.5 CO2e tons in transactions</p>
+                <p>🏭 {address && <CarbonFYI currentAddress = {address} />} CO2e tons in <a href="https://carbon.fyi/" target="_blank">transactions</a></p>
                 <p>{tonsPledged > 0 ? "🩸 "+(CO2TokenBalance/Math.pow(10,18)).toFixed(2)+" CO2e tons dripped" : "🤐 Start dripping CO2 tokens."}</p>
                 <h2>{tonsPledged > 0 ? "🤞 "+tonsPledged.toString()+" CO2e tons/year pledged" : "🤐 Take the pledge to own your share of the problem."}</h2>
               </Card>
-              
             </Space>
-            <div style={{ width: 400, margin: "auto"}}>
-              <Doughnut data={chartData} />
-            </div>
+            <PositionChart CO2TokenBalance={CO2TokenBalance} balances={[myPolyBCTBalance,myPolyMCO2Balance]} tonsPledged={tonsPledged}/>
             <h2>Your Regenerative Art</h2>
-            {address ? <TreejerGraph address={address} /> : ""}
+            {address ? <TreejerGraph address={address} /> : "Loading"}
             <h2>Your ReFi Positions</h2>
-            <div style={{ width: 900, margin: "auto"}}>
-              <Table columns={tokenColumns} dataSource={tokenData} />
-            </div>
+            {address ? <GreenTokenTable address={address} prices={prices} readContracts={polyContracts} localContracts={readContracts}/> : "Loading"}
             <Link to="/refi" >
               <Button size={"large"} >
                 🌱 Put your money where your mouth is 🤑  Buy more! 🌱
@@ -650,12 +495,7 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
                       name = {"CO2TokenContract"}
                       address = {item.args[0]}
                     /> CO2 tons emmitted
-                    | &nbsp;{item.args[1].toString()} CO2e tons/year committed
-                    | &nbsp;<TokenBalance 
-                      contracts = {readContracts}
-                      name = {"KoyweToken"}
-                      address = {item.args[0]}
-                    /> KOYWE
+                    | &nbsp;{item.args[1].toString()*1/10**9} CO2e tons/year committed
                     | <TokenBalance 
                       contracts = {polyContracts}
                       name = {"PBCT"}
@@ -677,7 +517,9 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
             <h1 style={{ padding: 8, marginTop: 32 }}>Regenerative Art Collections</h1>
             <p>Check out your collection or add more items to help fight climate change.</p>
             <p>Some cool things you can fund: planting trees, direct capture CO2 from the air, help local communities, and more!</p>
+            <p>For now, you can only view your Treejer collection. <a href="https://treejer.com/" target="_blank">You cant mint trees here↗️</a></p>
           </div>
+          <h2 style={{ padding: 8, marginTop: 32 }}>Treejer Trees</h2>
           {address ? <TreejerGraph address={address} /> : ""}
           {/* <TreejerGraph address={address} /> */}
         </Route>
@@ -688,7 +530,7 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
               <h1 style={{ padding: 8, marginTop: 32 }}>First... The Pledge</h1>
               <p>This pledge is nothing more than a public commitment to do better. To be in charge of our emissions. To take ownership of a part of the effort.</p>
               <p>It doesn't need to be exact, but it does need to come from the heart.</p>
-              <p>There are 60 million CO2e tons emitted every year.</p>
+              <p>There are 60 gigatons of CO2e emitted every year.</p>
               <p>We ask you to make a commitment, just like our nation's leaders do, of annual CO2 tons that we will contribute to bring to zero (0).</p>
               <Divider/>
               <p>🌎 🌍 I hereby pledge to do my best to save the planet.</p>
@@ -715,6 +557,11 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
           <p>A group of committed individuals taking action, TODAY.</p>
           <p>Because words without actions are just wind, let's explore actionable steps to fight climate change, together...</p>
           <p>Start by investing in sustainable web3 projects.</p>
+          <Link to="/refi" >
+            <Button size={"large"} >
+              🌱 Put your money where your mouth is 🤑  Buy more! 🌱
+            </Button>
+          </Link>
 
           <Steps size="small" current={2}>
               <Step title="Pledge" />
@@ -724,12 +571,12 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
         </Route>
         <Route path="/refi">
           <div style={{ width: 500, margin: "auto"}}>
-            <h1 style={{ padding: 8, marginTop: 32 }}>ReFi positions and curated holdings</h1>
+            <h1 style={{ padding: 8, marginTop: 32 }}>ReFi positions and curated tokens</h1>
             <p>You can earn money and save the planet, AT THE SAME TIME!</p>
-            <p>Such convinience, such wow. Use our dex or vendor to buy Göerli (testnet) Koywe Tokens or check out our curated selection of tokens.</p>
-            <p>In the future, this will the place to swap, trade, buy or sell the best regerative tokens.</p>
+            <p>Such convinience, such wow. For now, you can just buy BCT Tokens.<a href="https://toucan.earth/" target="_blank">Find more about this token and Toucan Protocol↗️</a></p>
+            <p>In the future, this will be the place to swap, trade, buy or sell the best regerative tokens.</p>
           </div>
-          <DexSwapper 
+          {/* <DexSwapper 
             localProvider={localProvider}
             address={address}
             readContracts={readContracts}
@@ -742,96 +589,19 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
             readContracts={readContracts}
             writeContracts={writeContracts}
             tx={tx}
-          />
-          <h1 style={{ padding: 8, marginTop: 32 }}>Koywe Tokens Centralized Vendor</h1>
-          <Space>
-              <div style={{ padding: 8 }}>
-                <div>Available Supply to Buy:</div>
-                <TokenBalance balance={vendorTokenBalance} fontSize={64} />
-              </div>
-            </Space>
-            <div style={{ padding: 8 }}>{tokensPerEth && tokensPerEth.toNumber()} tokens per ETH</div>
-            <Space>
-              <div style={{ padding: 8, marginTop: 32, width: 300, margin: "auto" }}>
-                <Card title="Buy Tokens" >
-                  
-
-                  <div style={{ padding: 8 }}>
-                    <Input
-                      style={{ textAlign: "center" }}
-                      placeholder={"amount of tokens to buy"}
-                      value={tokenBuyAmount}
-                      onChange={e => {
-                        setTokenBuyAmount(e.target.value);
-                      }}
-                    />
-                    <Balance balance={ethCostToPurchaseTokens} dollarMultiplier={price} />
-                  </div>
-
-                  <div style={{ padding: 8 }}>
-                    <Button
-                      type={"primary"}
-                      loading={buying}
-                      onClick={async () => {
-                        setBuying(true);
-                        await tx(writeContracts.KoyweVendor.buyTokens({ value: ethCostToPurchaseTokens }));
-                        setBuying(false);
-                      }}
-                    >
-                      Buy Tokens
-                    </Button>
-                  </div>
-                </Card>
-              </div>
-              <div style={{ padding: 8, marginTop: 32, width: 300, margin: "auto" }}>
-                <Card title="Sell Tokens">
-                  
-                  <div style={{ padding: 8 }}>
-                    <Input
-                      style={{ textAlign: "center" }}
-                      placeholder={"amount of tokens to sell"}
-                      value={tokenSellAmount}
-                      onChange={e => {
-                        setTokenSellAmount(e.target.value);
-                      }}
-                    />
-                    <Balance balance={ethCostToSellTokens} dollarMultiplier={price} />
-                  </div>
-                  {isSellAmountApproved?
-
-                    <div style={{ padding: 8 }}>
-                      <Button
-                        type={"primary"}
-                        loading={selling}
-                        onClick={async () => {
-                          setSelling(true);
-                          await tx(writeContracts.KoyweVendor.sellTokens(tokenSellAmount && ethers.utils.parseEther(tokenSellAmount)));
-                          setSelling(false);
-                        }}
-                      >
-                        Sell Tokens
-                      </Button>
-                    </div>
-                    :
-                    <div style={{ padding: 8 }}>
-                      <Button
-                        type={"primary"}
-                        loading={selling}
-                        onClick={async () => {
-                          setSelling(true);
-                          await tx(writeContracts.KoyweToken.approve(readContracts.KoyweVendor.address, tokenSellAmount && ethers.utils.parseEther(tokenSellAmount)));
-                          setSelling(false);
-                        }}
-                      >
-                        Approve Tokens
-                      </Button>
-                    </div>
-                  }
-
-
-                </Card>
-              </div>
-            </Space>
+          /> */}
+          <h1 style={{ padding: 8, marginTop: 32 }}>BCT Centralized Vendor</h1>
+          {address ?
+            <BCTVendor 
+              address={address}
+              readContracts={readContracts}
+              writeContracts={writeContracts}
+              polyContracts={polyContracts}
+              tx={tx}
+              price={price}
+            />
+            : "Loading" 
+          }
         </Route>
         <Route exact path="/debug">
           {/*
@@ -858,7 +628,7 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
             blockExplorer={blockExplorer}
             contractConfig={contractConfig}
           />
-          <Contract
+          {/* <Contract
             name="KoyweToken"
             price={price}
             signer={userSigner}
@@ -866,9 +636,9 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
             address={address}
             blockExplorer={blockExplorer}
             contractConfig={contractConfig}
-          />
+          /> */}
           <Contract
-            name="KoyweVendor"
+            name="BCTVendor"
             price={price}
             signer={userSigner}
             provider={localProvider}
@@ -876,7 +646,7 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
             blockExplorer={blockExplorer}
             contractConfig={contractConfig}
           />
-          <Contract
+          {/* <Contract
             name="Dex"
             price={price}
             signer={userSigner}
@@ -884,7 +654,7 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
             address={address}
             blockExplorer={blockExplorer}
             contractConfig={contractConfig}
-          />
+          /> */}
         </Route>
       </Switch>
 

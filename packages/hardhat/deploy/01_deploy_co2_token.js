@@ -5,7 +5,7 @@ const { ethers } = require("hardhat");
 module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
-  const chianId = await getChainId();
+  const chainId = await getChainId();
 
   const koywePledgeContract = await deployments.get(
     "KoywePledge"
@@ -25,7 +25,6 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   // console.log("\n 🤹  Sending ownership to frontend address...\n")
   // const ownershipTransaction = await cO2TokenContract.transferOwnership("0x40f9bf922c23c43acdad71Ab4425280C0ffBD697" );
   // console.log("\n    ✅ confirming...\n");
-  
   // const ownershipResult = await ownershipTransaction.wait();
 
   // Getting a previously deployed contract
@@ -59,24 +58,24 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
 
   // todo: verification with etherscan
   // Verification
-  // if (chainId !== "31337") {
-  //   try {
-  //     console.log(" 🎫 Verifing Contract on Etherscan... ");
-  //     await sleep(5000); // wait 5 seconds for deployment to propagate
-  //     await run("verify:verify", {
-  //       address: CO2TokenContract.address,
-  //       contract:
-  //         "contracts/CO2TokenContract.sol:CO2TokenContract",
-  //       contractArguments: [],
-  //     });
-  //   } catch (error) {
-  //     console.log("⚠️ Contract Verification Failed: ", error);
-  //   }
-  // }
+  if (chainId !== "31337") {
+    try {
+      console.log(" 🎫 Verifing Contract on Etherscan... ");
+      await sleep(5000); // wait 5 seconds for deployment to propagate
+      await run("verify:verify", {
+        address: cO2TokenContract.address,
+        contract:
+          "contracts/CO2TokenContract.sol:CO2TokenContract",
+          constructorArguments: [koywePledgeContract.address, 0, "CO2e Tons", "TCO2e"],
+      });
+    } catch (error) {
+      console.log("⚠️ Contract Verification Failed: ", error);
+    }
+  }
 };
 
-// function sleep(ms) {
-//   return new Promise((resolve) => setTimeout(resolve, ms));
-// }
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 module.exports.tags = ["CO2TokenContract"];
