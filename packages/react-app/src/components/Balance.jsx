@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useBalance } from "eth-hooks";
+import { HOOK_OPTIONS } from "../constants";
 
 const { utils } = require("ethers");
 
@@ -32,7 +33,7 @@ const { utils } = require("ethers");
 export default function Balance(props) {
   const [dollarMode, setDollarMode] = useState(true);
 
-  const balance = useBalance(props.provider, props.address);
+  const balance = useBalance(props.provider, props.address, props.hookOptions ? props.hookOptions : HOOK_OPTIONS);
   let floatBalance = parseFloat("0.00");
   let usingBalance = balance;
 

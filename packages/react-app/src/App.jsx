@@ -37,7 +37,7 @@ import {
   PositionChart,
   BCTVendor
 } from "./components";
-import { NETWORKS, ALCHEMY_KEY } from "./constants";
+import { NETWORKS, ALCHEMY_KEY, HOOK_OPTIONS } from "./constants";
 import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
@@ -154,11 +154,11 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
   const tx = Transactor(userSigner, gasPrice);
 
   // 🏗 scaffold-eth is full of handy hooks like this one to get your balance:
-  const yourLocalBalance = useBalance(localProvider, address);
+  const yourLocalBalance = useBalance(localProvider, address, HOOK_OPTIONS);
 
   // Just plug in different 🛰 providers to get your balance on different chains:
-  const yourMainnetBalance = useBalance(mainnetProvider, address);
-  const yourMaticBalance = useBalance(polyProvider, address);
+  const yourMainnetBalance = useBalance(mainnetProvider, address, HOOK_OPTIONS);
+  const yourMaticBalance = useBalance(polyProvider, address, HOOK_OPTIONS);
 
   // const contractConfig = useContractConfig();
 
@@ -184,24 +184,28 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
   // Then read your DAI balance like:
   const myMainnetDAIBalance = useContractReader(mainnetContracts, "DAI", "balanceOf", [
     "0x34aA3F359A9D614239015126635CE7732c18fDF3",
-  ]);
+  ], HOOK_OPTIONS);
 
   // Polybalances
   const myPolyMCO2Balance = useContractReader(polyContracts, "PMCO2", "balanceOf", [
     address,
-  ]);
+  ], HOOK_OPTIONS);
   
   const myPolyBCTBalance = useContractReader(polyContracts, "PBCT", "balanceOf", [
     address,
-  ]);
+  ], HOOK_OPTIONS);
+
+  const myPolyNCTBalance = useContractReader(polyContracts, "NCT", "balanceOf", [
+    address,
+  ], HOOK_OPTIONS);
 
   const myPolySKlimaBalance = useContractReader(polyContracts, "sKLIMA", "balanceOf", [
     address,
-  ]);
+  ], HOOK_OPTIONS);
 
   const myPolyWethBalance = useContractReader(polyContracts, "WETH", "balanceOf", [
     address,
-  ]);
+  ], HOOK_OPTIONS);
 
   // const koyweTokenBalance = useContractReader(readContracts, "KoyweToken", "balanceOf", [address]);
 
@@ -209,22 +213,23 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
   const kpledgeContractBalance = useBalance(
     localProvider,
     readContracts && readContracts.KoywePledge ? readContracts.KoywePledge.address : null,
+    HOOK_OPTIONS
   );
   if (DEBUG) console.log("💵 kpledgeContractBalance", kpledgeContractBalance);
 
   // ** keep track of a variable from the contract in the local React state:
-  const pledged = useContractReader(readContracts, "KoywePledge", "isPledged", [address]);
+  const pledged = useContractReader(readContracts, "KoywePledge", "isPledged", [address], HOOK_OPTIONS);
   console.log("💸 pledged:", pledged);
 
   // ** keep track of a variable from the contract in the local React state:
-  const tonsPledged = useContractReader(readContracts, "KoywePledge", "getCommitment", [address])/(10**9);
+  const tonsPledged = useContractReader(readContracts, "KoywePledge", "getCommitment", [address], HOOK_OPTIONS)/(10**9);
   console.log("💸 tons pledged:", tonsPledged ? tonsPledged.toString() : "...");
 
   // ** 📟 Listen for broadcast events
-  const pledgeEvents = useEventListener(readContracts, "KoywePledge", "NewPledge", localProvider, 1);
+  const pledgeEvents = useEventListener(readContracts, "KoywePledge", "NewPledge", localProvider, 1, HOOK_OPTIONS);
   console.log("📟 pledge events:", pledgeEvents);
 
-  const CO2TokenBalance = useContractReader(readContracts, "CO2TokenContract", "balanceOf", [address]);
+  const CO2TokenBalance = useContractReader(readContracts, "CO2TokenContract", "balanceOf", [address], HOOK_OPTIONS);
   console.log("🏵 CO2TokenBalance:", CO2TokenBalance ? ethers.utils.formatEther(CO2TokenBalance) : "...");
 
   
@@ -460,7 +465,7 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
               
               <Card title="Your Fight" style={{ width: 400, textAlign: "left" }}>
                 <p>🌳 0 trees planted</p>
-                <p>💨 {(myPolyBCTBalance && myPolyBCTBalance > 0 ? myPolyBCTBalance : 0)/(Math.pow(10,18)) + (myPolyMCO2Balance && myPolyMCO2Balance > 0 ? myPolyMCO2Balance : 0)/(Math.pow(10,18)).toFixed(2)} CO2e tons secuestered</p>
+                <p>💨 {((myPolyBCTBalance && myPolyBCTBalance > 0 ? myPolyBCTBalance : 0)/Math.pow(10,18) + (myPolyNCTBalance && myPolyNCTBalance > 0 ? myPolyNCTBalance : 0)/Math.pow(10,18) + (myPolyMCO2Balance && myPolyMCO2Balance > 0 ? myPolyMCO2Balance : 0)/Math.pow(10,18)).toFixed(2)} CO2e tons secuestered</p>
                 <h2>🤑 {((myPolyBCTBalance && myPolyBCTBalance > 0 ? myPolyBCTBalance : 0)/(Math.pow(10,18))*(prices && prices["toucan-protocol-base-carbon-tonne"] && prices["toucan-protocol-base-carbon-tonne"].usd) + (myPolyMCO2Balance && myPolyMCO2Balance > 0 ? myPolyMCO2Balance : 0)/(Math.pow(10,18))*(prices && prices["moss-carbon-credit"] && prices["moss-carbon-credit"].usd)  ).toFixed(2)} USD invested</h2>
               </Card>
               <Card title="Your Plight" style={{ width: 400, textAlign: "right" }}>
@@ -469,11 +474,11 @@ const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
                 <h2>{tonsPledged > 0 ? "🤞 "+tonsPledged.toString()+" CO2e tons/year pledged" : "🤐 Take the pledge to own your share of the problem."}</h2>
               </Card>
             </Space>
-            <PositionChart CO2TokenBalance={CO2TokenBalance} balances={[myPolyBCTBalance,myPolyMCO2Balance]} tonsPledged={tonsPledged}/>
+            <PositionChart CO2TokenBalance={CO2TokenBalance} balances={[myPolyBCTBalance,myPolyMCO2Balance,myPolyNCTBalance]} tonsPledged={tonsPledged}/>
             <h2>Your Regenerative Art</h2>
             {address ? <TreejerGraph address={address} /> : "Loading"}
             <h2>Your ReFi Positions</h2>
-            {address ? <GreenTokenTable address={address} prices={prices} readContracts={polyContracts} localContracts={readContracts}/> : "Loading"}
+            {address ? <GreenTokenTable address={address} prices={prices} readContracts={polyContracts} localContracts={readContracts} /> : "Loading"}
             <Link to="/refi" >
               <Button size={"large"} >
                 🌱 Put your money where your mouth is 🤑  Buy more! 🌱

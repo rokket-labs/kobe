@@ -1,5 +1,6 @@
 import { useTokenBalance } from "eth-hooks/erc/erc-20/useTokenBalance";
 import React, { useState } from "react";
+import { HOOK_OPTIONS } from "../constants";
 
 import { utils } from "ethers";
 
@@ -7,7 +8,7 @@ export default function TokenBalance(props) {
   const [dollarMode, setDollarMode] = useState(true);
 
   const tokenContract = props.contracts && props.contracts[props.name];
-  const balance = useTokenBalance(tokenContract, props.address, 1777).mul(props.name == "sKLIMA" || props.name == "KLIMA"  ? Math.pow(10,9) : 1 );
+  const balance = useTokenBalance(tokenContract, props.address, 1777).mul(props.name == "sKLIMA" || props.name == "KLIMA"  ? Math.pow(10,9) : 1 , HOOK_OPTIONS);
 
   let floatBalance = parseFloat("0.00");
 

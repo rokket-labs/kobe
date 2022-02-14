@@ -1246,6 +1246,10 @@ module.exports = {
         address: "0x3abbc23f3303ef36fd9f6cec0e585b2c23e47fd9",
         abi: ERC721ABI,
       },
+      NCT: {
+        address: "0xd838290e877e0188a4a44700463419ed96c16107",
+        abi: ERC20ABI,
+      },
     },
   },
 };

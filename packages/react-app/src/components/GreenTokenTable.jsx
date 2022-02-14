@@ -52,29 +52,28 @@ export default function GreenTokenTable({address, prices, readContracts, localCo
               address = {address}
               dollarMultiplier = {prices && prices["toucan-protocol-base-carbon-tonne"] && prices["toucan-protocol-base-carbon-tonne"].usd}
             />,
-      desc: 'Toucan credits bridged to blockchain on Polygon',
+      desc: 'Base Carbon Ton: Toucan credits bridged to blockchain on Polygon',
       co2: <TokenBalance 
               contracts = {readContracts}
               name = {"PBCT"}
               address = {address}
             />,
     },
-    // {
-    //   key: '3',
-    //   name: 'Koywe CO2 Tokens (KOY)',
-    //   hold: <TokenBalance 
-    //           contracts = {localContracts}
-    //           name = {"KoyweToken"}
-    //           address = {address}
-    //           dollarMultiplier = {7}
-    //         />,
-    //   desc: 'Koywe certified CO2 Tokens on Göerli',
-    //   co2: <TokenBalance 
-    //           contracts = {localContracts}
-    //           name = {"KoyweToken"}
-    //           address = {address}
-    //         />,
-    // },
+    {
+      key: '3',
+      name: 'Toucan CO2 Tokens (NCT)',
+      hold: <TokenBalance 
+              contracts = {readContracts}
+              name = {"NCT"}
+              address = {address}
+            />,
+      desc: 'Nature Carbon Ton: Toucan premium credits bridged to blockchain on Polygon',
+      co2: <TokenBalance 
+              contracts = {localContracts}
+              name = {"NCT"}
+              address = {address}
+            />,
+    },
     {
       key: '4',
       name: 'Klima Tokens (KLIMA)',

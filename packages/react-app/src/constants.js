@@ -10,6 +10,11 @@ export const BLOCKNATIVE_DAPPID = "0b58206a-f3c0-4701-a62f-73c7243e8c77";
 
 export const ALCHEMY_KEY = process.env.REACT_APP_ALCHEMY_KEY || "oKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
 
+export const HOOK_OPTIONS = {
+  blockNumberInterval: 5,
+  query: { refetchOnWindowFocus: true },
+};
+
 export const NETWORKS = {
   localhost: {
     name: "localhost",
@@ -73,7 +78,8 @@ export const NETWORKS = {
     chainId: 137,
     price: 1,
     gasPrice: 1000000000,
-    rpcUrl: process.env.REACT_APP_ALCHEMY_POLYGON ? "https://polygon-mainnet.g.alchemy.com/v2/"+process.env.REACT_APP_ALCHEMY_POLYGON : "https://polygon-rpc.com/",
+    // rpcUrl: process.env.REACT_APP_ALCHEMY_POLYGON ? "https://polygon-mainnet.g.alchemy.com/v2/"+process.env.REACT_APP_ALCHEMY_POLYGON : "https://polygon-rpc.com/",
+    rpcUrl: "https://polygon-rpc.com/",
     blockExplorer: "https://polygonscan.com/",
   },
   mumbai: {

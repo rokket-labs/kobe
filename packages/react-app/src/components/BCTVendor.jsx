@@ -7,6 +7,7 @@ import {
 import {
   useContractReader,
 } from "eth-hooks";
+import { HOOK_OPTIONS } from "../constants";
 
 const { ethers } = require("ethers");
 
@@ -29,10 +30,10 @@ export default function BCTVendor({address, readContracts, writeContracts, price
 
   const vendorAddress = readContracts && readContracts.BCTVendor && readContracts.BCTVendor.address;
 
-  const vendorTokenBalance = useContractReader(readContracts, "PBCT", "balanceOf", [vendorAddress]);
+  const vendorTokenBalance = useContractReader(readContracts, "PBCT", "balanceOf", [vendorAddress], HOOK_OPTIONS);
 
-  const tokensPerEthSell = useContractReader(readContracts, "BCTVendor", "maticPerBCTSell");
-  const tokensPerEthBuy = useContractReader(readContracts, "BCTVendor", "maticPerBCTBuy");
+  const tokensPerEthSell = useContractReader(readContracts, "BCTVendor", "maticPerBCTSell", HOOK_OPTIONS);
+  const tokensPerEthBuy = useContractReader(readContracts, "BCTVendor", "maticPerBCTBuy", HOOK_OPTIONS);
 
   const [tokenBuyAmount, setTokenBuyAmount] = useState();
   const [tokenSellAmount, setTokenSellAmount] = useState();
@@ -45,7 +46,7 @@ export default function BCTVendor({address, readContracts, writeContracts, price
 
   const vendorApproval = useContractReader(readContracts, "PBCT", "allowance", [
     address, vendorAddress
-  ]);
+  ], HOOK_OPTIONS);
 
   useEffect(()=>{
     const tokenSellAmountBN = tokenSellAmount && ethers.utils.parseEther("" + tokenSellAmount)
