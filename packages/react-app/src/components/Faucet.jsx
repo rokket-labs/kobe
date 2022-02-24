@@ -1,11 +1,13 @@
-import { SendOutlined } from "@ant-design/icons";
-import { Button, Input, Tooltip } from "antd";
-import React, { useState, useEffect } from "react";
-import Blockies from "react-blockies";
-import { Transactor } from "../helpers";
-import Wallet from "./Wallet";
+import React, { useEffect,useState } from 'react'
+import Blockies from 'react-blockies'
+import { SendOutlined } from '@ant-design/icons'
+import { Button, Input, Tooltip } from 'antd'
 
-const { utils } = require("ethers");
+import { Transactor } from '../helpers'
+
+import Wallet from './common/Wallet'
+
+const { utils } = require('ethers')
 
 // improved a bit by converting address to ens if it exists
 // added option to directly input ens name
@@ -36,41 +38,44 @@ const { utils } = require("ethers");
 */
 
 export default function Faucet(props) {
-  const [address, setAddress] = useState();
-  const [faucetAddress, setFaucetAddress] = useState();
+  const [address, setAddress] = useState()
+  const [faucetAddress, setFaucetAddress] = useState()
 
-  const { price, placeholder, localProvider, ensProvider } = props;
+  const { price, placeholder, localProvider, ensProvider } = props
 
   useEffect(() => {
     const getFaucetAddress = async () => {
       if (localProvider) {
-        const _faucetAddress = await localProvider.listAccounts();
-        setFaucetAddress(_faucetAddress[0]);
-      }
-    };
-    getFaucetAddress();
-  }, [localProvider]);
+        const _faucetAddress = await localProvider.listAccounts()
 
-  let blockie;
-  if (address && typeof address.toLowerCase === "function") {
-    blockie = <Blockies seed={address.toLowerCase()} size={8} scale={4} />;
-  } else {
-    blockie = <div />;
-  }
+        setFaucetAddress(_faucetAddress[0])
+      }
+    }
+
+    getFaucetAddress()
+  }, [localProvider])
+
+  let blockie
+
+  if (address && typeof address.toLowerCase === 'function')
+    blockie = <Blockies seed={address.toLowerCase()} size={8} scale={4} />
+   else
+    blockie = <div />
+
 
   const updateAddress = newValue => {
-    if (typeof newValue !== "undefined" && utils.isAddress(newValue)) {
-      setAddress(newValue);
-    }
-  };
+    if (typeof newValue !== 'undefined' && utils.isAddress(newValue))
+      setAddress(newValue)
 
-  const tx = Transactor(localProvider);
+  }
+
+  const tx = Transactor(localProvider)
 
   return (
     <span>
       <Input
         size="large"
-        placeholder={placeholder ? placeholder : "local faucet"}
+        placeholder={placeholder ? placeholder : 'local faucet'}
         prefix={blockie}
         value={address}
         onChange={e => updateAddress(e.target.value)}
@@ -80,9 +85,9 @@ export default function Faucet(props) {
               onClick={() => {
                 tx({
                   to: address,
-                  value: utils.parseEther("0.01"),
-                });
-                setAddress("");
+                  value: utils.parseEther('0.01'),
+                })
+                setAddress('')
               }}
               shape="circle"
               icon={<SendOutlined />}
@@ -98,5 +103,5 @@ export default function Faucet(props) {
         }
       />
     </span>
-  );
+  )
 }
