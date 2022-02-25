@@ -2,8 +2,8 @@ import React, { useMemo, useState } from 'react'
 import { Card } from 'antd'
 import { useContractExistsAtAddress, useContractLoader } from 'eth-hooks'
 
-import Address from '../Address'
-import Balance from '../Balance'
+import Address from '../common/Address'
+import Balance from '../common/Balance'
 
 import DisplayVariable from './DisplayVariable'
 import FunctionForm from './FunctionForm'

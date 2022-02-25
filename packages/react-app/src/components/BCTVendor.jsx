@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { Button, Card, Input, Space } from 'antd'
 import { useContractReader } from 'eth-hooks'
 
-import { Balance, TokenBalance } from '../components'
+import { TokenBalance } from '../components'
+import Balance from '../components/common/Balance'
 import { HOOK_OPTIONS } from '../constants'
 
 const { ethers } = require('ethers')

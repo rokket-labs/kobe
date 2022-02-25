@@ -1,0 +1,22 @@
+import React, { useState } from 'react'
+import { useBalance } from 'eth-hooks'
+
+import { HOOK_OPTIONS } from '../../constants'
+
+import InfoText from './InfoText'
+
+const { utils } = require('ethers')
+
+const Balance = ({ provider, address, price }) => {
+  const [dollarMode, setDollarMode] = useState(true)
+  const balance = useBalance(provider, address, HOOK_OPTIONS)
+  const usingBalance = typeof balance !== 'undefined' ? balance.toString() : balance
+
+  const floatBalance = usingBalance ? parseFloat(utils.formatEther(usingBalance)) : parseFloat('0.00')
+
+  const displayBalance = dollarMode ? `$${(floatBalance * (price || 1)).toFixed(2)}` : floatBalance.toFixed(4)
+
+  return <InfoText text={displayBalance} isCopyable={false} onClick={() => setDollarMode(prevState => !prevState)} />
+}
+
+export default Balance

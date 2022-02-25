@@ -1,7 +1,8 @@
 import React from 'react'
 import { List } from 'antd'
 
-import { Address, TokenBalance } from '../components'
+import { TokenBalance } from '../components'
+import Address from '../components/common/Address'
 
 const Ranking = ({ pledgeEvents, mainnetProvider, readContracts, polyContracts }) => {
   return (

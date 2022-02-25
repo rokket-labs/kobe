@@ -2,7 +2,7 @@
 /* eslint-disable max-lines-per-function */
 import React, { useCallback, useEffect, useState } from 'react'
 import { Link, Route, Switch, useLocation } from 'react-router-dom'
-import { Button, Card, Col, Input, Menu, Row, Steps } from 'antd'
+import { Button, Card, Input, Steps } from 'antd'
 import {
   useBalance,
   useContractLoader,
@@ -14,6 +14,7 @@ import {
 import { useExchangeEthPrice } from 'eth-hooks/dapps/dex'
 import { useEventListener } from 'eth-hooks/events/useEventListener'
 
+import { MainLayout } from './components/layouts/MainLayout'
 import externalContracts from './contracts/external_contracts'
 // contracts
 import deployedContracts from './contracts/hardhat_contracts.json'
@@ -24,25 +25,13 @@ import Pledge from './pages/Pledge'
 import Ranking from './pages/Ranking'
 import ReFi from './pages/ReFi'
 import RegenArt from './pages/RegenArt'
-import {
-  Account,
-  DropdownMenu,
-  Faucet,
-  FaucetHint,
-  GasGauge,
-  Header,
-  NetworkDisplay,
-  NetworkSwitch,
-  Ramp,
-  ThemeSwitch,
-  TokenBalance,
-} from './components'
+import { TokenBalance } from './components'
 import { ALCHEMY_KEY, HOOK_OPTIONS, NETWORKS } from './constants'
 import { Transactor, Web3ModalSetup } from './helpers'
 import { useStaticJsonRPC } from './hooks'
 
 import 'antd/dist/antd.css'
-import './App.css'
+import './styles/index.css'
 
 const { ethers } = require('ethers')
 /*
@@ -433,33 +422,25 @@ const App = () => {
   const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name.indexOf('local') !== -1
 
   return (
-    <div className="App">
-      {/* ✏️ Edit the header and change the title to your project name */}
-      <Header />
-      {pledgeBanner}
-      <NetworkDisplay
-        NETWORKCHECK={NETWORKCHECK}
-        localChainId={localChainId}
-        selectedChainId={selectedChainId}
-        targetNetwork={targetNetwork}
-        logoutOfWeb3Modal={logoutOfWeb3Modal}
-        USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-      />
-      <Menu style={{ textAlign: 'center', marginTop: 40 }} selectedKeys={[location.pathname]} mode="horizontal">
-        <Menu.Item key="/">
-          <Link to="/">Dashboard</Link>
-        </Menu.Item>
-        <Menu.Item key="/rart">
-          <Link to="/rart">Regen Art</Link>
-        </Menu.Item>
-        <Menu.Item key="/refi">
-          <Link to="/refi">ReFi</Link>
-        </Menu.Item>
-        <Menu.Item key="/pledge">
-          <Link to="/pledge">Pledge</Link>
-        </Menu.Item>
-      </Menu>
-
+    <MainLayout
+      NETWORKCHECK={NETWORKCHECK}
+      localChainId={localChainId}
+      selectedChainId={selectedChainId}
+      targetNetwork={targetNetwork}
+      setSelectedNetwork={setSelectedNetwork}
+      logoutOfWeb3Modal={logoutOfWeb3Modal}
+      USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+      useBurner={USE_BURNER_WALLET}
+      address={address}
+      localProvider={localProvider}
+      userSigner={userSigner}
+      mainnetProvider={mainnetProvider}
+      price={price}
+      web3Modal={web3Modal}
+      loadWeb3Modal={loadWeb3Modal}
+      blockExplorer={blockExplorer}
+      yourLocalBalance={yourLocalBalance}
+    >
       <Switch>
         <Route exact path="/">
           <Home
@@ -510,80 +491,7 @@ const App = () => {
           <DebugPage />
         </Route>
       </Switch>
-
-      <ThemeSwitch />
-
-      {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
-      <div style={{ position: 'fixed', textAlign: 'right', right: 0, top: 0, padding: 10 }}>
-        <div style={{ display: 'flex', flex: 1, alignItems: 'center' }}>
-          {USE_NETWORK_SELECTOR && (
-            <div style={{ marginRight: 20 }}>
-              <NetworkSwitch
-                networkOptions={networkOptions}
-                selectedNetwork={selectedNetwork}
-                setSelectedNetwork={setSelectedNetwork}
-              />
-            </div>
-          )}
-          <Account
-            useBurner={USE_BURNER_WALLET}
-            address={address}
-            localProvider={localProvider}
-            userSigner={userSigner}
-            mainnetProvider={mainnetProvider}
-            price={price}
-            web3Modal={web3Modal}
-            loadWeb3Modal={loadWeb3Modal}
-            logoutOfWeb3Modal={logoutOfWeb3Modal}
-            blockExplorer={blockExplorer}
-          />
-        </div>
-        <DropdownMenu />
-        {yourLocalBalance.lte(ethers.BigNumber.from('0')) && (
-          <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />
-        )}
-      </div>
-
-      {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
-      <div style={{ position: 'fixed', textAlign: 'left', left: 0, bottom: 20, padding: 10 }}>
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={8}>
-            <Ramp price={price} address={address} networks={NETWORKS} />
-          </Col>
-
-          <Col span={8} style={{ textAlign: 'center', opacity: 0.8 }}>
-            <GasGauge gasPrice={gasPrice} />
-          </Col>
-          <Col span={8} style={{ textAlign: 'center', opacity: 1 }}>
-            <Button
-              onClick={() => {
-                window.open('https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA')
-              }}
-              size="large"
-              shape="round"
-            >
-              <span style={{ marginRight: 8 }} role="img" aria-label="support">
-                💬
-              </span>
-              Support
-            </Button>
-          </Col>
-        </Row>
-
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={24}>
-            {
-              /*  if the local provider has a signer, let's show the faucet:  */
-              faucetAvailable ? (
-                <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider} />
-              ) : (
-                ''
-              )
-            }
-          </Col>
-        </Row>
-      </div>
-    </div>
+    </MainLayout>
   )
 }
 
