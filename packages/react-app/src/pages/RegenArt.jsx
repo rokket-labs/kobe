@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { TreejerGraph } from '../components/common/TreejerGraph'
+import { TreejerGraph } from '../components'
 
 const RegenArt = ({ address }) => {
   return (

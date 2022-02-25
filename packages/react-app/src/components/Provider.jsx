@@ -3,7 +3,7 @@ import { Badge, Button } from 'antd'
 import { useBlockNumber, usePoller } from 'eth-hooks'
 
 // import { WalletOutlined } from '@ant-design/icons';
-import Address from './common/Address'
+import Address from './Address'
 
 export default function Provider(props) {
   const [showMore, setShowMore] = useState(false)
@@ -21,11 +21,8 @@ export default function Provider(props) {
 
         setNetwork(newNetwork)
 
-        if (newNetwork.chainId > 0)
-          setStatus('success')
-         else
-          setStatus('warning')
-
+        if (newNetwork.chainId > 0) setStatus('success')
+        else setStatus('warning')
       } catch (e) {
         console.log(e)
         setStatus('processing')
@@ -62,7 +59,6 @@ export default function Provider(props) {
       </Button>
     )
 
-
   let showExtra = ''
 
   if (showMore)
@@ -79,7 +75,6 @@ export default function Provider(props) {
       </span>
     )
 
-
   let showWallet = ''
 
   if (typeof signer !== 'undefined' && address)
@@ -90,7 +85,6 @@ export default function Provider(props) {
         </span>
       </span>
     )
-
 
   return (
     <Button

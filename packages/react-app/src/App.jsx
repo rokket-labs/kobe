@@ -17,9 +17,15 @@ import { useEventListener } from 'eth-hooks/events/useEventListener'
 import externalContracts from './contracts/external_contracts'
 // contracts
 import deployedContracts from './contracts/hardhat_contracts.json'
+import DebugPage from './pages/DebugPage'
+import Home from './pages/Home'
+import Journey from './pages/Journey'
+import Pledge from './pages/Pledge'
+import Ranking from './pages/Ranking'
+import ReFi from './pages/ReFi'
+import RegenArt from './pages/RegenArt'
 import {
   Account,
-  BCTVendor,
   DropdownMenu,
   Faucet,
   FaucetHint,
@@ -34,7 +40,6 @@ import {
 import { ALCHEMY_KEY, HOOK_OPTIONS, NETWORKS } from './constants'
 import { Transactor, Web3ModalSetup } from './helpers'
 import { useStaticJsonRPC } from './hooks'
-import { Debug, Home, Journey, Pledge, Ranking, ReFi,RegenArt } from './pages'
 
 import 'antd/dist/antd.css'
 import './App.css'
@@ -78,7 +83,7 @@ const providers = [
   'https://rpc.scaffoldeth.io:48544',
 ]
 
-function App(props) {
+const App = () => {
   // specify all the chains your app is available on. Eg: ['localhost', 'mainnet', ...otherNetworks ]
   // reference './constants.js' for other networks
   const networkOptions = [initialNetwork.name, 'mainnet', 'rinkeby']
@@ -502,7 +507,7 @@ function App(props) {
           />
         </Route>
         <Route exact path="/debug">
-          <Debug />
+          <DebugPage />
         </Route>
       </Switch>
 

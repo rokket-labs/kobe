@@ -4,12 +4,12 @@ import { Button, Modal, Spin, Tooltip, Typography } from 'antd'
 import { ethers } from 'ethers'
 import QR from 'qrcode.react'
 
-import { Transactor } from '../../helpers'
-import EtherInput from '../EtherInput'
+import { Transactor } from '../helpers'
 
 import Address from './Address'
 import AddressInput from './AddressInput'
 import Balance from './Balance'
+import EtherInput from './EtherInput'
 
 const { Text, Paragraph } = Typography
 

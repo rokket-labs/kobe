@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { Contract } from '../components/Contract'
+import Contract from '../components/Contract'
 
-const Debug = ({ price, userSigner, localProvider, address, blockExplorer, contractConfig }) => {
+const DebugPage = ({ price, userSigner, localProvider, address, blockExplorer, contractConfig }) => {
   return (
     <>
       {/*
@@ -60,4 +60,4 @@ const Debug = ({ price, userSigner, localProvider, address, blockExplorer, contr
   )
 }
 
-export default Debug
+export default DebugPage

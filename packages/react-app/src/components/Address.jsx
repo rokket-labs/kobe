@@ -42,13 +42,9 @@ export default function Address(props) {
   const etherscanLink = blockExplorerLink(address, props.blockExplorer)
   let displayAddress = `${address?.substr(0, 5)}...${address?.substr(-4)}`
 
-  if (validEnsCheck)
-    displayAddress = ens
-   else if (props.size === 'short')
-    displayAddress += `...${address.substr(-4)}`
-   else if (props.size === 'long')
-    displayAddress = address
-
+  if (validEnsCheck) displayAddress = ens
+  else if (props.size === 'short') displayAddress += `...${address.substr(-4)}`
+  else if (props.size === 'long') displayAddress = address
 
   if (!address)
     return (
@@ -56,7 +52,6 @@ export default function Address(props) {
         <Skeleton avatar paragraph={{ rows: 1 }} />
       </span>
     )
-
 
   if (props.minimized)
     return (
@@ -71,7 +66,6 @@ export default function Address(props) {
         </a>
       </span>
     )
-
 
   return (
     <span>

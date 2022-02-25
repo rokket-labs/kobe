@@ -5,7 +5,7 @@ import { Badge, Input } from 'antd'
 import { useLookupAddress } from 'eth-hooks/dapps/ens'
 import { ethers } from 'ethers'
 
-import Blockie from '../Blockie'
+import Blockie from './Blockie'
 
 // probably we need to change value={toAddress} to address={toAddress}
 
@@ -53,17 +53,14 @@ export default function AddressInput(props) {
           try {
             const possibleAddress = await ensProvider.resolveName(address)
 
-            if (possibleAddress)
-              address = possibleAddress
+            if (possibleAddress) address = possibleAddress
 
             // eslint-disable-next-line no-empty
           } catch (e) {}
 
         setValue(address)
 
-        if (typeof onChange === 'function')
-          onChange(address)
-
+        if (typeof onChange === 'function') onChange(address)
       }
     },
     [ensProvider, onChange],

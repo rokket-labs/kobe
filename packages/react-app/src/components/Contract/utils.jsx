@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Address from '../common/Address'
+import Address from '../Address'
 
 const { utils } = require('ethers')
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { useThemeSwitcher } from 'react-css-theme-switcher'
 import { Button } from 'antd'
 
-import { Address,Balance, Wallet } from 'components/common'
+import { Address, Balance, Wallet } from '../components'
 /*
   ~ What it does? ~
 

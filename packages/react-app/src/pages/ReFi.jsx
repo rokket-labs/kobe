@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { BCTVendor } from '../components/ReFi'
+import { BCTVendor } from '../components'
 
 const ReFi = ({ address, readContracts, writeContracts, polyContracts, tx, price }) => {
   return (

@@ -2,8 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Card, Space } from 'antd'
 
-import { CarbonFYI, GreenTokenTable, PositionChart } from '../components'
-import { TreejerGraph } from '../components/common/TreejerGraph'
+import { CarbonFYI, GreenTokenTable, PositionChart, TreejerGraph } from '../components'
 
 const Home = ({
   myPolyBCTBalance,

@@ -1,11 +1,11 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Blockies from 'react-blockies'
 import { SendOutlined } from '@ant-design/icons'
 import { Button, Input, Tooltip } from 'antd'
 
 import { Transactor } from '../helpers'
 
-import Wallet from './common/Wallet'
+import Wallet from './Wallet'
 
 const { utils } = require('ethers')
 
@@ -59,14 +59,10 @@ export default function Faucet(props) {
 
   if (address && typeof address.toLowerCase === 'function')
     blockie = <Blockies seed={address.toLowerCase()} size={8} scale={4} />
-   else
-    blockie = <div />
-
+  else blockie = <div />
 
   const updateAddress = newValue => {
-    if (typeof newValue !== 'undefined' && utils.isAddress(newValue))
-      setAddress(newValue)
-
+    if (typeof newValue !== 'undefined' && utils.isAddress(newValue)) setAddress(newValue)
   }
 
   const tx = Transactor(localProvider)
