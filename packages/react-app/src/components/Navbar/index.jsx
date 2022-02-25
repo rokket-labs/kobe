@@ -17,19 +17,7 @@ const Logo = styled.div`
   background: url(${({ url }) => url});
 `
 
-const Index = ({
-  navbarRef,
-  NETWORKCHECK,
-  localChainId,
-  selectedChainId,
-  targetNetwork,
-  setSelectedNetwork,
-  USE_NETWORK_SELECTOR,
-  address,
-  localProvider,
-  price,
-  loadWeb3Modal,
-}) => {
+const Index = ({ navbarRef, NETWORKCHECK, price }) => {
   const router = useHistory()
   const [path, setPath] = useState(router.pathname)
   /*  const { isPledged } = useContext(IsPledgedContext) */
@@ -64,20 +52,13 @@ const Index = ({
       <Col className="menu-data">
         <Row gutter={10} justify="center">
           <Col>
-            <NetworkSelect
-              NETWORKCHECK={NETWORKCHECK}
-              localChainId={localChainId}
-              selectedChainId={selectedChainId}
-              targetNetwork={targetNetwork}
-              setSelectedNetwork={setSelectedNetwork}
-              USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-            />
+            <NetworkSelect NETWORKCHECK={NETWORKCHECK} />
           </Col>
           <Col>
-            <Balance provider={localProvider} address={address} price={price} />
+            <Balance price={price} />
           </Col>
           <Col>
-            <Wallet address={address} isPlant={isPledged} loadWeb3Modal={loadWeb3Modal} />
+            <Wallet isPlant={isPledged} />
           </Col>
         </Row>
       </Col>

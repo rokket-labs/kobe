@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { ThemeProvider } from 'styled-components'
 
+import { NetworkContextProvider } from './contexts/NetworkContext'
 import theme from './themes/theme'
 import App from './App'
 
@@ -18,7 +19,9 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <App subgraphUri={subgraphUri} />
+        <NetworkContextProvider>
+          <App subgraphUri={subgraphUri} />
+        </NetworkContextProvider>
       </BrowserRouter>
     </ThemeProvider>
   </ApolloProvider>,

@@ -1,15 +1,18 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useBalance } from 'eth-hooks'
 
 import { HOOK_OPTIONS } from '../../constants'
+import { NetworkContext } from '../../contexts/NetworkContext'
 
 import InfoText from './InfoText'
 
 const { utils } = require('ethers')
 
-const Balance = ({ provider, address, price }) => {
+const Balance = ({ price }) => {
   const [dollarMode, setDollarMode] = useState(true)
-  const balance = useBalance(provider, address, HOOK_OPTIONS)
+  const { address, localProvider } = useContext(NetworkContext)
+
+  const balance = useBalance(localProvider, address, HOOK_OPTIONS)
   const usingBalance = typeof balance !== 'undefined' ? balance.toString() : balance
 
   const floatBalance = usingBalance ? parseFloat(utils.formatEther(usingBalance)) : parseFloat('0.00')

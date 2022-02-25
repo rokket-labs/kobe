@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Alert, Select } from 'antd'
 import styled from 'styled-components'
 
 import { NETWORKS } from '../../constants'
+import { NetworkContext } from '../../contexts/NetworkContext'
 import { checkNetwork } from '../../helpers/checkNetwork'
 
 const { Option } = Select
@@ -14,7 +15,8 @@ const StyledSelect = styled(Select)`
   margin-top: 0.188rem;
   text-transform: capitalize;
 `
-const NetworkSelect = ({ NETWORKCHECK, localChainId, selectedChainId, targetNetwork, setSelectedNetwork }) => {
+const NetworkSelect = ({ NETWORKCHECK }) => {
+  const { localChainId, selectedChainId, setSelectedNetwork, targetNetwork } = useContext(NetworkContext)
   const networkError = checkNetwork(localChainId, selectedChainId, targetNetwork)
 
   return (

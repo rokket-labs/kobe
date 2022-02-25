@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button } from 'antd'
+
+import { NetworkContext } from '../../contexts/NetworkContext'
 
 import InfoText from './InfoText'
 
-const Wallet = ({ address, isPledged, loadWeb3Modal }) => {
+const Wallet = ({ isPledged }) => {
+  const { address, loadWeb3Modal } = useContext(NetworkContext)
+
   return (
     <>
       {!address ? (

@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import { BCTVendor } from '../components'
+import { NetworkContext } from '../contexts/NetworkContext'
 
-const ReFi = ({ address, readContracts, writeContracts, polyContracts, tx, price }) => {
+const ReFi = ({ readContracts, writeContracts, polyContracts, tx, price }) => {
+  const { address } = useContext(NetworkContext)
+
   return (
     <>
       <div style={{ width: 500, margin: 'auto' }}>

@@ -25,26 +25,7 @@ const StyledContent = styled(Content)`
   background-color: #ffffff;
 `
 
-const GeneralLayout = ({
-  children,
-  NETWORKCHECK,
-  localChainId,
-  selectedChainId,
-  targetNetwork,
-  setSelectedNetwork,
-  logoutOfWeb3Modal,
-  USE_NETWORK_SELECTOR,
-  USE_BURNER_WALLET,
-  address,
-  localProvider,
-  userSigner,
-  mainnetProvider,
-  price,
-  web3Modal,
-  loadWeb3Modal,
-  blockExplorer,
-  yourLocalBalance,
-}) => {
+const GeneralLayout = ({ children, NETWORKCHECK, price }) => {
   const navbarRef = useRef(null)
   const [height, setHeight] = useState(100)
 
@@ -63,26 +44,7 @@ const GeneralLayout = ({
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <StyledHeader>
-        <Navbar
-          navbarRef={navbarRef}
-          NETWORKCHECK={NETWORKCHECK}
-          localChainId={localChainId}
-          selectedChainId={selectedChainId}
-          targetNetwork={targetNetwork}
-          setSelectedNetwork={setSelectedNetwork}
-          logoutOfWeb3Modal={logoutOfWeb3Modal}
-          USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-          useBurner={USE_BURNER_WALLET}
-          address={address}
-          localProvider={localProvider}
-          userSigner={userSigner}
-          mainnetProvider={mainnetProvider}
-          price={price}
-          web3Modal={web3Modal}
-          loadWeb3Modal={loadWeb3Modal}
-          blockExplorer={blockExplorer}
-          yourLocalBalance={yourLocalBalance}
-        />
+        <Navbar navbarRef={navbarRef} NETWORKCHECK={NETWORKCHECK} price={price} />
       </StyledHeader>
       <StyledContent nav={height}>{children}</StyledContent>
       <Footer style={{ textAlign: 'center' }}>© Rokketlabs - 2022</Footer>

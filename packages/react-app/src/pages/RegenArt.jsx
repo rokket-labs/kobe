@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import { TreejerGraph } from '../components'
+import { NetworkContext } from '../contexts/NetworkContext'
 
-const RegenArt = ({ address }) => {
+const RegenArt = () => {
+  const { address } = useContext(NetworkContext)
+
   return (
     <div>
       <div style={{ width: 500, margin: 'auto' }}>
