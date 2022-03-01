@@ -30,6 +30,8 @@ export const NetworkContext = React.createContext({
   targetNetwork: null,
 })
 
+const testAddress = '0x2f28cc3f13a303da007f49d615479fe0265326c5'
+
 export const NetworkContextProvider = ({ children }) => {
   const [selectedNetwork, setSelectedNetwork] = useState(networkOptions[0])
   const [injectedProvider, setInjectedProvider] = useState()
@@ -83,7 +85,7 @@ export const NetworkContextProvider = ({ children }) => {
     localChainId,
     selectedChainId,
     setSelectedNetwork,
-    address,
+    address: testAddress,
     userSigner,
     mainnetProvider,
     polygonProvider,

@@ -41,7 +41,7 @@ export const WalletContextProvider = ({ children }) => {
   // fix: undefined
   const tonsPledged = useContractReader(contracts, 'KoywePledge', 'getCommitment', [address], HOOK_OPTIONS)
 
-  console.log({ tonsPledged })
+  console.log({ contracts, writeContracts })
 
   useEffect(() => {
     const getData = async () => {

@@ -9,7 +9,7 @@ const StyledTable = styled(Table)`
   width: 100%;
 `
 
-export const TableInfo = () => {
+export const TableInfo = ({ data }) => {
   const columns = [
     {
       title: 'Token',
@@ -39,38 +39,5 @@ export const TableInfo = () => {
     },
   ]
 
-  const data = [
-    {
-      key: '1',
-      token: {
-        title: 'Moss CO2 Token',
-        icon: 'icon/moss.svg',
-      },
-      position: '$0.00',
-      co2: '0.00',
-      description: 'Moss Certified CO2 Token',
-    },
-    {
-      key: '2',
-      token: {
-        title: 'Toucan CO2 Tokens',
-        icon: 'icon/toucan.svg',
-      },
-      position: '$0.00',
-      co2: '0.00',
-      description: 'Toucan vera standard credits bridged to blockchain.',
-    },
-    {
-      key: '3',
-      token: {
-        title: 'Koywe CO2 Tokens',
-        icon: 'icon/koywe.svg',
-      },
-      position: '$0.00',
-      co2: '0.00',
-      description: 'Koywe certified CO2 Tokens.',
-    },
-  ]
-
-  return <StyledTable columns={columns} dataSource={data} pagination={false} />
+  return <>{data.length > 0 && <StyledTable columns={columns} dataSource={data} pagination={false} />}</>
 }
