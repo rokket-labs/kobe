@@ -6,12 +6,12 @@ import { NetworkContext } from '../../contexts/NetworkContext'
 import InfoText from './InfoText'
 
 const Wallet = ({ isPledged }) => {
-  const { address, loadWeb3Modal } = useContext(NetworkContext)
+  const { address, connectToWallet } = useContext(NetworkContext)
 
   return (
     <>
       {!address ? (
-        <Button style={{ marginTop: '4px' }} onClick={() => loadWeb3Modal()}>
+        <Button style={{ marginTop: '4px' }} onClick={() => connectToWallet()}>
           Connect
         </Button>
       ) : (

@@ -2,12 +2,10 @@ import { AnimateSharedLayout } from 'framer-motion'
 
 import GeneralLayout from './GeneralLayout'
 
-export const MainLayout = ({ children, NETWORKCHECK, price }) => {
+export const MainLayout = ({ children, NETWORKCHECK }) => {
   return (
     <AnimateSharedLayout>
-      <GeneralLayout NETWORKCHECK={NETWORKCHECK} price={price}>
-        {children}
-      </GeneralLayout>
+      <GeneralLayout NETWORKCHECK={NETWORKCHECK}>{children}</GeneralLayout>
     </AnimateSharedLayout>
   )
 }

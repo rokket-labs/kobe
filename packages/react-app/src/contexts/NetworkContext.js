@@ -14,15 +14,18 @@ const providers = [
   `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`,
   'https://rpc.scaffoldeth.io:48544',
 ]
+const polygonNetwork = NETWORKS.polygon
+const polygonProviderUrl = polygonNetwork.rpcUrl
 
 export const NetworkContext = React.createContext({
-  loadWeb3Modal: () => {},
+  connectToWallet: () => {},
   localChainId: null,
   selectedChainId: null,
   setSelectedNetwork: () => {},
   address: null,
   userSigner: null,
   mainnetProvider: null,
+  polygonProvider: null,
   web3Modal: null,
   targetNetwork: null,
 })
@@ -34,18 +37,16 @@ export const NetworkContextProvider = ({ children }) => {
   const web3Modal = Web3ModalSetup()
 
   const targetNetwork = NETWORKS[selectedNetwork]
-  const localProvider = useStaticJsonRPC([
-    process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : targetNetwork.rpcUrl,
-  ])
-  const mainnetProvider = useStaticJsonRPC(providers)
-  const userProviderAndSigner = useUserProviderAndSigner(injectedProvider, localProvider, USE_BURNER_WALLET)
+  const localProvider = useStaticJsonRPC([targetNetwork.rpcUrl])
 
-  const userSigner = userProviderAndSigner.signer
+  const mainnetProvider = useStaticJsonRPC(providers)
+  const polygonProvider = new ethers.providers.StaticJsonRpcProvider(polygonProviderUrl)
+  const userSigner = useUserProviderAndSigner(injectedProvider, localProvider, USE_BURNER_WALLET).signer
 
   const localChainId = localProvider?._network?.chainId
   const selectedChainId = userSigner?.provider?._network?.chainId
 
-  const loadWeb3Modal = useCallback(async () => {
+  const connectToWallet = useCallback(async () => {
     const provider = await web3Modal.connect()
 
     setInjectedProvider(new ethers.providers.Web3Provider(provider))
@@ -59,12 +60,10 @@ export const NetworkContextProvider = ({ children }) => {
       console.log(`account changed!`)
       setInjectedProvider(new ethers.providers.Web3Provider(provider))
     })
-
-    // eslint-disable-next-line
-  }, [setInjectedProvider])
+  }, [web3Modal])
 
   useEffect(() => {
-    async function getAddress() {
+    const getAddress = async () => {
       if (userSigner) {
         const newAddress = await userSigner.getAddress()
 
@@ -76,18 +75,18 @@ export const NetworkContextProvider = ({ children }) => {
   }, [userSigner])
 
   useEffect(() => {
-    if (web3Modal.cachedProvider && !injectedProvider) loadWeb3Modal()
-  }, [injectedProvider, loadWeb3Modal, web3Modal])
+    if (web3Modal.cachedProvider && !injectedProvider) connectToWallet()
+  }, [injectedProvider, connectToWallet, web3Modal])
 
   const value = {
-    loadWeb3Modal,
+    connectToWallet,
     localChainId,
     selectedChainId,
     setSelectedNetwork,
     address,
     userSigner,
     mainnetProvider,
-    web3Modal,
+    polygonProvider,
     targetNetwork,
   }
 

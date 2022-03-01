@@ -1,10 +1,14 @@
 import React, { useContext } from 'react'
+import { useExchangeEthPrice } from 'eth-hooks/dapps/dex'
 
 import { BCTVendor } from '../components'
 import { NetworkContext } from '../contexts/NetworkContext'
+import { WalletContext } from '../contexts/WalletContext'
 
-const ReFi = ({ readContracts, writeContracts, polyContracts, tx, price }) => {
-  const { address } = useContext(NetworkContext)
+const ReFi = ({ writeContracts, tx }) => {
+  const { address, targetNetwork, mainnetProvider } = useContext(NetworkContext)
+  const { contracts, polygonContracts } = useContext(WalletContext)
+  const price = useExchangeEthPrice(targetNetwork, mainnetProvider)
 
   return (
     <>
@@ -37,9 +41,9 @@ const ReFi = ({ readContracts, writeContracts, polyContracts, tx, price }) => {
       {address ? (
         <BCTVendor
           address={address}
-          readContracts={readContracts}
+          readContracts={contracts}
           writeContracts={writeContracts}
-          polyContracts={polyContracts}
+          polyContracts={polygonContracts}
           tx={tx}
           price={price}
         />

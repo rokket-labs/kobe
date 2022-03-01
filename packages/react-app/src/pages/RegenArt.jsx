@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 
-import { TreejerGraph } from '../components'
 import { NetworkContext } from '../contexts/NetworkContext'
 
 const RegenArt = () => {
@@ -23,7 +22,7 @@ const RegenArt = () => {
         </p>
       </div>
       <h2 style={{ padding: 8, marginTop: 32 }}>Treejer Trees</h2>
-      {address && <TreejerGraph address={address} />}
+      {/*  {address && <TreejerGraph address={address} />} */}
     </div>
   )
 }

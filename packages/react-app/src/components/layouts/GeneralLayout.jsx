@@ -25,7 +25,7 @@ const StyledContent = styled(Content)`
   background-color: #ffffff;
 `
 
-const GeneralLayout = ({ children, NETWORKCHECK, price }) => {
+const GeneralLayout = ({ children, NETWORKCHECK }) => {
   const navbarRef = useRef(null)
   const [height, setHeight] = useState(100)
 
@@ -44,7 +44,7 @@ const GeneralLayout = ({ children, NETWORKCHECK, price }) => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <StyledHeader>
-        <Navbar navbarRef={navbarRef} NETWORKCHECK={NETWORKCHECK} price={price} />
+        <Navbar navbarRef={navbarRef} NETWORKCHECK={NETWORKCHECK} />
       </StyledHeader>
       <StyledContent nav={height}>{children}</StyledContent>
       <Footer style={{ textAlign: 'center' }}>© Rokketlabs - 2022</Footer>

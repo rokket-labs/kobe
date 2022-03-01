@@ -1,0 +1,7 @@
+.ant-progress-inner {
+  background-color: transparent;
+}
+
+.ant-progress-bg {
+  height: 1rem !important;
+}

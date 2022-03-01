@@ -17,7 +17,7 @@ const Logo = styled.div`
   background: url(${({ url }) => url});
 `
 
-const Index = ({ navbarRef, NETWORKCHECK, price }) => {
+const Index = ({ navbarRef, NETWORKCHECK }) => {
   const router = useHistory()
   const [path, setPath] = useState(router.pathname)
   /*  const { isPledged } = useContext(IsPledgedContext) */
@@ -55,7 +55,7 @@ const Index = ({ navbarRef, NETWORKCHECK, price }) => {
             <NetworkSelect NETWORKCHECK={NETWORKCHECK} />
           </Col>
           <Col>
-            <Balance price={price} />
+            <Balance />
           </Col>
           <Col>
             <Wallet isPlant={isPledged} />

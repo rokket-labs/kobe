@@ -1,0 +1,23 @@
+.ant-table-thead > tr > th {
+  background: #f0fff4 !important;
+  font-weight: 600 !important;
+  color: #333333;
+  line-height: 1.25rem;
+}
+
+.ant-table-thead
+  > tr
+  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+  display: none;
+}
+
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td,
+.ant-table tfoot > tr > th,
+.ant-table tfoot > tr > td {
+  line-height: 1.25rem;
+}
+
+.ant-table-tbody > tr > td {
+  padding: 8px 16px;
+}
