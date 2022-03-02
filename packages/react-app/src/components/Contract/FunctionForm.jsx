@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
 import React, { useState } from 'react'
 import Blockies from 'react-blockies'
 import { Button, Col, Divider, Input, Row, Tooltip } from 'antd'
@@ -50,7 +52,7 @@ export default function FunctionForm({ contractFunction, functionInfo, provider,
           </div>
         </Tooltip>
       )
-     else if (input.type === 'bytes')
+    else if (input.type === 'bytes')
       buttons = (
         <Tooltip placement="right" title="to hex">
           <div
@@ -74,7 +76,7 @@ export default function FunctionForm({ contractFunction, functionInfo, provider,
           </div>
         </Tooltip>
       )
-     else if (input.type === 'uint256')
+    else if (input.type === 'uint256')
       buttons = (
         <Tooltip placement="right" title="* 10 ** 18">
           <div
@@ -91,7 +93,7 @@ export default function FunctionForm({ contractFunction, functionInfo, provider,
           </div>
         </Tooltip>
       )
-     else if (input.type === 'address') {
+    else if (input.type === 'address') {
       const possibleAddress = form[key] && form[key].toLowerCase && form[key].toLowerCase().trim()
 
       if (possibleAddress && possibleAddress.length === 42)
@@ -100,7 +102,6 @@ export default function FunctionForm({ contractFunction, functionInfo, provider,
             <Blockies seed={possibleAddress} scale={3} />
           </Tooltip>
         )
-
     }
 
     return (
@@ -167,14 +168,10 @@ export default function FunctionForm({ contractFunction, functionInfo, provider,
     </div>
   )
 
-  if (functionInfo.payable)
-    inputs.push(txValueInput)
-
+  if (functionInfo.payable) inputs.push(txValueInput)
 
   const handleForm = returned => {
-    if (returned)
-      setForm({})
-
+    if (returned) setForm({})
   }
 
   const buttonIcon =
@@ -201,14 +198,11 @@ export default function FunctionForm({ contractFunction, functionInfo, provider,
                 const key = getFunctionInputKey(functionInfo, input, inputIndex)
                 let value = form[key]
 
-                if (input.baseType === 'array')
-                  value = JSON.parse(value)
-                 else if (input.type === 'bool')
+                if (input.baseType === 'array') value = JSON.parse(value)
+                else if (input.type === 'bool')
                   if (value === 'true' || value === '1' || value === '0x1' || value === '0x01' || value === '0x0001')
                     value = 1
-                   else
-                    value = 0
-
+                  else value = 0
 
                 return value
               })
@@ -224,14 +218,12 @@ export default function FunctionForm({ contractFunction, functionInfo, provider,
                 } catch (err) {
                   console.error(err)
                 }
-               else {
+              else {
                 const overrides = {}
 
-                if (txValue)
-                  overrides.value = txValue // ethers.utils.parseEther()
+                if (txValue) overrides.value = txValue // ethers.utils.parseEther()
 
-                if (gasPrice)
-                  overrides.gasPrice = gasPrice
+                if (gasPrice) overrides.gasPrice = gasPrice
 
                 // Uncomment this if you want to skip the gas estimation for each transaction
                 // overrides.gasLimit = hexlify(1200000);

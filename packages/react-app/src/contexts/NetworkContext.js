@@ -19,15 +19,15 @@ const polygonProviderUrl = polygonNetwork.rpcUrl
 
 export const NetworkContext = React.createContext({
   connectToWallet: () => {},
-  localChainId: null,
-  selectedChainId: null,
+  localChainId: undefined,
+  selectedChainId: undefined,
   setSelectedNetwork: () => {},
-  address: null,
-  userSigner: null,
-  mainnetProvider: null,
-  polygonProvider: null,
-  web3Modal: null,
-  targetNetwork: null,
+  address: undefined,
+  userSigner: undefined,
+  mainnetProvider: undefined,
+  polygonProvider: undefined,
+  web3Modal: undefined,
+  targetNetwork: undefined,
 })
 
 const testAddress = '0x2f28cc3f13a303da007f49d615479fe0265326c5'
@@ -35,6 +35,7 @@ const testAddress = '0x2f28cc3f13a303da007f49d615479fe0265326c5'
 export const NetworkContextProvider = ({ children }) => {
   const [selectedNetwork, setSelectedNetwork] = useState(networkOptions[0])
   const [injectedProvider, setInjectedProvider] = useState()
+  const [isLoadingAccount, setIsLoadingAccount] = useState(true)
   const [address, setAddress] = useState()
   const web3Modal = Web3ModalSetup()
 
@@ -49,6 +50,8 @@ export const NetworkContextProvider = ({ children }) => {
   const selectedChainId = userSigner?.provider?._network?.chainId
 
   const connectToWallet = useCallback(async () => {
+    setIsLoadingAccount(true)
+
     const provider = await web3Modal.connect()
 
     setInjectedProvider(new ethers.providers.Web3Provider(provider))
@@ -62,6 +65,7 @@ export const NetworkContextProvider = ({ children }) => {
       console.log(`account changed!`)
       setInjectedProvider(new ethers.providers.Web3Provider(provider))
     })
+    setIsLoadingAccount(false)
   }, [web3Modal])
 
   useEffect(() => {
@@ -78,6 +82,7 @@ export const NetworkContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (web3Modal.cachedProvider && !injectedProvider) connectToWallet()
+    else setIsLoadingAccount(false)
   }, [injectedProvider, connectToWallet, web3Modal])
 
   const value = {
@@ -85,11 +90,12 @@ export const NetworkContextProvider = ({ children }) => {
     localChainId,
     selectedChainId,
     setSelectedNetwork,
-    address: testAddress,
+    address: address ? address.toString() : undefined,
     userSigner,
     mainnetProvider,
     polygonProvider,
     targetNetwork,
+    isLoadingAccount,
   }
 
   return <NetworkContext.Provider value={value}>{children}</NetworkContext.Provider>

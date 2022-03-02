@@ -25,7 +25,7 @@ const App = () => {
           <Route exact path="/ranking">
             <Ranking />
           </Route>
-          <Route exact path="/rart">
+          <Route exact path="/regen-art">
             <RegenArt />
           </Route>
           <Route exact path="/pledge">

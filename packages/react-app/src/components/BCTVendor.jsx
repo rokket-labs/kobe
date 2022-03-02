@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { useEffect, useState } from 'react'
 import { Button, Card, Input, Space } from 'antd'
 import { useContractReader } from 'eth-hooks'
@@ -46,7 +47,7 @@ export default function BCTVendor({ address, readContracts, writeContracts, pric
     const tokenSellAmountBN = tokenSellAmount && ethers.utils.parseEther(`${tokenSellAmount}`)
 
     setIsSellAmountApproved(vendorApproval && tokenSellAmount && vendorApproval.gte(tokenSellAmountBN))
-  }, [tokenSellAmount, readContracts])
+  }, [tokenSellAmount, readContracts, vendorApproval])
 
   const [buying, setBuying] = useState()
   const [selling, setSelling] = useState()

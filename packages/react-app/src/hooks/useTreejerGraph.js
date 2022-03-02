@@ -43,15 +43,16 @@ export const useTreejerGraph = address => {
                   /* setTreejerCollection(treejerCollection => [...treejerCollection, json]) */
                   treejerCollection.push(json)
               } catch (e) {
+                console.log('adasdasdsadadsasdsasadasdadasd')
                 console.log(`Error loading Treejer json. ${e}`)
               }
             })
             setCollection(treejerCollection)
-            setIsLoading(false)
           })
           .catch(err => {
             console.log('Error fetching data: ', err)
           })
+        setIsLoading(false)
       }
     }
 

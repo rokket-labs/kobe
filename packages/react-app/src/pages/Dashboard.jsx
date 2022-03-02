@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+/* eslint-disable max-lines-per-function */
+import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Col, Image, Row, Typography } from 'antd'
 import { useContractReader } from 'eth-hooks'
@@ -16,30 +17,55 @@ import { getFightData, getPlightData } from '../helpers/dashboardData'
 import { getArtData } from '../helpers/getArtData'
 import { useTreejerGraph } from '../hooks/useTreejerGraph'
 
+const { utils } = require('ethers')
 const { Text } = Typography
 
 const Dashboard = () => {
   const router = useHistory()
-  const { address } = useContext(NetworkContext)
-  const { USDPrices, walletBalance, tonsPledged, contracts } = useContext(WalletContext)
+  const { address, isLoadingAccount } = useContext(NetworkContext)
+  const { USDPrices, walletBalance, tonsPledged, contracts, pledged, yourKTBalance } = useContext(WalletContext)
   const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance } = walletBalance
+  const [fightData, setFightData] = useState([])
+  const [plightData, setPlightData] = useState([])
+  const [yourPlight, setYourPlight] = useState()
+  const [yourFight, setYourFight] = useState()
 
   const CO2TokenBalance = useContractReader(contracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
-  const { /* collection: artGallery, */ isLoading } = useTreejerGraph()
+  const { collection: artGallery, isLoading } = useTreejerGraph(address)
+  /* const data = getArtData() */
 
-  const testArtGallery = getArtData()
+  useEffect(() => {
+    if (!isLoadingAccount) {
+      const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, yourKTBalance, USDPrices, pledged)
 
-  const yourFight = (
-    (polygonBCTBalance && polygonBCTBalance > 0 ? polygonBCTBalance : 0) / Math.pow(10, 18) +
-    (polygonNCTBalance && polygonNCTBalance > 0 ? polygonNCTBalance : 0) / Math.pow(10, 18) +
-    (polygonMCO2Balance && polygonMCO2Balance > 0 ? polygonMCO2Balance : 0) / Math.pow(10, 18)
-  ).toFixed(2)
-  const yourPlight = (CO2TokenBalance / Math.pow(10, 18) + tonsPledged * 70).toFixed(2)
-  const isPledged = false
+      setFightData(fightData)
+      setYourFight(
+        pledged
+          ? (
+              Number(utils.formatUnits(polygonBCTBalance, 18)) +
+              Number(utils.formatUnits(polygonNCTBalance, 18)) +
+              Number(utils.formatUnits(polygonMCO2Balance, 18))
+            ).toFixed(2)
+          : 0,
+      )
+    }
+  }, [isLoadingAccount])
 
-  const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, USDPrices)
+  useEffect(() => {
+    if (!isLoadingAccount) {
+      const plightData = getPlightData(address, polygonMCO2Balance, tonsPledged, pledged)
 
-  const plightData = getPlightData(address, polygonMCO2Balance, tonsPledged)
+      setPlightData(plightData)
+      setYourPlight(
+        pledged
+          ? (
+              (Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 18))) *
+              70
+            ).toFixed(2)
+          : 0,
+      )
+    }
+  }, [isLoadingAccount])
 
   return (
     <Row justify="center" className="my-sm">
@@ -53,7 +79,7 @@ const Dashboard = () => {
           </Col>
         </Row>
         <Row justify="end" className="my-md">
-          {isPledged ? (
+          {pledged ? (
             <Col>
               <StyledButton $type="primary">Mint living position NFT for 0.08 ETH</StyledButton>
             </Col>
@@ -95,8 +121,8 @@ const Dashboard = () => {
             />
           </Col>
         </Row>
-        <MyRegenArt artGallery={testArtGallery} />
-        <MyRegenPositions />
+        {!isLoadingAccount && address && <MyRegenArt artGallery={artGallery} isLoading={isLoading} />}
+        {!isLoadingAccount && address && <MyRegenPositions />}
       </Col>
     </Row>
   )

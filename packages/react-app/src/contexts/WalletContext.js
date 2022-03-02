@@ -21,6 +21,7 @@ export const WalletContext = React.createContext({
 
 export const WalletContextProvider = ({ children }) => {
   const { address, localChainId, userSigner, targetNetwork, polygonProvider } = useContext(NetworkContext)
+
   const [USDPrices, setUSDPrices] = useState(null) // prices of main tokens of the app
 
   const localProvider = useStaticJsonRPC([targetNetwork.rpcUrl])
@@ -38,10 +39,17 @@ export const WalletContextProvider = ({ children }) => {
 
   const polygonNCTBalance = useContractReader(polygonContracts, 'NCT', 'balanceOf', [address], HOOK_OPTIONS)
 
-  // fix: undefined
+  const polygonKlimaBalance = useContractReader(polygonContracts, 'KLIMA', 'balanceOf', [address], HOOK_OPTIONS)
+
+  const polygonSKlimaBalance = useContractReader(polygonContracts, 'sKLIMA', 'balanceOf', [address], HOOK_OPTIONS)
+
+  const polygonWethBalance = useContractReader(polygonContracts, 'WETH', 'balanceOf', [address], HOOK_OPTIONS)
+
+  const pledged = useContractReader(contracts, 'KoywePledge', 'isPledged', [address], HOOK_OPTIONS)
   const tonsPledged = useContractReader(contracts, 'KoywePledge', 'getCommitment', [address], HOOK_OPTIONS)
 
-  console.log({ contracts, writeContracts })
+  const koyweTreeBalance = useContractReader(contracts, 'KoyweCollectibles', 'balanceOf', [address])
+  const yourKTBalance = koyweTreeBalance && koyweTreeBalance.toNumber && koyweTreeBalance.toNumber()
 
   useEffect(() => {
     const getData = async () => {
@@ -62,11 +70,16 @@ export const WalletContextProvider = ({ children }) => {
       polygonMCO2Balance,
       polygonBCTBalance,
       polygonNCTBalance,
+      polygonKlimaBalance,
+      polygonSKlimaBalance,
+      polygonWethBalance,
     },
+    yourKTBalance,
     tonsPledged,
     contracts,
     polygonContracts,
     writeContracts,
+    pledged,
   }
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>

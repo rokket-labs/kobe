@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Input, Space } from 'antd'
 import { useBalance, useContractReader } from 'eth-hooks'

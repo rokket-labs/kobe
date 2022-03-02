@@ -3,8 +3,9 @@ import { useHistory } from 'react-router-dom'
 import { Col, Menu, Row } from 'antd'
 import styled from 'styled-components'
 
+import { WalletContext } from '../../contexts/WalletContext'
+
 import Balance from './Balance'
-/* import { IsPledgedContext } from '../../context/IsPledgedContext' */
 import KoyweSubMenu from './KoyweSubMenu'
 import NetworkSelect from './NetworkSelect'
 import Wallet from './Wallet'
@@ -20,8 +21,7 @@ const Logo = styled.div`
 const Index = ({ navbarRef, NETWORKCHECK }) => {
   const router = useHistory()
   const [path, setPath] = useState(router.pathname)
-  /*  const { isPledged } = useContext(IsPledgedContext) */
-  const isPledged = true
+  const { pledged } = useContext(WalletContext)
 
   useEffect(() => {
     setPath(router.pathname)
@@ -44,7 +44,7 @@ const Index = ({ navbarRef, NETWORKCHECK }) => {
           <Menu.Item className="menu-item" key="/regen-art" onClick={() => handleMenu('/regen-art')}>
             Regen art
           </Menu.Item>
-          <Menu.Item className="menu-item" key="/defi" onClick={() => handleMenu('/defi')}>
+          <Menu.Item className="menu-item" key="/defi" onClick={() => handleMenu('/refi')}>
             Regen defi
           </Menu.Item>
         </Menu>
@@ -58,7 +58,7 @@ const Index = ({ navbarRef, NETWORKCHECK }) => {
             <Balance />
           </Col>
           <Col>
-            <Wallet isPlant={isPledged} />
+            <Wallet isPlant={pledged} />
           </Col>
         </Row>
       </Col>
