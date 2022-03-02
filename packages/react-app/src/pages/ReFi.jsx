@@ -1,49 +1,43 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { Row, Spin, Typography } from 'antd'
+import { useContractReader, useGasPrice } from 'eth-hooks'
+import { useExchangeEthPrice } from 'eth-hooks/dapps/dex'
 
 import { BCTVendor } from '../components'
+import { TableToken } from '../components/RegenDefi/TableToken'
+import { HOOK_OPTIONS } from '../constants'
+import { NetworkContext } from '../contexts/NetworkContext'
+import { WalletContext } from '../contexts/WalletContext'
+import { Transactor } from '../helpers'
 
-const ReFi = ({ address, readContracts, writeContracts, polyContracts, tx, price }) => {
+const { utils } = require('ethers')
+const { Title } = Typography
+
+const ReFi = () => {
+  const { targetNetwork, mainnetProvider, address, userSigner, isLoadingAccount } = useContext(NetworkContext)
+  const { contracts, USDPrices, writeContracts, polygonContracts } = useContext(WalletContext)
+  /*  const contractTotalLiquidity = useContractReader(contracts, 'Dex', 'totalLiquidity', []) */
+
+  /* const price = useExchangeEthPrice(targetNetwork, mainnetProvider)
+   */
+  /*  const gasPrice = useGasPrice(targetNetwork, 'fast')
+  const tx = Transactor(userSigner, gasPrice) */
+
   return (
-    <>
-      <div style={{ width: 500, margin: 'auto' }}>
-        <h1 style={{ padding: 8, marginTop: 32 }}>ReFi positions and curated tokens</h1>
-        <p>You can earn money and save the planet, AT THE SAME TIME!</p>
-        <p>
-          Such convinience, such wow. For now, you can just buy BCT Tokens.
-          <a href="https://toucan.earth/" target="_blank" rel="noreferrer">
-            Find more about this token and Toucan Protocol↗️
-          </a>
-        </p>
-        <p>In the future, this will be the place to swap, trade, buy or sell the best regerative tokens.</p>
-      </div>
-      {/* <DexSwapper
-            localProvider={localProvider}
-            address={address}
-            readContracts={readContracts}
-            writeContracts={writeContracts}
-            tx={tx}
-          />
-          <DexSwapperLP
-            localProvider={localProvider}
-            address={address}
-            readContracts={readContracts}
-            writeContracts={writeContracts}
-            tx={tx}
-          /> */}
-      <h1 style={{ padding: 8, marginTop: 32 }}>BCT Centralized Vendor</h1>
-      {address ? (
-        <BCTVendor
-          address={address}
-          readContracts={readContracts}
-          writeContracts={writeContracts}
-          polyContracts={polyContracts}
-          tx={tx}
-          price={price}
-        />
+    <Row className="mb-md">
+      <Row style={{ width: '100%' }}>
+        <Title level={2}>Current Tokens</Title>
+      </Row>
+      {!address && isLoadingAccount ? (
+        <Row style={{ flex: 1, minHeight: 200 }} justify="center" align="middle">
+          <Spin />
+        </Row>
+      ) : Object.values(contracts).length > 0 ? (
+        <TableToken USDPrices={USDPrices} contracts={contracts}></TableToken>
       ) : (
-        'Loading'
+        <div>Is Empty</div>
       )}
-    </>
+    </Row>
   )
 }
 

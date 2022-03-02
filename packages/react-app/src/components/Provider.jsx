@@ -3,7 +3,7 @@ import { Badge, Button } from 'antd'
 import { useBlockNumber, usePoller } from 'eth-hooks'
 
 // import { WalletOutlined } from '@ant-design/icons';
-import Address from './Address'
+import Address from './common/Address'
 
 export default function Provider(props) {
   const [showMore, setShowMore] = useState(false)

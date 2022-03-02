@@ -1,27 +1,89 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { Col, Row, Space, Typography } from 'antd'
+import { useContractReader, useGasPrice } from 'eth-hooks'
 
-import { TreejerGraph } from '../components'
+import KoyweTrees from '../components/RegenArt/KoyweTrees'
+import NftCard from '../components/RegenArt/NftCard'
+import TreejerTrees from '../components/RegenArt/TreejerTrees'
+import { HOOK_OPTIONS } from '../constants'
+import { NetworkContext } from '../contexts/NetworkContext'
+import { WalletContext } from '../contexts/WalletContext'
+import { Transactor } from '../helpers'
 
-const RegenArt = ({ address }) => {
+const { Title, Text } = Typography
+
+const RegenArt = () => {
+  const { address, targetNetwork, userSigner } = useContext(NetworkContext)
+  const { contracts, writeContracts, yourKTBalance } = useContext(WalletContext)
+  const [isBCTAmountApproved, setIsBCTAmountApproved] = useState()
+  const [buying, setBuying] = useState()
+  const [approving, setApproving] = useState()
+
+  const treeAddress = contracts?.KoyweCollectibles?.address
+
+  const mintPrice = useContractReader(contracts, 'KoyweCollectibles', 'bctPrice', HOOK_OPTIONS)
+  const isOpen = useContractReader(contracts, 'KoyweCollectibles', 'mintOpen', HOOK_OPTIONS)
+
+  const vendorApproval = useContractReader(contracts, 'PBCT', 'allowance', [address, treeAddress], HOOK_OPTIONS)
+
+  const gasPrice = useGasPrice(targetNetwork, 'fast')
+  const tx = Transactor(userSigner, gasPrice)
+
+  const handleApproveBCT = async () => {
+    setApproving(true)
+    await tx(writeContracts.PBCT.approve(contracts.KoyweCollectibles.address, mintPrice))
+    setApproving(false)
+  }
+
+  const handleMint = async () => {
+    setBuying(true)
+    await tx(writeContracts.KoyweCollectibles.mintItem())
+    setBuying(false)
+  }
+
+  useEffect(() => {
+    if (vendorApproval && mintPrice) setIsBCTAmountApproved(vendorApproval.gte(mintPrice))
+  }, [mintPrice, vendorApproval])
+
   return (
-    <div>
-      <div style={{ width: 500, margin: 'auto' }}>
-        <h1 style={{ padding: 8, marginTop: 32 }}>Regenerative Art Collections</h1>
-        <p>Check out your collection or add more items to help fight climate change.</p>
-        <p>
-          Some cool things you can fund: planting trees, direct capture CO2 from the air, help local communities, and
-          more!
-        </p>
-        <p>
-          For now, you can only view your Treejer collection.{' '}
-          <a href="https://treejer.com/" target="_blank" rel="noreferrer">
-            You cant mint trees here↗️
-          </a>
-        </p>
-      </div>
-      <h2 style={{ padding: 8, marginTop: 32 }}>Treejer Trees</h2>
-      {address && <TreejerGraph address={address} />}
-    </div>
+    <Row className="flex-center">
+      <Col span={20}>
+        <Space direction="vertical" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
+          <Title>NFT Collections</Title>
+          <Text>Choose your favorite collection and buy it from here</Text>
+          <Space direction="vertical" size={'large'} style={{ marginTop: '1rem' }}>
+            <NftCard
+              title="Regenerative Art Collections"
+              mintPrice={mintPrice}
+              address={address}
+              isBCTAmountApproved={isBCTAmountApproved}
+              buying={buying}
+              handleApproveBCT={handleApproveBCT}
+              handleMint={handleMint}
+              approving={approving}
+            />
+          </Space>
+          {address && (
+            <>
+              <h2 style={{ padding: 8, marginTop: 32 }}>Koywe Trees</h2>
+              <KoyweTrees address={address} yourKTBalance={yourKTBalance} contracts={contracts} />
+            </>
+          )}
+          {address && (
+            <>
+              <h2 style={{ padding: 8, marginTop: 32 }}>Treejer Trees</h2>
+              <p>
+                Also, check out your Treejer collection.{' '}
+                <a href="https://treejer.com/" target="_blank">
+                  You cant mint (more) trees here↗️
+                </a>
+              </p>
+              <TreejerTrees address={address} />
+            </>
+          )}
+        </Space>
+      </Col>
+    </Row>
   )
 }
 

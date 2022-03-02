@@ -1,0 +1,12 @@
+.art-container_image {
+  background-color: rgba(196, 196, 196, 0.25);
+  border-radius: 0.3rem;
+  width: 14rem;
+  height: 9rem;
+}
+
+.art-title {
+  font-size: 1.125rem;
+  line-height: 1.25;
+  color: #333333;
+}

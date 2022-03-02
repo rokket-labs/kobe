@@ -1,0 +1,38 @@
+.card-info {
+  background: #ffffff;
+  border-radius: 10px !important;
+  width: 100%;
+  color: #333333;
+}
+
+.card-info-fixed {
+  background: #ffffff;
+  border-radius: 10px;
+  width: 100%;
+  color: #333333;
+  height: 397px;
+}
+
+.text-end {
+  text-align: end;
+}
+
+.ant-card-head-title {
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 20px;
+}
+
+.ant-card-head-wrapper {
+  margin: 10px 0;
+}
+
+.card-text {
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+}
+
+.card-text--active {
+  font-weight: 600;
+  font-size: 1.5rem;
+}

@@ -1,0 +1,20 @@
+.btn-white {
+    background: #ffffff;
+    border: 0.125rem solid #3182CE;
+    box-sizing: border-box;
+    box-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
+    border-radius: 0.313rem;
+    color: #3182CE;
+}
+
+.card-regen-art {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 0.313rem;
+}
+
+.flex-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}

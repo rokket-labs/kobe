@@ -1,15 +1,25 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Steps } from 'antd'
+import { useContractReader } from 'eth-hooks'
+
+import DripBalance from '../components/journey/DripBalance'
+import { HOOK_OPTIONS } from '../constants'
+import { NetworkContext } from '../contexts/NetworkContext'
+import { WalletContext } from '../contexts/WalletContext'
 
 const { Step } = Steps
-const Journey = ({ dripBalance }) => {
+const Journey = () => {
+  const { address } = useContext(NetworkContext)
+  const { contracts } = useContext(WalletContext)
+  const CO2TokenBalance = useContractReader(contracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
+
   return (
     <>
       <h1 style={{ padding: 8, marginTop: 32 }}>
         🌱🌿🪴🌳 Our Journey starts <b>here</b>🌳🪴🌿🌱
       </h1>
-      {dripBalance}
+      <DripBalance CO2TokenBalance={CO2TokenBalance} />
       <h1 style={{ padding: 8, marginTop: 32 }}>You are not alone</h1>
       <h2>We are a Forest, the Koywe Forest</h2>
       <p>A group of committed individuals taking action, TODAY.</p>

@@ -1,12 +1,23 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Divider, Steps } from 'antd'
+import { useContractReader } from 'eth-hooks'
+
+import PledgeButton from '../components/pledge/PledgeButton'
+import PledgeDisplay from '../components/pledge/PledgeDisplay'
+import { HOOK_OPTIONS } from '../constants'
+import { NetworkContext } from '../contexts/NetworkContext'
+import { WalletContext } from '../contexts/WalletContext'
 
 const { Step } = Steps
 
-const Pledge = ({ pledgeDisplay, tonsPledged, tonsCommitted, pledgeButton }) => {
+const Pledge = ({ pledgeDisplay, tonsCommitted }) => {
+  const { address } = useContext(NetworkContext)
+  const { tonsPledged, contracts } = useContext(WalletContext)
+  const pledged = useContractReader(contracts, 'KoywePledge', 'isPledged', [address], HOOK_OPTIONS)
+
   return (
     <>
-      {pledgeDisplay}
+      {pledged && <PledgeDisplay />}
       <div>
         <div style={{ width: 500, margin: 'auto' }}>
           <h1 style={{ padding: 8, marginTop: 32 }}>First... The Pledge</h1>
@@ -37,7 +48,7 @@ const Pledge = ({ pledgeDisplay, tonsPledged, tonsCommitted, pledgeButton }) => 
             to protect and help everyone adapt to the stormy weather 🌳 🌳
           </h2>
         </div>
-        {pledgeButton}
+        <PledgeButton pledged={pledged} tonsCommitted={tonsCommitted} />
 
         <Steps size="small" current={0}>
           <Step title="Pledge" />

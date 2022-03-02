@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
 import React, { useEffect, useState } from 'react'
 import { Button, Form, Input, InputNumber, Radio, Select, Table } from 'antd'
 import { useContractLoader, useOnBlock } from 'eth-hooks'
@@ -59,7 +61,7 @@ export default function L2ArbitrumBridge({ address, userSigner }) {
     }
 
     setProviders()
-  }, [rollup, activeConfig.L1, activeConfig.L2])
+  }, [rollup, activeConfig.L1, activeConfig.L2, activeConfig])
 
   const contracts = useContractLoader(userSigner, { externalContracts: L1BridgeMetadata, hardhatContracts: {} })
 
@@ -145,14 +147,14 @@ export default function L2ArbitrumBridge({ address, userSigner }) {
     try {
       if (rollup === 'arbitrum')
         newTx = await tx(
-          contracts.Inbox.depositEth(1_300_000, {
+          contracts.Inbox.depositEth('1_300_000', {
             value: utils.parseEther(values.amount.toString()),
             gasLimit: 300000,
           }),
         )
       else if (rollup === 'optimism')
         newTx = await tx(
-          contracts.OVM_L1StandardBridge.depositETH(1_300_000, '0x', {
+          contracts.OVM_L1StandardBridge.depositETH('1_300_000', '0x', {
             value: utils.parseEther(values.amount.toString()),
           }),
         )

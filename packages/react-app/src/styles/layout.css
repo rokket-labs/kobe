@@ -1,0 +1,88 @@
+.menu {
+    background: none;
+    border-bottom: none;
+    margin: auto 0;
+  }
+  
+  .menu-item {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 2rem;
+    margin: auto 0;
+  }
+  
+  .menu-data {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 0;
+    margin: auto 0;
+  }
+  
+  .menu-subitem {
+    color: rgba(0, 0, 0, 0.92);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 2rem;
+  }
+  
+  .submenu {
+    position: absolute;
+  }
+  
+  @media only screen and (min-width: 633px) {
+    .submenu {
+      position: fixed;
+      z-index: 2;
+    }
+  }
+  
+  .menu-row {
+    background: #3f9c49;
+    padding: 0 7%;
+    width: 100%;
+  }
+  
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item:hover,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu:hover,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-active,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-active,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-open,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-open,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-selected {
+    color: #ffffff;
+  }
+  
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item:hover::after,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu:hover::after,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-active::after,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-active::after,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-open::after,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-open::after,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected::after,
+  .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-selected::after {
+    border-bottom: 4px solid #ffffff;
+    margin-right: 1.5rem;
+  }
+  
+  .ant-menu-horizontal > .ant-menu-item::after,
+  .ant-menu-horizontal > .ant-menu-submenu::after {
+    border-bottom: 4px solid transparent;
+    margin-right: 1.5rem;
+    transition: border-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  
+  .ant-menu-item .ant-menu-item-icon + span,
+  .ant-menu-submenu-title .ant-menu-item-icon + span,
+  .ant-menu-item .anticon + span,
+  .ant-menu-submenu-title .anticon + span {
+    margin-left: 0;
+  }
+  
+  .ant-menu-horizontal > .ant-menu-item,
+  .ant-menu-horizontal > .ant-menu-submenu {
+    vertical-align: middle;
+  }
+  
