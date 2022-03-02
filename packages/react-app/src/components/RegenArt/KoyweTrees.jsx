@@ -40,7 +40,7 @@ const KoyweTrees = (contracts, yourKTBalance, address) => {
   }, [address, contracts.KoyweCollectibles, yourKTBalance])
 
   return (
-    <div style={{ width: 900, margin: 'auto', marginTop: 32, paddingBottom: 32 }}>
+    <div style={{ width: '100%', margin: 'auto', marginTop: 32, paddingBottom: 32 }}>
       <List
         grid={3}
         bordered

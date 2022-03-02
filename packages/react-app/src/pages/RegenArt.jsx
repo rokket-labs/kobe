@@ -48,10 +48,10 @@ const RegenArt = () => {
   return (
     <Row className="flex-center">
       <Col span={20}>
-        <Space direction="vertical" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
+        <Space direction="vertical" style={{ marginBottom: '1rem', marginTop: '1rem', width: '100%' }}>
           <Title>NFT Collections</Title>
           <Text>Choose your favorite collection and buy it from here</Text>
-          <Space direction="vertical" size={'large'} style={{ marginTop: '1rem' }}>
+          <Space direction="vertical" style={{ marginTop: '1rem', width: '100%' }}>
             <NftCard
               title="Regenerative Art Collections"
               mintPrice={mintPrice}
