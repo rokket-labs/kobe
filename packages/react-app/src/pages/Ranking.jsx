@@ -71,7 +71,7 @@ const RankingTitle = () => {
   )
 }
 
-const Defi = () => {
+const Ranking = () => {
   const [data, setData] = useState()
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const Defi = () => {
   )
 }
 
-const Ranking = () => {
+/* const Ranking = () => {
   const { mainnetProvider } = useContext(NetworkContext)
   const { contracts, polygonContracts, localProvider } = useContext(WalletContext)
 
@@ -114,7 +114,6 @@ const Ranking = () => {
       />
     </div>
   )
-}
+} */
 
-// export default Ranking
-export default Defi
+export default Ranking

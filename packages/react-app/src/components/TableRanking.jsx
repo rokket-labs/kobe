@@ -44,13 +44,13 @@ export const TableRanking = ({ rankingData }) => {
       align: 'center',
       render: user => (
         <Row justify="space-around" align="middle">
-          <Link href={`/${user.name}`} passHref>
+          <Link to={`/${user.name}`} passHref>
             <a>
               <Image src={user.icon} preview={false} height={42} />
             </a>
           </Link>
           <Text style={{ alignSelf: 'center', marginLeft: '10px' }}>{user.name}</Text>
-          <Link href={`/${user.name}`} passHref>
+          <Link to={`/${user.name}`} passHref>
             <a>
               <Image src="icon/leave.svg" preview={false} height={24} />
             </a>
