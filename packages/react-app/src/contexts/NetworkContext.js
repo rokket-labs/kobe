@@ -90,7 +90,7 @@ export const NetworkContextProvider = ({ children }) => {
     localChainId,
     selectedChainId,
     setSelectedNetwork,
-    address: address ? address.toString() : undefined,
+    address,
     userSigner,
     mainnetProvider,
     polygonProvider,

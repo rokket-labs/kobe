@@ -17,7 +17,7 @@ import './styles/index.css'
 const App = () => {
   return (
     <WalletContextProvider>
-      <MainLayout>
+      <MainLayout NETWORKCHECK>
         <Switch>
           <Route exact path="/">
             <Dashboard />

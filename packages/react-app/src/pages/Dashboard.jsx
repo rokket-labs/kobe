@@ -32,40 +32,36 @@ const Dashboard = () => {
 
   const CO2TokenBalance = useContractReader(contracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
   const { collection: artGallery, isLoading } = useTreejerGraph(address)
+
   /* const data = getArtData() */
 
   useEffect(() => {
-    if (!isLoadingAccount) {
-      const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, yourKTBalance, USDPrices, pledged)
+    const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, yourKTBalance, USDPrices, pledged)
 
-      setFightData(fightData)
-      setYourFight(
-        pledged
-          ? (
-              Number(utils.formatUnits(polygonBCTBalance, 18)) +
-              Number(utils.formatUnits(polygonNCTBalance, 18)) +
-              Number(utils.formatUnits(polygonMCO2Balance, 18))
-            ).toFixed(2)
-          : 0,
-      )
-    }
-  }, [isLoadingAccount])
+    setFightData(fightData)
+    setYourFight(
+      pledged
+        ? (
+            Number(utils.formatUnits(polygonBCTBalance, 18)) +
+            Number(utils.formatUnits(polygonNCTBalance, 18)) +
+            Number(utils.formatUnits(polygonMCO2Balance, 18))
+          ).toFixed(2)
+        : 0,
+    )
+  }, [address])
 
   useEffect(() => {
-    if (!isLoadingAccount) {
-      const plightData = getPlightData(address, polygonMCO2Balance, tonsPledged, pledged)
+    const plightData = getPlightData(address, polygonMCO2Balance, tonsPledged, pledged)
 
-      setPlightData(plightData)
-      setYourPlight(
-        pledged
-          ? (
-              (Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 18))) *
-              70
-            ).toFixed(2)
-          : 0,
-      )
-    }
-  }, [isLoadingAccount])
+    setPlightData(plightData)
+    setYourPlight(
+      pledged
+        ? ((Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 18))) * 70).toFixed(
+            2,
+          )
+        : 0,
+    )
+  }, [address])
 
   return (
     <Row justify="center" className="my-sm">
@@ -103,7 +99,7 @@ const Dashboard = () => {
                   <Image src={'icon/emoji-trophy.svg'} preview={false} />
                 </>
               }
-              below={<Text>{`${yourFight} CO2 tons / year`}</Text>}
+              below={<Text>{`${yourFight || 0} CO2 tons / year`}</Text>}
               title={'Your fight'}
               color="#3182CE"
             />
@@ -116,7 +112,7 @@ const Dashboard = () => {
                   <Image src={'icon/emoji-user.svg'} preview={false} />
                 </>
               }
-              below={<Text>{`${yourPlight} CO2 tons / year`}</Text>}
+              below={<Text>{`${yourPlight || 0} CO2 tons / year`}</Text>}
               percentage={50}
             />
           </Col>

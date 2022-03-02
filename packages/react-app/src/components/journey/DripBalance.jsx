@@ -7,6 +7,7 @@ import { WalletContext } from '../../contexts/WalletContext'
 import { Transactor } from '../../helpers'
 import TokenBalance from '../TokenBalance'
 
+const { utils } = require('ethers')
 const DripBalance = ({ CO2TokenBalance }) => {
   const [dripping, setDripping] = useState()
   const { address, targetNetwork, userSigner } = useContext(NetworkContext)
@@ -17,7 +18,7 @@ const DripBalance = ({ CO2TokenBalance }) => {
 
   return (
     <>
-      {CO2TokenBalance === 0 ? (
+      {CO2TokenBalance && Number(utils.formatUnits(CO2TokenBalance, 18)) === 0 ? (
         <Button
           type={CO2TokenBalance > 0 ? 'success' : 'primary'}
           size={'large'}
