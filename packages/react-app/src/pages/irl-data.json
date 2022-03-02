@@ -1,0 +1,31 @@
+{
+  "data": {
+    "info": [
+      {
+        "id": 1,
+        "quantity": "341",
+        "type": "house"
+      },
+      {
+        "id": 2,
+        "quantity": "312",
+        "type": "car"
+      },
+      {
+        "id": 3,
+        "quantity": "1200",
+        "type": "burger"
+      },
+      {
+        "id": 4,
+        "quantity": "1200",
+        "type": "work"
+      },
+      {
+        "id": 5,
+        "quantity": "1200",
+        "type": "co2"
+      }
+    ]
+  }
+}
