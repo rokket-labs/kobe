@@ -1,10 +1,8 @@
-import { Button } from "antd";
-import React from "react";
-import { useThemeSwitcher } from "react-css-theme-switcher";
-import Address from "./Address";
-import Balance from "./Balance";
-import Wallet from "./Wallet";
+import React from 'react'
+import { useThemeSwitcher } from 'react-css-theme-switcher'
+import { Button } from 'antd'
 
+import { Address, Balance, Wallet } from '../components'
 /*
   ~ What it does? ~
 
@@ -55,27 +53,28 @@ export default function Account({
   blockExplorer,
   isContract,
 }) {
-  const { currentTheme } = useThemeSwitcher();
+  const { currentTheme } = useThemeSwitcher()
 
-  const modalButtons = [];
-  if (web3Modal) {
-    if (web3Modal.cachedProvider) {
+  const modalButtons = []
+
+  if (web3Modal)
+    if (web3Modal.cachedProvider)
       modalButtons.push(
         <Button
           key="logoutbutton"
-          style={{ verticalAlign: "top", marginLeft: 8, marginTop: 4 }}
+          style={{ verticalAlign: 'top', marginLeft: 8, marginTop: 4 }}
           shape="round"
           size="large"
           onClick={logoutOfWeb3Modal}
         >
           logout
         </Button>,
-      );
-    } else {
+      )
+    else
       modalButtons.push(
         <Button
           key="loginbutton"
-          style={{ verticalAlign: "top", marginLeft: 8, marginTop: 4 }}
+          style={{ verticalAlign: 'top', marginLeft: 8, marginTop: 4 }}
           shape="round"
           size="large"
           /* type={minimized ? "default" : "primary"}     too many people just defaulting to MM and having a bad time */
@@ -83,11 +82,10 @@ export default function Account({
         >
           connect
         </Button>,
-      );
-    }
-  }
+      )
+
   const display = minimized ? (
-    ""
+    ''
   ) : (
     <span>
       {web3Modal && web3Modal.cachedProvider ? (
@@ -100,18 +98,18 @@ export default function Account({
             signer={userSigner}
             ensProvider={mainnetProvider}
             price={price}
-            color={currentTheme === "light" ? "#1890ff" : "#2caad9"}
+            color={currentTheme === 'light' ? '#1890ff' : '#2caad9'}
           />
         </>
       ) : useBurner ? (
-        ""
+        ''
       ) : isContract ? (
         <>
           {address && <Address address={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />}
           <Balance address={address} provider={localProvider} price={price} />
         </>
       ) : (
-        ""
+        ''
       )}
       {useBurner && web3Modal && !web3Modal.cachedProvider ? (
         <>
@@ -123,19 +121,19 @@ export default function Account({
             signer={userSigner}
             ensProvider={mainnetProvider}
             price={price}
-            color={currentTheme === "light" ? "#1890ff" : "#2caad9"}
+            color={currentTheme === 'light' ? '#1890ff' : '#2caad9'}
           />
         </>
       ) : (
         <></>
       )}
     </span>
-  );
+  )
 
   return (
     <div>
       {display}
       {modalButtons}
     </div>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-import { DollarCircleOutlined } from "@ant-design/icons";
-import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
-import { Button, Divider, Modal } from "antd";
-import React, { useState } from "react";
+import React, { useState } from 'react'
+import { DollarCircleOutlined } from '@ant-design/icons'
+import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk'
+import { Button, Divider, Modal } from 'antd'
 
 // added display of 0 if price={price} is not provided
 
@@ -26,13 +26,14 @@ import React, { useState } from "react";
 */
 
 export default function Ramp(props) {
-  const [modalUp, setModalUp] = useState("down");
+  const [modalUp, setModalUp] = useState('down')
 
-  const type = "default";
+  const type = 'default'
 
-  const allFaucets = [];
-  for (const n in props.networks) {
-    if (props.networks[n].chainId !== 31337 && props.networks[n].chainId !== 1) {
+  const allFaucets = []
+
+  for (const n in props.networks)
+    if (props.networks[n].chainId !== 31337 && props.networks[n].chainId !== 1)
       allFaucets.push(
         <p key={props.networks[n].chainId}>
           <Button
@@ -41,15 +42,13 @@ export default function Ramp(props) {
             size="large"
             shape="round"
             onClick={() => {
-              window.open(props.networks[n].faucet);
+              window.open(props.networks[n].faucet)
             }}
           >
             {props.networks[n].name}
           </Button>
         </p>,
-      );
-    }
-  }
+      )
 
   return (
     <div>
@@ -57,23 +56,23 @@ export default function Ramp(props) {
         size="large"
         shape="round"
         onClick={() => {
-          setModalUp("up");
+          setModalUp('up')
         }}
       >
-        <DollarCircleOutlined style={{ color: "#52c41a" }} />{" "}
-        {typeof props.price === "undefined" ? 0 : props.price.toFixed(2)}
+        <DollarCircleOutlined style={{ color: '#52c41a' }} />{' '}
+        {typeof props.price === 'undefined' ? 0 : props.price.toFixed(2)}
       </Button>
       <Modal
         title="Buy ETH"
-        visible={modalUp === "up"}
+        visible={modalUp === 'up'}
         onCancel={() => {
-          setModalUp("down");
+          setModalUp('down')
         }}
         footer={[
           <Button
             key="back"
             onClick={() => {
-              setModalUp("down");
+              setModalUp('down')
             }}
           >
             cancel
@@ -86,7 +85,7 @@ export default function Ramp(props) {
             size="large"
             shape="round"
             onClick={() => {
-              window.open("https://pay.sendwyre.com/purchase?destCurrency=ETH&sourceAmount=25&dest=" + props.address);
+              window.open(`https://pay.sendwyre.com/purchase?destCurrency=ETH&sourceAmount=25&dest=${props.address}`)
             }}
           >
             <span style={{ paddingRight: 15 }} role="img">
@@ -98,21 +97,21 @@ export default function Ramp(props) {
           </Button>
         </p>
         <p>
-          {" "}
+          {' '}
           <Button
             type={type}
             size="large"
             shape="round"
             onClick={() => {
               new RampInstantSDK({
-                hostAppName: "scaffold-eth",
-                hostLogoUrl: "https://scaffoldeth.io/scaffold-eth.png",
-                swapAmount: "100000000000000000", // 0.1 ETH in wei  ?
-                swapAsset: "ETH",
+                hostAppName: 'scaffold-eth',
+                hostLogoUrl: 'https://scaffoldeth.io/scaffold-eth.png',
+                swapAmount: '100000000000000000', // 0.1 ETH in wei  ?
+                swapAsset: 'ETH',
                 userAddress: props.address,
               })
-                .on("*", event => console.log(event))
-                .show();
+                .on('*', event => console.log(event))
+                .show()
             }}
           >
             <span style={{ paddingRight: 15 }} role="img">
@@ -130,7 +129,7 @@ export default function Ramp(props) {
             size="large"
             shape="round"
             onClick={() => {
-              window.open("https://www.coinbase.com/buy-ethereum");
+              window.open('https://www.coinbase.com/buy-ethereum')
             }}
           >
             <span style={{ paddingRight: 15 }} role="img" aria-label="bank">
@@ -147,5 +146,5 @@ export default function Ramp(props) {
         {allFaucets}
       </Modal>
     </div>
-  );
+  )
 }

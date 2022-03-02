@@ -1,0 +1,13 @@
+{
+    "extends":["rokket-labs/react"],
+    "rules": {
+        "no-unused-vars": "off",
+        "react/prop-types": "off",
+        "no-use-before-define": "off"
+      },
+      "overrides": [
+        {
+          "files": ["*.js"]
+        }
+      ]
+}

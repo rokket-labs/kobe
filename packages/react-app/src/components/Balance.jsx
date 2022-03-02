@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { useBalance } from "eth-hooks";
-import { HOOK_OPTIONS } from "../constants";
+import React, { useState } from 'react'
+import { useBalance } from 'eth-hooks'
 
-const { utils } = require("ethers");
+import { HOOK_OPTIONS } from '../constants'
+
+const { utils } = require('ethers')
 
 /*
   ~ What it does? ~
@@ -31,42 +32,42 @@ const { utils } = require("ethers");
 */
 
 export default function Balance(props) {
-  const [dollarMode, setDollarMode] = useState(true);
+  const [dollarMode, setDollarMode] = useState(true)
 
-  const balance = useBalance(props.provider, props.address, props.hookOptions ? props.hookOptions : HOOK_OPTIONS);
-  let floatBalance = parseFloat("0.00");
-  let usingBalance = balance;
+  const balance = useBalance(props.provider, props.address, props.hookOptions ? props.hookOptions : HOOK_OPTIONS)
+  let floatBalance = parseFloat('0.00')
+  let usingBalance = balance
 
-  if (typeof props.balance !== "undefined") usingBalance = props.balance;
-  if (typeof props.value !== "undefined") usingBalance = props.value;
+  if (typeof props.balance !== 'undefined') usingBalance = props.balance
+
+  if (typeof props.value !== 'undefined') usingBalance = props.value
 
   if (usingBalance) {
-    const etherBalance = utils.formatEther(usingBalance);
-    parseFloat(etherBalance).toFixed(2);
-    floatBalance = parseFloat(etherBalance);
+    const etherBalance = utils.formatEther(usingBalance)
+
+    parseFloat(etherBalance).toFixed(2)
+    floatBalance = parseFloat(etherBalance)
   }
 
-  let displayBalance = floatBalance.toFixed(4);
+  let displayBalance = floatBalance.toFixed(4)
 
-  const price = props.price || props.dollarMultiplier || 1;
+  const price = props.price || props.dollarMultiplier || 1
 
-  if (dollarMode) {
-    displayBalance = "$" + (floatBalance * price).toFixed(2);
-  }
+  if (dollarMode) displayBalance = `$${(floatBalance * price).toFixed(2)}`
 
   return (
     <span
       style={{
-        verticalAlign: "middle",
+        verticalAlign: 'middle',
         fontSize: props.size ? props.size : 24,
         padding: 8,
-        cursor: "pointer",
+        cursor: 'pointer',
       }}
       onClick={() => {
-        setDollarMode(!dollarMode);
+        setDollarMode(!dollarMode)
       }}
     >
       {displayBalance}
     </span>
-  );
+  )
 }

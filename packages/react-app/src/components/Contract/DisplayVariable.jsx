@@ -1,23 +1,25 @@
-import { Button, Col, Divider, Row } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
-import { tryToDisplay } from "./utils";
+import React, { useCallback, useEffect, useState } from 'react'
+import { Button, Col, Divider, Row } from 'antd'
+
+import { tryToDisplay } from './utils'
 
 const DisplayVariable = ({ contractFunction, functionInfo, refreshRequired, triggerRefresh, blockExplorer }) => {
-  const [variable, setVariable] = useState("");
+  const [variable, setVariable] = useState('')
 
   const refresh = useCallback(async () => {
     try {
-      const funcResponse = await contractFunction();
-      setVariable(funcResponse);
-      triggerRefresh(false);
+      const funcResponse = await contractFunction()
+
+      setVariable(funcResponse)
+      triggerRefresh(false)
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  }, [setVariable, contractFunction, triggerRefresh]);
+  }, [setVariable, contractFunction, triggerRefresh])
 
   useEffect(() => {
-    refresh();
-  }, [refresh, refreshRequired, contractFunction]);
+    refresh()
+  }, [refresh, refreshRequired, contractFunction])
 
   return (
     <div>
@@ -25,7 +27,7 @@ const DisplayVariable = ({ contractFunction, functionInfo, refreshRequired, trig
         <Col
           span={8}
           style={{
-            textAlign: "right",
+            textAlign: 'right',
             opacity: 0.333,
             paddingRight: 6,
             fontSize: 24,
@@ -44,7 +46,7 @@ const DisplayVariable = ({ contractFunction, functionInfo, refreshRequired, trig
       </Row>
       <Divider />
     </div>
-  );
-};
+  )
+}
 
-export default DisplayVariable;
+export default DisplayVariable
