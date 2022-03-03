@@ -37,7 +37,7 @@ const App = () => {
           <Route exact path="/journey">
             <Journey />
           </Route>
-          <Route path="/refi">
+          <Route path="/regen-defi">
             <ReFi />
           </Route>
           <Route exact path="/debug">
