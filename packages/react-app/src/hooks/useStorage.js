@@ -1,5 +1,15 @@
 import { useMemo } from 'react'
 
+/**
+  type StorageType = 'localStorage' | 'sessionStorage'
+
+  type UseStorageReturnValue = {
+    getItem: (key: string) => string
+    setItem: (key: string, value: string) => boolean
+    removeItem: (key: string) => void
+  }
+*/
+
 const useStorage = (storage = 'sessionStorage') => {
   const storageMethods = useMemo(() => {
     const isBrowser = (() => typeof window !== 'undefined')()

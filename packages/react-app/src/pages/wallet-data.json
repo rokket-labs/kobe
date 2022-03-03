@@ -1,0 +1,21 @@
+{
+  "data": {
+    "info": [
+      {
+        "id": 1,
+        "quantity": "20",
+        "type": "coin"
+      },
+      {
+        "id": 2,
+        "quantity": "120",
+        "type": "air"
+      },
+      {
+        "id": 3,
+        "quantity": "34",
+        "type": "co2"
+      }
+    ]
+  }
+}

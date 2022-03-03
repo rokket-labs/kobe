@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
 import { List, Row, Spin, Typography } from 'antd'
 
+import { StyledButton } from '../../components/common/StyledButton'
 import { Art } from '../common/Art'
-import { StyledButton } from '../common/StyledButton'
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
