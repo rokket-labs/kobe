@@ -3,8 +3,10 @@ import { Route, Switch } from 'react-router-dom'
 
 import { MainLayout } from './components/layouts/MainLayout'
 import { WalletContextProvider } from './contexts/WalletContext'
+import CalculatorPage from './pages/Calculator'
 import Dashboard from './pages/Dashboard'
 import DebugPage from './pages/DebugPage'
+import EmissionPage from './pages/Emission'
 import Journey from './pages/Journey'
 import Pledge from './pages/Pledge'
 import Ranking from './pages/Ranking'
@@ -39,6 +41,12 @@ const App = () => {
           </Route>
           <Route exact path="/debug">
             <DebugPage />
+          </Route>
+          <Route exact path="/emission">
+            <EmissionPage />
+          </Route>
+          <Route exact path="/calculator">
+            <CalculatorPage />
           </Route>
         </Switch>
       </MainLayout>
