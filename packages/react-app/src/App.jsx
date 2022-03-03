@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
 import { MainLayout } from './components/layouts/MainLayout'
+import { IsPledgedProvider } from './contexts/IsPledgedContext'
 import { WalletContextProvider } from './contexts/WalletContext'
 import CalculatorPage from './pages/Calculator'
 import Dashboard from './pages/Dashboard'

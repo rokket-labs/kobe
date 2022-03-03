@@ -10,9 +10,7 @@ import { useMemo } from 'react'
   }
 */
 
-const useStorage = (
-  storage = 'sessionStorage',
-) => {
+const useStorage = (storage = 'sessionStorage') => {
   const storageMethods = useMemo(() => {
     const isBrowser = (() => typeof window !== 'undefined')()
 

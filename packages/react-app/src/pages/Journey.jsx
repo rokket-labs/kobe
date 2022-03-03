@@ -28,7 +28,7 @@ const Journey = () => {
         together...
       </p>
       <p>Start by investing in sustainable web3 projects.</p>
-      <Link to="/refi">
+      <Link to="/regen-defi">
         <Button size={'large'}>🌱 Put your money where your mouth is 🤑 Buy more! 🌱</Button>
       </Link>
 

@@ -1,61 +1,60 @@
 import React, { useContext } from 'react'
-import { Divider, Steps } from 'antd'
-import { useContractReader } from 'eth-hooks'
+import { Col, Row, Typography } from 'antd'
 
-import PledgeButton from '../components/pledge/PledgeButton'
+// import { useContractReader } from 'eth-hooks'
+// import PledgeButton from '../components/pledge/PledgeButton'
 import PledgeDisplay from '../components/pledge/PledgeDisplay'
-import { HOOK_OPTIONS } from '../constants'
-import { NetworkContext } from '../contexts/NetworkContext'
-import { WalletContext } from '../contexts/WalletContext'
+import PledgedReduceCO2 from '../components/PledgedReduceCO2'
+import { StyledIcon } from '../components/StyledIcon'
+// import { HOOK_OPTIONS } from '../constants'
+import { IsPledgedContext } from '../contexts/IsPledgedContext'
+// import { NetworkContext } from '../contexts/NetworkContext'
+// import { WalletContext } from '../contexts/WalletContext'
 
-const { Step } = Steps
+const { Title, Paragraph } = Typography
 
-const Pledge = ({ pledgeDisplay, tonsCommitted }) => {
-  const { address } = useContext(NetworkContext)
-  const { tonsPledged, contracts } = useContext(WalletContext)
-  const pledged = useContractReader(contracts, 'KoywePledge', 'isPledged', [address], HOOK_OPTIONS)
+const Pledge = () => {
+  const { isPledged, handleIsPledged } = useContext(IsPledgedContext)
 
   return (
-    <>
-      {pledged && <PledgeDisplay />}
-      <div>
-        <div style={{ width: 500, margin: 'auto' }}>
-          <h1 style={{ padding: 8, marginTop: 32 }}>First... The Pledge</h1>
-          <p>
-            This pledge is nothing more than a public commitment to do better. To be in charge of our emissions. To take
-            ownership of a part of the effort.
-          </p>
-          <p>It doesn&apos;t need to be exact, but it does need to come from the heart.</p>
-          <p>There are 60 gigatons of CO2e emitted every year.</p>
-          <p>
-            We ask you to make a commitment, just like our nation&apos;s leaders do, of annual CO2 tons that we will
-            contribute to bring to zero (0).
-          </p>
-          <Divider />
-          <p>🌎 🌍 I hereby pledge to do my best to save the planet.</p>
-          <p>
-            🏬 🍔 I pledge to do my best to reduce emissions, by consuming less or by being more conscious about my
-            decisions.
-          </p>
-          <p>👭 👬 I pledge to help others in their paths to help the planet.</p>
-          <p>🤑 ⌛ I pledge to contribute, with money or time as long as I am able, to other people in my community.</p>
-          <p>
-            📝 🪧 I pledge to reduce or offset {tonsPledged > 0 ? tonsPledged.toString() : tonsCommitted} CO2e tons per
-            year.
-          </p>
-          <h2>
-            🌳 🌳 I pledge to grow a Forest, to be a Forest with my community, to take small, steady, and concrete steps
-            to protect and help everyone adapt to the stormy weather 🌳 🌳
-          </h2>
-        </div>
-        <PledgeButton pledged={pledged} tonsCommitted={tonsCommitted} />
+    <Row justify="center" style={{ marginBottom: '5rem' }}>
+      {isPledged && <PledgeDisplay />}
+      <Col span={24}>
+        <Title style={{ textAlign: 'center', fontSize: 36 }}>First... The Pledge</Title>
+      </Col>
+      <Col xl={13} xs={22}>
+        <Paragraph style={{ fontSize: 18, lineHeight: '2.5rem' }}>
+          This pledge is nothing more than a public commitment to do better. To be in charge of our emissions. To take
+          ownership of a part of the effort. It doesn&apos;t need to be exact, but it does need to come from your heart.
+          There are 60 million CO2e tons emitted every year. <br />
+          We ask you to make a commitment, just like our nation&apos;s leaders do, of annual CO2 tons that we will
+          contribute to bring to zero (0). Now the important....your pledge
+        </Paragraph>
+      </Col>
+      <Col xl={13} xs={22}>
+        <Paragraph style={{ fontSize: 24, lineHeight: '3rem' }}>
+          I hereby pledge to do my best to save the planet. <StyledIcon src={'icon/planet.svg'} preview={false} />
+          <br />I pledge to do my best to reduce emissions, by consuming less or by being more conscious about my
+          decisions.
+          <StyledIcon src={'icon/burger.svg'} preview={false} /> <StyledIcon src={'icon/recycle.svg'} preview={false} />
+          <br />I pledge to help others in their paths to help the planet.{' '}
+          <StyledIcon src={'icon/humans.svg'} preview={false} />
+          <br />I pledge to contribute, with money or time as long as I am able, to other people in my community.
+        </Paragraph>
+      </Col>
+      <Col xl={13} xs={22}>
+        <Paragraph style={{ fontSize: 24, lineHeight: '3rem' }}>
+          I pledge to grow a Forest, to be a Forest with my community, to take small, steady, and concrete steps to
+          protect and help everyone adapt to the stormy weather. <StyledIcon src={'icon/tree.svg'} preview={false} />
+          <StyledIcon src={'icon/tree.svg'} preview={false} />
+          <StyledIcon src={'icon/tree.svg'} preview={false} />
+        </Paragraph>
+      </Col>
 
-        <Steps size="small" current={0}>
-          <Step title="Pledge" />
-          <Step title="Forest" />
-        </Steps>
-      </div>
-    </>
+      <Col xl={13} xs={22}>
+        <PledgedReduceCO2 isPledge={isPledged} handleIsPledge={handleIsPledged} />
+      </Col>
+    </Row>
   )
 }
 

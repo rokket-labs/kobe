@@ -44,7 +44,7 @@ const Index = ({ navbarRef, NETWORKCHECK }) => {
           <Menu.Item className="menu-item" key="/regen-art" onClick={() => handleMenu('/regen-art')}>
             Regen art
           </Menu.Item>
-          <Menu.Item className="menu-item" key="/defi" onClick={() => handleMenu('/refi')}>
+          <Menu.Item className="menu-item" key="/regen-defi" onClick={() => handleMenu('/regen-defi')}>
             Regen defi
           </Menu.Item>
         </Menu>
