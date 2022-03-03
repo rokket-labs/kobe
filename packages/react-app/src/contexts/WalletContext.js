@@ -17,6 +17,7 @@ export const WalletContext = React.createContext({
   contracts: {},
   polygonContracts: {},
   writeContracts: {},
+  isPledged: false,
 })
 
 export const WalletContextProvider = ({ children }) => {

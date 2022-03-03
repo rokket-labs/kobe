@@ -3,17 +3,17 @@ import CarbonFYI from '../components/common/CarbonFYI'
 const { utils } = require('ethers')
 
 // eslint-disable-next-line max-params
-export const getFightData = (BTC = 0, CO2 = 0, trees = 0, USDPrices = 0, pledged) => [
+export const getFightData = (BTC = 0, CO2 = 0, trees = 0, USDPrices = 0, isPledged) => [
   {
     id: 1,
     srcIcon: '/icon/tree.svg',
-    quantity: !pledged ? '0' : trees,
+    quantity: !isPledged ? '0' : trees,
     text: 'trees planted',
   },
   {
     id: 2,
     srcIcon: '/icon/co2.svg',
-    quantity: !pledged
+    quantity: !isPledged
       ? '0.00'
       : ((BTC && BTC > 0 ? BTC : 0) / Math.pow(10, 18) + (CO2 && CO2 > 0 ? CO2 : 0) / Math.pow(10, 18)).toFixed(2),
     text: 'CO2 tons extracted/compensated',
@@ -21,7 +21,7 @@ export const getFightData = (BTC = 0, CO2 = 0, trees = 0, USDPrices = 0, pledged
   {
     id: 3,
     srcIcon: '/icon/emoji-money.svg',
-    quantity: !pledged
+    quantity: !isPledged
       ? '0.00'
       : (
           ((BTC && BTC > 0 ? BTC : 0) / Math.pow(10, 18)) *
@@ -37,24 +37,24 @@ export const getFightData = (BTC = 0, CO2 = 0, trees = 0, USDPrices = 0, pledged
 ]
 
 // eslint-disable-next-line max-params
-export const getPlightData = (address, CO2 = 0, tonsPledged = 0, pledged) => [
+export const getPlightData = (address, CO2 = 0, tonsPledged = 0, isPledged) => [
   {
     id: 1,
     srcIcon: '/icon/co2.svg',
-    quantity: !pledged ? '0.00' : address && <CarbonFYI currentAddress={address} />,
+    quantity: !isPledged ? '0.00' : address && <CarbonFYI currentAddress={address} />,
     text: 'CO2 tons in transactions',
   },
   {
     id: 2,
     srcIcon: '/icon/emoji-zipper.svg',
-    quantity: !pledged ? '' : (CO2 / Math.pow(10, 18)).toFixed(2),
-    text: !pledged ? 'Start dripping CO2 tokens' : 'CO2 tons dripped',
+    quantity: !isPledged ? '' : (CO2 / Math.pow(10, 18)).toFixed(2),
+    text: !isPledged ? 'Start dripping CO2 tokens' : 'CO2 tons dripped',
   },
   {
     id: 3,
     srcIcon: '/icon/emoji-confused.svg',
-    quantity: !pledged ? '' : utils.formatUnits(tonsPledged, 18),
-    text: !pledged ? 'Take the pledge to own your share of the problem.' : 'CO2 tons pledged',
+    quantity: !isPledged ? '' : utils.formatUnits(tonsPledged, 18),
+    text: !isPledged ? 'Take the pledge to own your share of the problem.' : 'CO2 tons isPledged',
     isBold: true,
   },
 ]

@@ -7,7 +7,7 @@ import { NetworkContext } from '../../contexts/NetworkContext'
 import { WalletContext } from '../../contexts/WalletContext'
 import { Transactor } from '../../helpers'
 
-const PledgeButton = ({ pledged }) => {
+const PledgeButton = ({ isPledged }) => {
   const [pledging, setPledging] = useState(false)
   const [tonsCommitted, setTonsCommitted] = useState()
   const { targetNetwork, userSigner } = useContext(NetworkContext)
@@ -18,7 +18,7 @@ const PledgeButton = ({ pledged }) => {
 
   return (
     <>
-      {!pledged ? (
+      {!isPledged ? (
         <div style={{ padding: 8, marginTop: 32, width: 300, margin: 'auto' }}>
           <Input
             style={{ textAlign: 'center' }}
@@ -29,7 +29,7 @@ const PledgeButton = ({ pledged }) => {
             }}
           />
           <Button
-            type={pledged ? 'success' : 'primary'}
+            type={isPledged ? 'success' : 'primary'}
             size={'large'}
             loading={pledging}
             onClick={async () => {

@@ -21,7 +21,7 @@ const Logo = styled.div`
 const Index = ({ navbarRef, NETWORKCHECK }) => {
   const router = useHistory()
   const [path, setPath] = useState(router.pathname)
-  const { pledged } = useContext(WalletContext)
+  const { isPledged } = useContext(WalletContext)
 
   useEffect(() => {
     setPath(router.pathname)
@@ -58,7 +58,7 @@ const Index = ({ navbarRef, NETWORKCHECK }) => {
             <Balance />
           </Col>
           <Col>
-            <Wallet isPlant={pledged} />
+            <Wallet isPledged={isPledged} />
           </Col>
         </Row>
       </Col>
