@@ -13,8 +13,6 @@ import { HOOK_OPTIONS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 import { getFightData, getPlightData } from '../helpers/dashboardData'
-// only for test purpose
-import { getArtData } from '../helpers/getArtData'
 import { useTreejerGraph } from '../hooks/useTreejerGraph'
 
 const { utils } = require('ethers')
@@ -32,8 +30,6 @@ const Dashboard = () => {
 
   const CO2TokenBalance = useContractReader(contracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
   const { collection: artGallery, isLoading } = useTreejerGraph(address)
-
-  /* const data = getArtData() */
 
   useEffect(() => {
     const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, yourKTBalance, USDPrices, pledged)
@@ -54,13 +50,16 @@ const Dashboard = () => {
     const plightData = getPlightData(address, polygonMCO2Balance, tonsPledged, pledged)
 
     setPlightData(plightData)
-    setYourPlight(
-      pledged
-        ? ((Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 18))) * 70).toFixed(
-            2,
-          )
-        : 0,
-    )
+
+    if (CO2TokenBalance)
+      setYourPlight(
+        pledged
+          ? (
+              (Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 18))) *
+              70
+            ).toFixed(2)
+          : 0,
+      )
   }, [address])
 
   return (
@@ -117,7 +116,9 @@ const Dashboard = () => {
             />
           </Col>
         </Row>
-        {!isLoadingAccount && address && <MyRegenArt artGallery={artGallery} isLoading={isLoading} />}
+        {!isLoadingAccount && address && (
+          <MyRegenArt artGallery={artGallery} isLoading={isLoading} title="Your regen art" />
+        )}
         {!isLoadingAccount && address && <MyRegenPositions />}
       </Col>
     </Row>

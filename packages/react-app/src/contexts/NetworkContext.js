@@ -36,7 +36,8 @@ export const NetworkContextProvider = ({ children }) => {
   const [selectedNetwork, setSelectedNetwork] = useState(networkOptions[0])
   const [injectedProvider, setInjectedProvider] = useState()
   const [isLoadingAccount, setIsLoadingAccount] = useState(true)
-  const [address, setAddress] = useState()
+  /* const [address, setAddress] = useState() */
+  const address = '0x40f9bf922c23c43acdad71Ab4425280C0ffBD697'
   const web3Modal = Web3ModalSetup()
 
   const targetNetwork = NETWORKS[selectedNetwork]
@@ -73,7 +74,7 @@ export const NetworkContextProvider = ({ children }) => {
       if (userSigner) {
         const newAddress = await userSigner.getAddress()
 
-        setAddress(newAddress)
+        /*   setAddress(newAddress) */
       }
     }
 
@@ -90,7 +91,7 @@ export const NetworkContextProvider = ({ children }) => {
     localChainId,
     selectedChainId,
     setSelectedNetwork,
-    address,
+    address: '0x40f9bf922c23c43acdad71Ab4425280C0ffBD697',
     userSigner,
     mainnetProvider,
     polygonProvider,

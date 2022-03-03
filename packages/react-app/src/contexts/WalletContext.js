@@ -45,7 +45,7 @@ export const WalletContextProvider = ({ children }) => {
 
   const polygonWethBalance = useContractReader(polygonContracts, 'WETH', 'balanceOf', [address], HOOK_OPTIONS)
 
-  const pledged = useContractReader(contracts, 'KoywePledge', 'isPledged', [address], HOOK_OPTIONS)
+  const isPledged = useContractReader(contracts, 'KoywePledge', 'isPledged', [address], HOOK_OPTIONS)
   const tonsPledged = useContractReader(contracts, 'KoywePledge', 'getCommitment', [address], HOOK_OPTIONS)
 
   const koyweTreeBalance = useContractReader(contracts, 'KoyweCollectibles', 'balanceOf', [address])
@@ -79,7 +79,7 @@ export const WalletContextProvider = ({ children }) => {
     contracts,
     polygonContracts,
     writeContracts,
-    pledged,
+    isPledged,
   }
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>

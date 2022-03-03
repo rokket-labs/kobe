@@ -9,13 +9,13 @@ const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
 const { Title } = Typography
 
-const MyRegenArt = ({ artGallery, isLoading }) => {
+const MyRegenArt = ({ artGallery, isLoading, title = '' }) => {
   const [showAll, setShowAll] = useState(false)
 
   return (
     <>
       <Row>
-        <Title level={2}>Your regen art</Title>
+        <Title level={2}>{title}</Title>
       </Row>
       {isLoading ? (
         <Row justify="center" gutter={8}>
@@ -37,7 +37,7 @@ const MyRegenArt = ({ artGallery, isLoading }) => {
               }}
             />
           </Row>
-          {artGallery.length > 0 && (
+          {artGallery.length > 5 && (
             <Row justify="center" className="my-md">
               <StyledButton $type="primary" onClick={() => setShowAll(hiddenArt => !hiddenArt)}>
                 {!showAll ? 'See all my art' : 'Hide my art'}
