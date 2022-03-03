@@ -13,8 +13,6 @@ import { HOOK_OPTIONS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 import { getFightData, getPlightData } from '../helpers/dashboardData'
-// only for test purpose
-import { getArtData } from '../helpers/getArtData'
 import { useTreejerGraph } from '../hooks/useTreejerGraph'
 
 const { utils } = require('ethers')
@@ -23,7 +21,7 @@ const { Text } = Typography
 const Dashboard = () => {
   const router = useHistory()
   const { address, isLoadingAccount } = useContext(NetworkContext)
-  const { USDPrices, walletBalance, tonsPledged, contracts, pledged, yourKTBalance } = useContext(WalletContext)
+  const { USDPrices, walletBalance, tonsPledged, contracts, isPledged, yourKTBalance } = useContext(WalletContext)
   const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance } = walletBalance
   const [fightData, setFightData] = useState([])
   const [plightData, setPlightData] = useState([])
@@ -33,14 +31,15 @@ const Dashboard = () => {
   const CO2TokenBalance = useContractReader(contracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
   const { collection: artGallery, isLoading } = useTreejerGraph(address)
 
-  /* const data = getArtData() */
-
   useEffect(() => {
-    const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, yourKTBalance, USDPrices, pledged)
+    console.log({ yourKTBalance, isPledged })
 
+    const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, yourKTBalance, USDPrices, isPledged)
+
+    console.log({ walletBalance })
     setFightData(fightData)
     setYourFight(
-      pledged
+      isPledged
         ? (
             Number(utils.formatUnits(polygonBCTBalance, 18)) +
             Number(utils.formatUnits(polygonNCTBalance, 18)) +
@@ -51,16 +50,19 @@ const Dashboard = () => {
   }, [address])
 
   useEffect(() => {
-    const plightData = getPlightData(address, polygonMCO2Balance, tonsPledged, pledged)
+    const plightData = getPlightData(address, polygonMCO2Balance, tonsPledged, isPledged)
 
     setPlightData(plightData)
-    setYourPlight(
-      pledged
-        ? ((Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 18))) * 70).toFixed(
-            2,
-          )
-        : 0,
-    )
+
+    if (CO2TokenBalance)
+      setYourPlight(
+        isPledged
+          ? (
+              (Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 18))) *
+              70
+            ).toFixed(2)
+          : 0,
+      )
   }, [address])
 
   return (
@@ -75,7 +77,7 @@ const Dashboard = () => {
           </Col>
         </Row>
         <Row justify="end" className="my-md">
-          {pledged ? (
+          {isPledged ? (
             <Col>
               <StyledButton $type="primary">Mint living position NFT for 0.08 ETH</StyledButton>
             </Col>
@@ -117,7 +119,9 @@ const Dashboard = () => {
             />
           </Col>
         </Row>
-        {!isLoadingAccount && address && <MyRegenArt artGallery={artGallery} isLoading={isLoading} />}
+        {!isLoadingAccount && address && (
+          <MyRegenArt artGallery={artGallery} isLoading={isLoading} title="Your regen art" />
+        )}
         {!isLoadingAccount && address && <MyRegenPositions />}
       </Col>
     </Row>

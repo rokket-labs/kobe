@@ -2,23 +2,24 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Col, Row, Space, Typography } from 'antd'
 import { useContractReader, useGasPrice } from 'eth-hooks'
 
+import MyRegenArt from '../components/dashboard/MyRegenArt'
 import KoyweTrees from '../components/RegenArt/KoyweTrees'
 import NftCard from '../components/RegenArt/NftCard'
-import TreejerTrees from '../components/RegenArt/TreejerTrees'
 import { HOOK_OPTIONS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 import { Transactor } from '../helpers'
+import { useTreejerGraph } from '../hooks/useTreejerGraph'
 
 const { Title, Text } = Typography
 
 const RegenArt = () => {
-  const { address, targetNetwork, userSigner } = useContext(NetworkContext)
+  const { address, targetNetwork, userSigner, isLoadingAccount } = useContext(NetworkContext)
   const { contracts, writeContracts, yourKTBalance } = useContext(WalletContext)
   const [isBCTAmountApproved, setIsBCTAmountApproved] = useState()
   const [buying, setBuying] = useState()
   const [approving, setApproving] = useState()
-
+  const { collection: artGallery, isLoading } = useTreejerGraph(address)
   const treeAddress = contracts?.KoyweCollectibles?.address
 
   const mintPrice = useContractReader(contracts, 'KoyweCollectibles', 'bctPrice', HOOK_OPTIONS)
@@ -78,7 +79,7 @@ const RegenArt = () => {
                   You cant mint (more) trees here↗️
                 </a>
               </p>
-              <TreejerTrees address={address} />
+              {!isLoadingAccount && address && <MyRegenArt artGallery={artGallery} isLoading={isLoading} />}
             </>
           )}
         </Space>

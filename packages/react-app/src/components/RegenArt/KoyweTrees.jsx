@@ -43,7 +43,6 @@ const KoyweTrees = (contracts, yourKTBalance, address) => {
     <div style={{ width: '100%', margin: 'auto', marginTop: 32, paddingBottom: 32 }}>
       <List
         grid={3}
-        bordered
         dataSource={yourCollectibles}
         renderItem={item => {
           const id = parseInt(item.id, 16)

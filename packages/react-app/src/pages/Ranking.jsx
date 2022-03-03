@@ -28,7 +28,7 @@ const StyledText = styled(Text)`
 
 const RankingTitle = () => {
   /*   const { mainnetProvider, address } = useContext(NetworkContext)
-  const { contracts, polygonContracts, localProvider, pledged } = useContext(WalletContext)
+  const { contracts, polygonContracts, localProvider, isPledged } = useContext(WalletContext)
 
   const pledgeEvents = useEventListener(contracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
 
