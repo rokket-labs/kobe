@@ -49,13 +49,24 @@ export const NetworkContextProvider = ({ children }) => {
   const localChainId = localProvider?._network?.chainId
   const selectedChainId = userSigner?.provider?._network?.chainId
 
-  const connectToWallet = useCallback(async () => {
-    setIsLoadingAccount(true)
+  const logoutOfWeb3Modal = useCallback(async () => {
+    await web3Modal.clearCachedProvider()
 
+    if (injectedProvider && injectedProvider.provider && typeof injectedProvider.provider.disconnect === 'function') {
+      console.log('aca')
+      await injectedProvider.provider.disconnect()
+    }
+
+    setTimeout(() => {
+      window.location.reload()
+    }, 1)
+  }, [injectedProvider, web3Modal])
+
+  const connectToWallet = useCallback(async () => {
     const provider = await web3Modal.connect()
 
     setInjectedProvider(new ethers.providers.Web3Provider(provider))
-
+    setIsLoadingAccount(false)
     provider.on('chainChanged', chainId => {
       console.log(`chain changed to ${chainId}! updating providers`)
       setInjectedProvider(new ethers.providers.Web3Provider(provider))
@@ -65,8 +76,13 @@ export const NetworkContextProvider = ({ children }) => {
       console.log(`account changed!`)
       setInjectedProvider(new ethers.providers.Web3Provider(provider))
     })
-    setIsLoadingAccount(false)
-  }, [web3Modal])
+
+    // Subscribe to session disconnection
+    provider.on('disconnect', (code, reason) => {
+      console.log(code, reason)
+      logoutOfWeb3Modal()
+    })
+  }, [web3Modal, logoutOfWeb3Modal])
 
   useEffect(() => {
     const getAddress = async () => {
@@ -82,7 +98,6 @@ export const NetworkContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (web3Modal.cachedProvider && !injectedProvider) connectToWallet()
-    else setIsLoadingAccount(false)
   }, [injectedProvider, connectToWallet, web3Modal])
 
   const value = {
