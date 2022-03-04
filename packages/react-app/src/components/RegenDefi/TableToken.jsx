@@ -1,3 +1,4 @@
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { Image, Row, Table, Typography } from 'antd'
 import styled from 'styled-components'
@@ -22,7 +23,7 @@ const milesPipe = n => {
 
   return n.toLocaleString(locale)
 }
-const getData = (contracts, USDPrices) => {
+const getData = USDPrices => {
   return [
     {
       key: '1',
@@ -33,8 +34,8 @@ const getData = (contracts, USDPrices) => {
       tvl: '20k',
       potential: '28,325%',
       contract: {
-        title: contracts.PBCT.address,
-        url: contracts.PBCT.address,
+        title: '0x2F800Db0fdb5223b3C3f354886d907A671414A7F',
+        url: '0x2F800Db0fdb5223b3C3f354886d907A671414A7F',
       },
       co2: milesPipe('4000'),
       website: 'website1.com',
@@ -52,8 +53,8 @@ const getData = (contracts, USDPrices) => {
       tvl: '102',
       potential: 'N/A %',
       contract: {
-        title: contracts.PMCO2.address,
-        url: contracts.PMCO2.address,
+        title: '0xAa7DbD1598251f856C12f63557A4C4397c253Cea',
+        url: '0xAa7DbD1598251f856C12f63557A4C4397c253Cea',
       },
       co2: '23',
       website: 'website1.io',
@@ -71,8 +72,8 @@ const getData = (contracts, USDPrices) => {
       tvl: '4235K',
       potential: '28,325%',
       contract: {
-        title: contracts.KLIMA.address,
-        url: contracts.KLIMA.address,
+        title: '0x4e78011ce80ee02d2c3e649fb657e45898257815',
+        url: '0x4e78011ce80ee02d2c3e649fb657e45898257815',
       },
       co2: milesPipe(1246),
       website: 'website1.eco',
@@ -84,7 +85,7 @@ const getData = (contracts, USDPrices) => {
   ]
 }
 
-export const TableToken = ({ contracts, USDPrices }) => {
+export const TableToken = ({ USDPrices }) => {
   const columns = [
     {
       title: 'Token',
@@ -142,7 +143,7 @@ export const TableToken = ({ contracts, USDPrices }) => {
       render: props => <StyledButton $type="primary">{props.title}</StyledButton>,
     },
   ]
-  const data = getData(contracts, USDPrices)
+  const data = getData(USDPrices)
 
   return <StyledTable columns={columns} dataSource={data} pagination={false} />
 }

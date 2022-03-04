@@ -214,9 +214,7 @@ export const NETWORKS = {
 }
 
 export const NETWORK = chainId => {
-  for (const n in NETWORKS)
-    if (NETWORKS[n].chainId === chainId)
-      return NETWORKS[n]
-
-
+  for (const n in NETWORKS) if (NETWORKS[n].chainId === chainId) return NETWORKS[n]
 }
+
+export const networkOptions = [NETWORKS.polygon.name, 'mainnet', 'rinkeby', 'goerli']

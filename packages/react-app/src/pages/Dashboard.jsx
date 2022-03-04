@@ -20,9 +20,10 @@ const { Text } = Typography
 
 const Dashboard = () => {
   const router = useHistory()
-  const { address, isLoadingAccount } = useContext(NetworkContext)
+  const { address, isLoadingAccount, localChainId } = useContext(NetworkContext)
   const { USDPrices, walletBalance, tonsPledged, contracts, isPledged, yourKTBalance } = useContext(WalletContext)
-  const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance } = walletBalance
+  const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance, polygonKLIMABalance, polygonSklimaBalance } =
+    walletBalance
   const [fightData, setFightData] = useState([])
   const [plightData, setPlightData] = useState([])
   const [yourPlight, setYourPlight] = useState()
@@ -32,13 +33,17 @@ const Dashboard = () => {
   const { collection: artGallery, isLoading } = useTreejerGraph(address)
 
   useEffect(() => {
-    console.log({ yourKTBalance, isPledged })
+    const fightData = getFightData(
+      polygonBCTBalance,
+      polygonMCO2Balance,
+      yourKTBalance,
+      USDPrices,
+      isPledged,
+      totalBalance,
+    )
 
-    const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, yourKTBalance, USDPrices, isPledged)
-
-    console.log({ walletBalance })
     setFightData(fightData)
-    setYourFight(
+    setYourPlight(
       isPledged
         ? (
             Number(utils.formatUnits(polygonBCTBalance, 18)) +
@@ -47,23 +52,43 @@ const Dashboard = () => {
           ).toFixed(2)
         : 0,
     )
-  }, [address])
 
-  useEffect(() => {
     const plightData = getPlightData(address, polygonMCO2Balance, tonsPledged, isPledged)
 
     setPlightData(plightData)
 
     if (CO2TokenBalance)
-      setYourPlight(
-        isPledged
-          ? (
-              (Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 18))) *
-              70
-            ).toFixed(2)
-          : 0,
-      )
-  }, [address])
+      setYourFight(tonsPledged > 0 ? (CO2TokenBalance / Math.pow(10, 18) + tonsPledged * 70).toFixed(2) : 0)
+  }, [address, walletBalance])
+
+  const [totalBalance, setTotalBalance] = useState(0)
+
+  // read prices from coingecko
+  useEffect(() => {
+    // we will use async/await to fetch this data
+    function getTotalBalance() {
+      let sum = 0
+
+      sum +=
+        ((polygonBCTBalance && polygonBCTBalance > 0 ? polygonBCTBalance : 0) / Math.pow(10, 18)) *
+        (USDPrices &&
+          USDPrices['toucan-protocol-base-carbon-tonne'] &&
+          USDPrices['toucan-protocol-base-carbon-tonne'].usd)
+      sum +=
+        ((polygonMCO2Balance && polygonMCO2Balance > 0 ? polygonMCO2Balance : 0) / Math.pow(10, 18)) *
+        (USDPrices && USDPrices['moss-carbon-credit'] && USDPrices['moss-carbon-credit'].usd)
+      sum +=
+        ((polygonKLIMABalance && polygonKLIMABalance > 0 ? polygonKLIMABalance : 0) / Math.pow(10, 9)) *
+        (USDPrices && USDPrices['staked-klima'] && USDPrices['staked-klima'].usd)
+      sum +=
+        ((polygonSklimaBalance && polygonSklimaBalance > 0 ? polygonSklimaBalance : 0) / Math.pow(10, 9)) *
+        (USDPrices && USDPrices['klima-dao'] && USDPrices['klima-dao'].usd)
+      // sum+=(myPolyMCO2Balance && myPolyMCO2Balance > 0 ? myPolyMCO2Balance : 0)/(Math.pow(10,18))*(prices && prices["moss-carbon-credit"] && prices["moss-carbon-credit"].usd);
+      setTotalBalance(sum.toFixed(2))
+    }
+
+    getTotalBalance()
+  }, [polygonBCTBalance, polygonMCO2Balance])
 
   return (
     <Row justify="center" className="my-sm">

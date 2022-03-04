@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useUserProviderAndSigner } from 'eth-hooks'
 
-import { ALCHEMY_KEY, NETWORKS } from '../constants'
+import { ALCHEMY_KEY, networkOptions, NETWORKS } from '../constants'
 import { Web3ModalSetup } from '../helpers'
 import { useStaticJsonRPC } from '../hooks'
 
 const { ethers } = require('ethers')
-const networkOptions = ['polygon', 'mainnet', 'rinkeby']
+
 const USE_BURNER_WALLET = false
 
 const providers = [
@@ -24,6 +24,7 @@ export const NetworkContext = React.createContext({
   setSelectedNetwork: () => {},
   address: undefined,
   userSigner: undefined,
+  localProvider: undefined,
   mainnetProvider: undefined,
   polygonProvider: undefined,
   web3Modal: undefined,
@@ -92,6 +93,7 @@ export const NetworkContextProvider = ({ children }) => {
     setSelectedNetwork,
     address,
     userSigner,
+    localProvider,
     mainnetProvider,
     polygonProvider,
     targetNetwork,

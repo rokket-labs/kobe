@@ -1,31 +1,32 @@
+/* eslint-disable max-lines-per-function */
 import React, { useContext, useEffect, useState } from 'react'
 import { useContractLoader, useContractReader } from 'eth-hooks'
 
 import { HOOK_OPTIONS } from '../constants'
 import externalContracts from '../contracts/external_contracts'
 import deployedContracts from '../contracts/hardhat_contracts.json'
-import { useStaticJsonRPC } from '../hooks'
 
 import { NetworkContext } from './NetworkContext'
 
 const contractConfig = { deployedContracts: deployedContracts || {}, externalContracts: externalContracts || {} }
 
 export const WalletContext = React.createContext({
-  prices: null,
+  USDPrices: undefined,
   walletBalance: {},
   tonsPledged: {},
   contracts: {},
+  yourKTBalance: 0,
   polygonContracts: {},
   writeContracts: {},
   isPledged: false,
 })
 
 export const WalletContextProvider = ({ children }) => {
-  const { address, localChainId, userSigner, targetNetwork, polygonProvider } = useContext(NetworkContext)
+  const { address, localChainId, userSigner, localProvider, polygonProvider } = useContext(NetworkContext)
 
   const [USDPrices, setUSDPrices] = useState(null) // prices of main tokens of the app
 
-  const localProvider = useStaticJsonRPC([targetNetwork.rpcUrl])
+  /* const localProvider = useStaticJsonRPC([targetNetwork.rpcUrl]) */
 
   // Load in your local 📝 contract and read a value from it:
   const contracts = useContractLoader(localProvider, contractConfig)
@@ -34,20 +35,56 @@ export const WalletContextProvider = ({ children }) => {
 
   const polygonContracts = useContractLoader(polygonProvider, contractConfig)
   // Read the balance of the user's wallet
-  const polygonMCO2Balance = useContractReader(polygonContracts, 'PMCO2', 'balanceOf', [address], HOOK_OPTIONS)
+  const polygonMCO2Balance = useContractReader(
+    /* polygonContracts */ writeContracts,
+    'PMCO2',
+    'balanceOf',
+    [address],
+    HOOK_OPTIONS,
+  )
 
-  const polygonBCTBalance = useContractReader(polygonContracts, 'PBCT', 'balanceOf', [address], HOOK_OPTIONS)
+  const polygonBCTBalance = useContractReader(
+    /* polygonContracts */ writeContracts,
+    'PBCT',
+    'balanceOf',
+    [address],
+    HOOK_OPTIONS,
+  )
 
-  const polygonNCTBalance = useContractReader(polygonContracts, 'NCT', 'balanceOf', [address], HOOK_OPTIONS)
+  const polygonNCTBalance = useContractReader(
+    /* polygonContracts */ writeContracts,
+    'NCT',
+    'balanceOf',
+    [address],
+    HOOK_OPTIONS,
+  )
 
-  const polygonKlimaBalance = useContractReader(polygonContracts, 'KLIMA', 'balanceOf', [address], HOOK_OPTIONS)
+  const polygonKlimaBalance = useContractReader(
+    /* polygonContracts */ writeContracts,
+    'KLIMA',
+    'balanceOf',
+    [address],
+    HOOK_OPTIONS,
+  )
 
-  const polygonSKlimaBalance = useContractReader(polygonContracts, 'sKLIMA', 'balanceOf', [address], HOOK_OPTIONS)
+  const polygonSKlimaBalance = useContractReader(
+    /* polygonContracts */ writeContracts,
+    'sKLIMA',
+    'balanceOf',
+    [address],
+    HOOK_OPTIONS,
+  )
 
-  const polygonWethBalance = useContractReader(polygonContracts, 'WETH', 'balanceOf', [address], HOOK_OPTIONS)
+  const polygonWethBalance = useContractReader(
+    /* polygonContracts */ writeContracts,
+    'WETH',
+    'balanceOf',
+    [address],
+    HOOK_OPTIONS,
+  )
 
   const isPledged = useContractReader(contracts, 'KoywePledge', 'isPledged', [address], HOOK_OPTIONS)
-  const tonsPledged = useContractReader(contracts, 'KoywePledge', 'getCommitment', [address], HOOK_OPTIONS)
+  const tonsPledged = useContractReader(contracts, 'KoywePledge', 'getCommitment', [address], HOOK_OPTIONS) / 10 ** 9
 
   const koyweTreeBalance = useContractReader(contracts, 'KoyweCollectibles', 'balanceOf', [address])
   const yourKTBalance = koyweTreeBalance && koyweTreeBalance.toNumber && koyweTreeBalance.toNumber()

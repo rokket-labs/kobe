@@ -1,20 +1,15 @@
 import React, { useContext } from 'react'
 import { Col, Row, Typography } from 'antd'
 
-// import { useContractReader } from 'eth-hooks'
-// import PledgeButton from '../components/pledge/PledgeButton'
 import PledgeDisplay from '../components/pledge/PledgeDisplay'
 import PledgedReduceCO2 from '../components/PledgedReduceCO2'
 import { StyledIcon } from '../components/StyledIcon'
-// import { HOOK_OPTIONS } from '../constants'
-import { IsPledgedContext } from '../contexts/IsPledgedContext'
-// import { NetworkContext } from '../contexts/NetworkContext'
-// import { WalletContext } from '../contexts/WalletContext'
+import { WalletContext } from '../contexts/WalletContext'
 
 const { Title, Paragraph } = Typography
 
 const Pledge = () => {
-  const { isPledged, handleIsPledged } = useContext(IsPledgedContext)
+  const { isPledged } = useContext(WalletContext)
 
   return (
     <Row justify="center" style={{ marginBottom: '5rem' }}>
@@ -52,7 +47,7 @@ const Pledge = () => {
       </Col>
 
       <Col xl={13} xs={22}>
-        <PledgedReduceCO2 isPledge={isPledged} handleIsPledge={handleIsPledged} />
+        <PledgedReduceCO2 isPledged={isPledged} />
       </Col>
     </Row>
   )
