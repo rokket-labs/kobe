@@ -1,7 +1,7 @@
 import CarbonFYI from '../components/common/CarbonFYI'
 
 // eslint-disable-next-line max-params
-export const getFightData = (BTC = 0, CO2 = 0, trees = 0, USDPrices = 0, isPledged, totalBalance) => [
+export const getFightData = (BTC = 0, CO2 = 0, trees = 0, totalBalance) => [
   {
     id: 1,
     srcIcon: '/icon/tree.svg',

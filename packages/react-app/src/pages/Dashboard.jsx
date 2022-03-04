@@ -33,14 +33,7 @@ const Dashboard = () => {
   const { collection: artGallery, isLoading } = useTreejerGraph(address)
 
   useEffect(() => {
-    const fightData = getFightData(
-      polygonBCTBalance,
-      polygonMCO2Balance,
-      yourKTBalance,
-      USDPrices,
-      isPledged,
-      totalBalance,
-    )
+    const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, yourKTBalance, totalBalance)
 
     setFightData(fightData)
     setYourPlight(

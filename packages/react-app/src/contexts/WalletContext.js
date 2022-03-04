@@ -26,8 +26,6 @@ export const WalletContextProvider = ({ children }) => {
 
   const [USDPrices, setUSDPrices] = useState(null) // prices of main tokens of the app
 
-  /* const localProvider = useStaticJsonRPC([targetNetwork.rpcUrl]) */
-
   // Load in your local 📝 contract and read a value from it:
   const contracts = useContractLoader(localProvider, contractConfig)
 
@@ -35,53 +33,17 @@ export const WalletContextProvider = ({ children }) => {
 
   const polygonContracts = useContractLoader(polygonProvider, contractConfig)
   // Read the balance of the user's wallet
-  const polygonMCO2Balance = useContractReader(
-    /* polygonContracts */ writeContracts,
-    'PMCO2',
-    'balanceOf',
-    [address],
-    HOOK_OPTIONS,
-  )
+  const polygonMCO2Balance = useContractReader(polygonContracts, 'PMCO2', 'balanceOf', [address], HOOK_OPTIONS)
 
-  const polygonBCTBalance = useContractReader(
-    /* polygonContracts */ writeContracts,
-    'PBCT',
-    'balanceOf',
-    [address],
-    HOOK_OPTIONS,
-  )
+  const polygonBCTBalance = useContractReader(polygonContracts, 'PBCT', 'balanceOf', [address], HOOK_OPTIONS)
 
-  const polygonNCTBalance = useContractReader(
-    /* polygonContracts */ writeContracts,
-    'NCT',
-    'balanceOf',
-    [address],
-    HOOK_OPTIONS,
-  )
+  const polygonNCTBalance = useContractReader(polygonContracts, 'NCT', 'balanceOf', [address], HOOK_OPTIONS)
 
-  const polygonKlimaBalance = useContractReader(
-    /* polygonContracts */ writeContracts,
-    'KLIMA',
-    'balanceOf',
-    [address],
-    HOOK_OPTIONS,
-  )
+  const polygonKlimaBalance = useContractReader(polygonContracts, 'KLIMA', 'balanceOf', [address], HOOK_OPTIONS)
 
-  const polygonSKlimaBalance = useContractReader(
-    /* polygonContracts */ writeContracts,
-    'sKLIMA',
-    'balanceOf',
-    [address],
-    HOOK_OPTIONS,
-  )
+  const polygonSKlimaBalance = useContractReader(polygonContracts, 'sKLIMA', 'balanceOf', [address], HOOK_OPTIONS)
 
-  const polygonWethBalance = useContractReader(
-    /* polygonContracts */ writeContracts,
-    'WETH',
-    'balanceOf',
-    [address],
-    HOOK_OPTIONS,
-  )
+  const polygonWethBalance = useContractReader(polygonContracts, 'WETH', 'balanceOf', [address], HOOK_OPTIONS)
 
   const isPledged = useContractReader(contracts, 'KoywePledge', 'isPledged', [address], HOOK_OPTIONS)
   const tonsPledged = useContractReader(contracts, 'KoywePledge', 'getCommitment', [address], HOOK_OPTIONS) / 10 ** 9
