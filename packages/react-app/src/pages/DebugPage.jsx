@@ -1,8 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import Contract from '../components/Contract'
+import { NetworkContext } from '../contexts/NetworkContext'
+import { WalletContext } from '../contexts/WalletContext'
 
-const DebugPage = ({ price, userSigner, localProvider, address, blockExplorer, contractConfig }) => {
+
+const DebugPage = () => {
+  const price = 2600
+  const { address, userSigner, polygonProvider, blockExplorer } = useContext(NetworkContext)
+  const { contractConfig } = useContext(WalletContext)
+
   return (
     <>
       {/*
@@ -15,7 +22,7 @@ const DebugPage = ({ price, userSigner, localProvider, address, blockExplorer, c
         name="KoywePledge"
         price={price}
         signer={userSigner}
-        provider={localProvider}
+        provider={polygonProvider}
         address={address}
         blockExplorer={blockExplorer}
         contractConfig={contractConfig}
@@ -24,25 +31,25 @@ const DebugPage = ({ price, userSigner, localProvider, address, blockExplorer, c
         name="CO2TokenContract"
         price={price}
         signer={userSigner}
-        provider={localProvider}
+        provider={polygonProvider}
         address={address}
         blockExplorer={blockExplorer}
         contractConfig={contractConfig}
       />
-      {/* <Contract
-            name="KoyweToken"
+      <Contract
+            name="KoyweCollectibles"
             price={price}
             signer={userSigner}
-            provider={localProvider}
+            provider={polygonProvider}
             address={address}
             blockExplorer={blockExplorer}
             contractConfig={contractConfig}
-          /> */}
+          />
       <Contract
         name="BCTVendor"
         price={price}
         signer={userSigner}
-        provider={localProvider}
+        provider={polygonProvider}
         address={address}
         blockExplorer={blockExplorer}
         contractConfig={contractConfig}
@@ -51,7 +58,7 @@ const DebugPage = ({ price, userSigner, localProvider, address, blockExplorer, c
             name="Dex"
             price={price}
             signer={userSigner}
-            provider={localProvider}
+            provider={polygonProvider}
             address={address}
             blockExplorer={blockExplorer}
             contractConfig={contractConfig}

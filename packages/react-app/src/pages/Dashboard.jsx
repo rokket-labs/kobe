@@ -21,20 +21,20 @@ const { Text } = Typography
 const Dashboard = () => {
   const router = useHistory()
   const { address, isLoadingAccount } = useContext(NetworkContext)
-  const { USDPrices, walletBalance, tonsPledged, contracts, isPledged, yourKTBalance } = useContext(WalletContext)
+  const { USDPrices, walletBalance, tonsPledged, contracts, isPledged, yourKTBalance, CO2TokenBalance } = useContext(WalletContext)
   const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance } = walletBalance
   const [fightData, setFightData] = useState([])
   const [plightData, setPlightData] = useState([])
   const [yourPlight, setYourPlight] = useState()
   const [yourFight, setYourFight] = useState()
 
-  const CO2TokenBalance = useContractReader(contracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
   const { collection: artGallery, isLoading } = useTreejerGraph(address)
 
+  // TODO: Estos useEffect NO están cargando bien los datos. Sólo cargan 1 vez, antes de tener todo el contexto, y se quedan como no pledgeados
   useEffect(() => {
     console.log({ yourKTBalance, isPledged })
 
-    const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, yourKTBalance, USDPrices, isPledged)
+    const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, polygonNCTBalance, yourKTBalance, USDPrices, isPledged)
 
     console.log({ walletBalance })
     setFightData(fightData)
@@ -50,7 +50,7 @@ const Dashboard = () => {
   }, [address])
 
   useEffect(() => {
-    const plightData = getPlightData(address, polygonMCO2Balance, tonsPledged, isPledged)
+    const plightData = getPlightData(address, CO2TokenBalance, tonsPledged, isPledged)
 
     setPlightData(plightData)
 
@@ -58,8 +58,7 @@ const Dashboard = () => {
       setYourPlight(
         isPledged
           ? (
-              (Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 18))) *
-              70
+              Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 9)*70)
             ).toFixed(2)
           : 0,
       )
@@ -101,9 +100,11 @@ const Dashboard = () => {
                   <Image src={'icon/emoji-trophy.svg'} preview={false} />
                 </>
               }
-              below={<Text>{`${yourFight || 0} CO2 tons / year`}</Text>}
+              below={<Text>{`${yourFight || 0} CO2 tons`}</Text>}
               title={'Your fight'}
               color="#3182CE"
+              // percentage={}
+              percentage={isPledged && yourFight > yourPlight ? 100 : Math.max((yourFight/yourPlight).toFixed(2)*100,10)}
             />
             <ProgressInfo
               title={'Your plight'}
@@ -114,8 +115,8 @@ const Dashboard = () => {
                   <Image src={'icon/emoji-user.svg'} preview={false} />
                 </>
               }
-              below={<Text>{`${yourPlight || 0} CO2 tons / year`}</Text>}
-              percentage={50}
+              below={<Text>Pledged {`${yourPlight || 0} CO2 tons over Lifetime`}</Text>}
+              percentage={isPledged && yourFight < yourPlight ? 100 : Math.max((yourPlight/yourFight).toFixed(2)*100,10)}
             />
           </Col>
         </Row>

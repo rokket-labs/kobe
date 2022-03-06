@@ -47,7 +47,7 @@ const GeneralLayout = ({ children, NETWORKCHECK }) => {
         <Navbar navbarRef={navbarRef} NETWORKCHECK={NETWORKCHECK} />
       </StyledHeader>
       <StyledContent nav={height}>{children}</StyledContent>
-      <Footer style={{ textAlign: 'center' }}>© Rokketlabs - 2022</Footer>
+      <Footer style={{ textAlign: 'center' }}>© Koywe - 2022</Footer>
     </Layout>
   )
 }

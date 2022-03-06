@@ -5,14 +5,14 @@ export const createTableData = (USDPrices, BTC, MCO2, NCT, KLIMA, sKLIMA) => {
   const MCO2formated = utils.formatUnits(MCO2, 18)
   const BTCformated = utils.formatUnits(BTC, 18)
   const NCTformated = utils.formatUnits(NCT, 18)
-  const KLIMAformated = utils.formatUnits(KLIMA, 18)
-  const sKLIMAformated = utils.formatUnits(sKLIMA, 18)
+  const KLIMAformated = utils.formatUnits(KLIMA, 9)
+  const sKLIMAformated = utils.formatUnits(sKLIMA, 9)
 
   const MCO2BalanceUSD = MCO2formated * USDPrices['moss-carbon-credit']?.usd || 0
   const BCTBalanceUSD = BTCformated * USDPrices['toucan-protocol-base-carbon-tonne']?.usd || 0
-  const NCTBalanceUSD = NCTformated * USDPrices['klima-dao']?.usd || 0
+  const NCTBalanceUSD = NCTformated * USDPrices['toucan-protocol-nature-based-carbon-tonne']?.usd || NCTformated*1
   const KLIMABalanceUSD = KLIMAformated * USDPrices['klima-dao']?.usd || 0
-  const sKLIMABalanceUSD = sKLIMAformated * USDPrices['klima-dao']?.usd || 0
+  const sKLIMABalanceUSD = sKLIMAformated * USDPrices['staked-klima']?.usd || 0
 
   const tableData = [
     {
@@ -28,22 +28,22 @@ export const createTableData = (USDPrices, BTC, MCO2, NCT, KLIMA, sKLIMA) => {
     {
       key: '2',
       token: {
-        title: 'Toucan CO2 Tokens',
+        title: 'Toucan CO2 Tokens (BCT)',
         icon: 'icon/toucan.svg',
       },
       position: `$${BCTBalanceUSD.toFixed(2)}`,
       co2: Number(BTCformated).toFixed(2),
-      description: 'Toucan vera standard credits bridged to blockchain.',
+      description: 'Base Carbon Ton: Toucan credits bridged to blockchain on Polygon.',
     },
     {
       key: '3',
       token: {
-        title: 'Koywe CO2 Tokens',
-        icon: 'icon/koywe.svg',
+        title: 'Toucan CO2 Tokens (NCT)',
+        icon: 'icon/nct.png',
       },
       position: `$${NCTBalanceUSD.toFixed(2)}`,
       co2: Number(NCTformated).toFixed(2),
-      description: 'Koywe certified CO2 Tokens.',
+      description: 'Nature Carbon Ton: Toucan premium credits bridged to blockchain on Polygon.',
     },
     {
       key: '4',
