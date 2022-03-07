@@ -54,7 +54,7 @@ const RegenArt = () => {
           <Text>Choose your favorite collection and buy it from here</Text>
           <Space direction="vertical" style={{ marginTop: '1rem', width: '100%' }}>
             <NftCard
-              title="Regenerative Art Collections"
+              title="Koywe Trees"
               mintPrice={mintPrice}
               address={address}
               isBCTAmountApproved={isBCTAmountApproved}

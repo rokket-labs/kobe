@@ -33,7 +33,7 @@ const NftCard = ({ title, mintPrice, isBCTAmountApproved, buying, handleApproveB
           }}
         >
           <Space direction="vertical" align="center" style={{ display: 'flex', justifyContent: 'center' }}>
-            <Image width={'16.688rem'} height={'16.688rem'} preview={false} src={'/icon/LandscapeDesigner.svg'} />
+            <Image width={'16.688rem'} height={'16.688rem'} preview={false} src={'/icon/koywenft.png'} />
             <Title level={5}>{title}</Title>
           </Space>
         </Col>
@@ -48,7 +48,7 @@ const NftCard = ({ title, mintPrice, isBCTAmountApproved, buying, handleApproveB
               <Space direction="vertical" size={'large'}>
                 <Space size={'large'} wrap>
                   <Text>Price: {mintPrice && utils.formatUnits(mintPrice, 18)} BCT</Text>
-                  <Text style={{ marginLeft: 10 }}>-20 CO2 tons / tree</Text>
+                  {/* <Text style={{ marginLeft: 10 }}>-20 CO2 tons / tree</Text> */}
                 </Space>
                 <Space direction="vertical">
                   <Paragraph>

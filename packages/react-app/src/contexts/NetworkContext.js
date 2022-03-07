@@ -43,6 +43,8 @@ export const NetworkContextProvider = ({ children }) => {
   const targetNetwork = NETWORKS[selectedNetwork]
   const localProvider = useStaticJsonRPC([targetNetwork.rpcUrl])
 
+  const { blockExplorer } = targetNetwork
+
   const mainnetProvider = useStaticJsonRPC(providers)
   const polygonProvider = new ethers.providers.StaticJsonRpcProvider(polygonProviderUrl)
   const userSigner = useUserProviderAndSigner(injectedProvider, localProvider, USE_BURNER_WALLET).signer
@@ -113,6 +115,7 @@ export const NetworkContextProvider = ({ children }) => {
     polygonProvider,
     targetNetwork,
     isLoadingAccount,
+    blockExplorer,
   }
 
   return <NetworkContext.Provider value={value}>{children}</NetworkContext.Provider>

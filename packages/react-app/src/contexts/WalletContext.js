@@ -19,12 +19,14 @@ export const WalletContext = React.createContext({
   polygonContracts: {},
   writeContracts: {},
   isPledged: false,
+  isLoadingBalances: true,
 })
 
 export const WalletContextProvider = ({ children }) => {
   const { address, localChainId, userSigner, localProvider, polygonProvider } = useContext(NetworkContext)
 
   const [USDPrices, setUSDPrices] = useState(null) // prices of main tokens of the app
+  const [isLoadingBalances, setIsLoadingBalances] = useState(true)
 
   // Load in your local 📝 contract and read a value from it:
   const contracts = useContractLoader(localProvider, contractConfig)
@@ -46,7 +48,8 @@ export const WalletContextProvider = ({ children }) => {
   const polygonWethBalance = useContractReader(polygonContracts, 'WETH', 'balanceOf', [address], HOOK_OPTIONS)
 
   const isPledged = useContractReader(contracts, 'KoywePledge', 'isPledged', [address], HOOK_OPTIONS)
-  const tonsPledged = useContractReader(contracts, 'KoywePledge', 'getCommitment', [address], HOOK_OPTIONS) / 10 ** 9
+  const tonsPledged = useContractReader(contracts, 'KoywePledge', 'getCommitment', [address], HOOK_OPTIONS)
+  const CO2TokenBalance = useContractReader(contracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
 
   const koyweTreeBalance = useContractReader(contracts, 'KoyweCollectibles', 'balanceOf', [address])
   const yourKTBalance = koyweTreeBalance && koyweTreeBalance.toNumber && koyweTreeBalance.toNumber()
@@ -64,6 +67,33 @@ export const WalletContextProvider = ({ children }) => {
     getData()
   }, [])
 
+  // Read the balance of the user's wallet
+  useEffect(() => {
+    if (isLoadingBalances)
+      if (
+        polygonMCO2Balance &&
+        polygonBCTBalance &&
+        polygonNCTBalance &&
+        polygonKlimaBalance &&
+        polygonSKlimaBalance &&
+        polygonWethBalance &&
+        CO2TokenBalance &&
+        tonsPledged &&
+        isPledged
+      )
+        setIsLoadingBalances(false)
+  }, [
+    polygonMCO2Balance,
+    polygonBCTBalance,
+    polygonNCTBalance,
+    polygonKlimaBalance,
+    polygonSKlimaBalance,
+    polygonWethBalance,
+    CO2TokenBalance,
+    tonsPledged,
+    isPledged,
+  ])
+
   const value = {
     USDPrices,
     walletBalance: {
@@ -80,6 +110,9 @@ export const WalletContextProvider = ({ children }) => {
     polygonContracts,
     writeContracts,
     isPledged,
+    contractConfig,
+    CO2TokenBalance,
+    isLoadingBalances,
   }
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>

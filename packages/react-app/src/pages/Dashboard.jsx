@@ -2,14 +2,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Col, Image, Row, Typography } from 'antd'
-import { useContractReader } from 'eth-hooks'
 
 import { StyledButton } from '../components/common/StyledButton'
 import { CardInfo } from '../components/dashboard/CardInfo'
 import MyRegenArt from '../components/dashboard/MyRegenArt'
 import MyRegenPositions from '../components/dashboard/MyRegenPositions'
 import { ProgressInfo } from '../components/dashboard/ProgressInfo'
-import { HOOK_OPTIONS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 import { getFightData, getPlightData } from '../helpers/dashboardData'
@@ -20,23 +18,30 @@ const { Text } = Typography
 
 const Dashboard = () => {
   const router = useHistory()
-  const { address, isLoadingAccount, localChainId } = useContext(NetworkContext)
-  const { USDPrices, walletBalance, tonsPledged, contracts, isPledged, yourKTBalance } = useContext(WalletContext)
-  const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance, polygonKLIMABalance, polygonSklimaBalance } =
-    walletBalance
+  const { address, isLoadingAccount } = useContext(NetworkContext)
+  const { USDPrices, walletBalance, tonsPledged, isPledged, yourKTBalance, CO2TokenBalance, isLoadingBalances } =
+    useContext(WalletContext)
+  const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance } = walletBalance
   const [fightData, setFightData] = useState([])
   const [plightData, setPlightData] = useState([])
   const [yourPlight, setYourPlight] = useState()
   const [yourFight, setYourFight] = useState()
 
-  const CO2TokenBalance = useContractReader(contracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
   const { collection: artGallery, isLoading } = useTreejerGraph(address)
 
+  // TODO: Estos useEffect NO están cargando bien los datos. Sólo cargan 1 vez, antes de tener todo el contexto, y se quedan como no pledgeados
   useEffect(() => {
-    const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, yourKTBalance, totalBalance)
+    const fightData = getFightData(
+      polygonBCTBalance,
+      polygonMCO2Balance,
+      polygonNCTBalance,
+      yourKTBalance,
+      USDPrices,
+      isPledged,
+    )
 
     setFightData(fightData)
-    setYourPlight(
+    setYourFight(
       isPledged
         ? (
             Number(utils.formatUnits(polygonBCTBalance, 18)) +
@@ -45,43 +50,20 @@ const Dashboard = () => {
           ).toFixed(2)
         : 0,
     )
+  }, [address, isLoadingBalances])
 
-    const plightData = getPlightData(address, polygonMCO2Balance, tonsPledged, isPledged)
+  useEffect(() => {
+    const plightData = getPlightData(address, CO2TokenBalance, tonsPledged, isPledged)
 
     setPlightData(plightData)
 
     if (CO2TokenBalance)
-      setYourFight(tonsPledged > 0 ? (CO2TokenBalance / Math.pow(10, 18) + tonsPledged * 70).toFixed(2) : 0)
-  }, [address, walletBalance])
-
-  const [totalBalance, setTotalBalance] = useState(0)
-
-  // read prices from coingecko
-  useEffect(() => {
-    // we will use async/await to fetch this data
-    function getTotalBalance() {
-      let sum = 0
-
-      sum +=
-        ((polygonBCTBalance && polygonBCTBalance > 0 ? polygonBCTBalance : 0) / Math.pow(10, 18)) *
-        (USDPrices &&
-          USDPrices['toucan-protocol-base-carbon-tonne'] &&
-          USDPrices['toucan-protocol-base-carbon-tonne'].usd)
-      sum +=
-        ((polygonMCO2Balance && polygonMCO2Balance > 0 ? polygonMCO2Balance : 0) / Math.pow(10, 18)) *
-        (USDPrices && USDPrices['moss-carbon-credit'] && USDPrices['moss-carbon-credit'].usd)
-      sum +=
-        ((polygonKLIMABalance && polygonKLIMABalance > 0 ? polygonKLIMABalance : 0) / Math.pow(10, 9)) *
-        (USDPrices && USDPrices['staked-klima'] && USDPrices['staked-klima'].usd)
-      sum +=
-        ((polygonSklimaBalance && polygonSklimaBalance > 0 ? polygonSklimaBalance : 0) / Math.pow(10, 9)) *
-        (USDPrices && USDPrices['klima-dao'] && USDPrices['klima-dao'].usd)
-      // sum+=(myPolyMCO2Balance && myPolyMCO2Balance > 0 ? myPolyMCO2Balance : 0)/(Math.pow(10,18))*(prices && prices["moss-carbon-credit"] && prices["moss-carbon-credit"].usd);
-      setTotalBalance(sum.toFixed(2))
-    }
-
-    getTotalBalance()
-  }, [polygonBCTBalance, polygonMCO2Balance])
+      setYourPlight(
+        isPledged
+          ? (Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 9) * 70)).toFixed(2)
+          : 0,
+      )
+  }, [address, isLoadingBalances])
 
   return (
     <Row justify="center" className="my-sm">
@@ -119,9 +101,13 @@ const Dashboard = () => {
                   <Image src={'icon/emoji-trophy.svg'} preview={false} />
                 </>
               }
-              below={<Text>{`${yourFight || 0} CO2 tons / year`}</Text>}
+              below={<Text>{`${yourFight || 0} CO2 tons`}</Text>}
               title={'Your fight'}
               color="#3182CE"
+              // percentage={}
+              percentage={
+                isPledged && yourFight > yourPlight ? 100 : Math.max((yourFight / yourPlight).toFixed(2) * 100, 10)
+              }
             />
             <ProgressInfo
               title={'Your plight'}
@@ -132,8 +118,10 @@ const Dashboard = () => {
                   <Image src={'icon/emoji-user.svg'} preview={false} />
                 </>
               }
-              below={<Text>{`${yourPlight || 0} CO2 tons / year`}</Text>}
-              percentage={50}
+              below={<Text>Pledged {`${yourPlight || 0} CO2 tons over Lifetime`}</Text>}
+              percentage={
+                isPledged && yourFight < yourPlight ? 100 : Math.max((yourPlight / yourFight).toFixed(2) * 100, 10)
+              }
             />
           </Col>
         </Row>
