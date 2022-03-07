@@ -2,12 +2,11 @@ import React, { useContext } from 'react'
 import { Alert, Select } from 'antd'
 import styled from 'styled-components'
 
-import { NETWORKS } from '../../constants'
+import { networkOptions, NETWORKS } from '../../constants'
 import { NetworkContext } from '../../contexts/NetworkContext'
 import { checkNetwork } from '../../helpers/checkNetwork'
 
 const { Option } = Select
-const networkOptions = [NETWORKS.polygon.name, 'mainnet', 'rinkeby']
 
 const StyledSelect = styled(Select)`
   min-width: 7.5rem;

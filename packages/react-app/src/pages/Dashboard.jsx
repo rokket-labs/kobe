@@ -2,14 +2,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Col, Image, Row, Typography } from 'antd'
-import { useContractReader } from 'eth-hooks'
 
 import { StyledButton } from '../components/common/StyledButton'
 import { CardInfo } from '../components/dashboard/CardInfo'
 import MyRegenArt from '../components/dashboard/MyRegenArt'
 import MyRegenPositions from '../components/dashboard/MyRegenPositions'
 import { ProgressInfo } from '../components/dashboard/ProgressInfo'
-import { HOOK_OPTIONS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 import { getFightData, getPlightData } from '../helpers/dashboardData'
@@ -21,7 +19,8 @@ const { Text } = Typography
 const Dashboard = () => {
   const router = useHistory()
   const { address, isLoadingAccount } = useContext(NetworkContext)
-  const { USDPrices, walletBalance, tonsPledged, contracts, isPledged, yourKTBalance, CO2TokenBalance } = useContext(WalletContext)
+  const { USDPrices, walletBalance, tonsPledged, isPledged, yourKTBalance, CO2TokenBalance, isLoadingBalances } =
+    useContext(WalletContext)
   const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance } = walletBalance
   const [fightData, setFightData] = useState([])
   const [plightData, setPlightData] = useState([])
@@ -32,11 +31,15 @@ const Dashboard = () => {
 
   // TODO: Estos useEffect NO están cargando bien los datos. Sólo cargan 1 vez, antes de tener todo el contexto, y se quedan como no pledgeados
   useEffect(() => {
-    console.log({ yourKTBalance, isPledged })
+    const fightData = getFightData(
+      polygonBCTBalance,
+      polygonMCO2Balance,
+      polygonNCTBalance,
+      yourKTBalance,
+      USDPrices,
+      isPledged,
+    )
 
-    const fightData = getFightData(polygonBCTBalance, polygonMCO2Balance, polygonNCTBalance, yourKTBalance, USDPrices, isPledged)
-
-    console.log({ walletBalance })
     setFightData(fightData)
     setYourFight(
       isPledged
@@ -47,7 +50,7 @@ const Dashboard = () => {
           ).toFixed(2)
         : 0,
     )
-  }, [address])
+  }, [address, isLoadingBalances])
 
   useEffect(() => {
     const plightData = getPlightData(address, CO2TokenBalance, tonsPledged, isPledged)
@@ -57,12 +60,10 @@ const Dashboard = () => {
     if (CO2TokenBalance)
       setYourPlight(
         isPledged
-          ? (
-              Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 9)*70)
-            ).toFixed(2)
+          ? (Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 9) * 70)).toFixed(2)
           : 0,
       )
-  }, [address])
+  }, [address, isLoadingBalances])
 
   return (
     <Row justify="center" className="my-sm">
@@ -104,7 +105,9 @@ const Dashboard = () => {
               title={'Your fight'}
               color="#3182CE"
               // percentage={}
-              percentage={isPledged && yourFight > yourPlight ? 100 : Math.max((yourFight/yourPlight).toFixed(2)*100,10)}
+              percentage={
+                isPledged && yourFight > yourPlight ? 100 : Math.max((yourFight / yourPlight).toFixed(2) * 100, 10)
+              }
             />
             <ProgressInfo
               title={'Your plight'}
@@ -116,7 +119,9 @@ const Dashboard = () => {
                 </>
               }
               below={<Text>Pledged {`${yourPlight || 0} CO2 tons over Lifetime`}</Text>}
-              percentage={isPledged && yourFight < yourPlight ? 100 : Math.max((yourPlight/yourFight).toFixed(2)*100,10)}
+              percentage={
+                isPledged && yourFight < yourPlight ? 100 : Math.max((yourPlight / yourFight).toFixed(2) * 100, 10)
+              }
             />
           </Col>
         </Row>
