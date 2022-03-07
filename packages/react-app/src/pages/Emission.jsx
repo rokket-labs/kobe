@@ -50,47 +50,27 @@ const Wallet = () => {
           <Title>Calculate emissions</Title>
         </Space>
       </Col>
-      <Row
-        justify="center"
-        style={{ width: '100%', minHeight: '100vh', marginBottom: '2rem' }}>
+      <Row justify="center" style={{ width: '100%', minHeight: '100vh', marginBottom: '2rem' }}>
         <Col xs={24} md={22}>
           <Row justify="space-between">
             <Col xs={24} md={11}>
-              {dataWallet && (
-                <CardCustom
-                  title="Wallet Sessions"
-                  cardType="wallet"
-                  items={dataWallet.data.info}
-                />
-              )}
+              {dataWallet && <CardCustom title="Wallet Sessions" cardType="wallet" items={dataWallet.data.info} />}
             </Col>
             {!showIrl && <Col md={9}></Col>}
             {!showIrl && (
-              <Col
-                xs={{ span: 24 }}
-                md={{ span: 11 }}
-                style={{ marginTop: '20px' }}>
+              <Col xs={{ span: 24 }} md={{ span: 11 }} style={{ marginTop: '20px' }}>
                 <Card title="IRL emissions" className="card-info">
                   <Row justify="center">
                     <Col xs={{ span: 22 }} style={{ marginBottom: '30px' }}>
                       <Row justify="space-around">
                         <Image src={'/icon/emoji-house.svg'} preview={false} />
-                        <Image
-                          src={'/icon/emoji-airplane.svg'}
-                          preview={false}
-                        />
-                        <Image
-                          src={'/icon/emoji-hamburguer.svg'}
-                          preview={false}
-                        />
+                        <Image src={'/icon/emoji-airplane.svg'} preview={false} />
+                        <Image src={'/icon/emoji-hamburguer.svg'} preview={false} />
                         <Image src={'/icon/emoji-work.svg'} preview={false} />
                         <Image src={'/icon/world.svg'} preview={false} />
                       </Row>
                     </Col>
-                    <StyledButton
-                      $type="primary"
-                      onClick={() => handleMenu('/calculator')}
-                      block>
+                    <StyledButton $type="primary" onClick={() => handleMenu('/calculator')} block>
                       Start calculator
                     </StyledButton>
                   </Row>
@@ -98,13 +78,7 @@ const Wallet = () => {
               </Col>
             )}
             <Col xs={{ span: 24 }} md={{ span: 11 }}>
-              {showIrl && dataIrl && (
-                <CardCustom
-                  title="IRL emissions"
-                  cardType="irl"
-                  items={dataIrl.data.info}
-                />
-              )}
+              {showIrl && dataIrl && <CardCustom title="IRL emissions" cardType="irl" items={dataIrl.data.info} />}
             </Col>
           </Row>
           {showIrl && (
