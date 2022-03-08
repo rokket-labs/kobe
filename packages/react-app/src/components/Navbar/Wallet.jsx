@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
-import { Button } from 'antd'
 
 import { NetworkContext } from '../../contexts/NetworkContext'
+import { StyledButton } from '../common/StyledButton'
 
 import InfoText from './InfoText'
 
@@ -11,9 +11,9 @@ const Wallet = ({ isPledged }) => {
   return (
     <>
       {!address ? (
-        <Button style={{ marginTop: '4px' }} onClick={() => connectToWallet()}>
+        <StyledButton $type="secondary" style={{ marginTop: '4px' }} onClick={() => connectToWallet()}>
           Connect
-        </Button>
+        </StyledButton>
       ) : (
         <InfoText backgroundColor={'#4299E1'} text={address} isPlant={isPledged} />
       )}

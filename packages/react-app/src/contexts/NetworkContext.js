@@ -29,6 +29,7 @@ export const NetworkContext = React.createContext({
   polygonProvider: undefined,
   web3Modal: undefined,
   targetNetwork: undefined,
+  injectedProvider: undefined,
 })
 
 const testAddress = '0x2f28cc3f13a303da007f49d615479fe0265326c5'
@@ -52,7 +53,7 @@ export const NetworkContextProvider = ({ children }) => {
   const localChainId = localProvider?._network?.chainId
   const selectedChainId = userSigner?.provider?._network?.chainId
 
-  const logoutOfWeb3Modal = useCallback(async () => {
+  const disconnectWallet = useCallback(async () => {
     await web3Modal.clearCachedProvider()
 
     if (injectedProvider && injectedProvider.provider && typeof injectedProvider.provider.disconnect === 'function') {
@@ -83,9 +84,9 @@ export const NetworkContextProvider = ({ children }) => {
     // Subscribe to session disconnection
     provider.on('disconnect', (code, reason) => {
       console.log(code, reason)
-      logoutOfWeb3Modal()
+      disconnectWallet()
     })
-  }, [web3Modal, logoutOfWeb3Modal])
+  }, [web3Modal, disconnectWallet])
 
   useEffect(() => {
     const getAddress = async () => {
@@ -105,6 +106,7 @@ export const NetworkContextProvider = ({ children }) => {
 
   const value = {
     connectToWallet,
+    disconnectWallet,
     localChainId,
     selectedChainId,
     setSelectedNetwork,
@@ -116,6 +118,7 @@ export const NetworkContextProvider = ({ children }) => {
     targetNetwork,
     isLoadingAccount,
     blockExplorer,
+    injectedProvider,
   }
 
   return <NetworkContext.Provider value={value}>{children}</NetworkContext.Provider>
