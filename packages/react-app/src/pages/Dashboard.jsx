@@ -26,10 +26,10 @@ const Dashboard = () => {
   const [plightData, setPlightData] = useState([])
   const [yourPlight, setYourPlight] = useState()
   const [yourFight, setYourFight] = useState()
+  const [pledged, setPledged] = useState(isPledged) // created to be sync with the useEffect
 
   const { collection: artGallery, isLoading } = useTreejerGraph(address)
 
-  // TODO: Estos useEffect NO están cargando bien los datos. Sólo cargan 1 vez, antes de tener todo el contexto, y se quedan como no pledgeados
   useEffect(() => {
     const fightData = getFightData(
       polygonBCTBalance,
@@ -50,20 +50,20 @@ const Dashboard = () => {
           ).toFixed(2)
         : 0,
     )
-  }, [address, isLoadingBalances])
 
-  useEffect(() => {
     const plightData = getPlightData(address, CO2TokenBalance, tonsPledged, isPledged)
 
     setPlightData(plightData)
 
-    if (CO2TokenBalance)
-      setYourPlight(
-        isPledged
-          ? (Number(utils.formatUnits(CO2TokenBalance, 18)) + Number(utils.formatUnits(tonsPledged, 9) * 70)).toFixed(2)
-          : 0,
-      )
-  }, [address, isLoadingBalances])
+    setYourPlight(
+      isPledged
+        ? (
+            Number(utils.formatUnits(CO2TokenBalance || 0, 18)) + Number(utils.formatUnits(tonsPledged || 0, 9) * 70)
+          ).toFixed(2)
+        : 0,
+    )
+    setPledged(isPledged)
+  }, [isLoadingBalances])
 
   return (
     <Row justify="center" className="my-sm">
@@ -77,7 +77,7 @@ const Dashboard = () => {
           </Col>
         </Row>
         <Row justify="end" className="my-md">
-          {isPledged ? (
+          {pledged ? (
             <Col>
               <StyledButton $type="primary">Mint living position NFT for 0.08 ETH</StyledButton>
             </Col>

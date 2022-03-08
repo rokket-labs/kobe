@@ -3,7 +3,9 @@ import { useHistory } from 'react-router-dom'
 import { Col, Menu, Row } from 'antd'
 import styled from 'styled-components'
 
+import { NetworkContext } from '../../contexts/NetworkContext'
 import { WalletContext } from '../../contexts/WalletContext'
+import { StyledButton } from '../common/StyledButton'
 
 import Balance from './Balance'
 import KoyweSubMenu from './KoyweSubMenu'
@@ -22,6 +24,7 @@ const Index = ({ navbarRef, NETWORKCHECK }) => {
   const router = useHistory()
   const [path, setPath] = useState(router.pathname)
   const { isPledged } = useContext(WalletContext)
+  const { disconnectWallet, userSigner } = useContext(NetworkContext)
 
   useEffect(() => {
     setPath(router.pathname)
@@ -50,7 +53,7 @@ const Index = ({ navbarRef, NETWORKCHECK }) => {
         </Menu>
       </Col>
       <Col className="menu-data">
-        <Row gutter={10} justify="center">
+        <Row gutter={10} justify="center" align="middle">
           <Col>
             <NetworkSelect NETWORKCHECK={NETWORKCHECK} />
           </Col>
@@ -60,6 +63,13 @@ const Index = ({ navbarRef, NETWORKCHECK }) => {
           <Col>
             <Wallet isPledged={isPledged} />
           </Col>
+          {userSigner && (
+            <Col>
+              <StyledButton $type="secondary" onClick={disconnectWallet} style={{ marginTop: 1.6 }}>
+                Logout
+              </StyledButton>
+            </Col>
+          )}
         </Row>
       </Col>
       <Col style={{ display: 'flex' }}>
