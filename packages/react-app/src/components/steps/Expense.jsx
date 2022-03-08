@@ -32,7 +32,17 @@ const Expense = ({ nextStep, backStep }) => {
 
   const handleNext = () => {
     const data = {
-      'spend_on_services_per_month': formData?.spendOnServicesPerMonth,
+      ...(!advanced && { 'spend_on_services_per_month': formData?.spendOnServicesPerMonth }),
+      ...(advanced && {
+        'health': formData?.health,
+        'information_telecommunications': formData?.information,
+        'visits_doctor': formData?.doctor,
+        'auto_technical_service': formData?.autoService,
+        'financial_management_services': formData?.financialServices,
+        'home_maintenance_repairs': formData?.homeMaintenance,
+        'donations': formData?.donations,
+        'other_services': formData?.otherServices,
+      }),
       'bearerToken': accessToken,
     }
 

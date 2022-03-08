@@ -13,7 +13,7 @@ export const EnergyForm = ({
     peopleLive,
     homeBig,
     electricityConsume,
-    liquifiedGasConsume,
+    liquefiedGasConsume,
     naturalGasConsume,
     waterConsume,
   } = formData
@@ -83,8 +83,8 @@ export const EnergyForm = ({
             placeholder="15 kgs"
             size="large"
             style={{ width: '100%' }}
-            value={liquifiedGasConsume}
-            onChange={value => onChange(value, 'liquifiedGasConsume')}
+            value={liquefiedGasConsume}
+            onChange={value => onChange(value, 'liquefiedGasConsume')}
           />
         </InputLayout>
         <InputLayout

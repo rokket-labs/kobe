@@ -23,7 +23,7 @@ import { RightLayout } from './layouts/content/RightLayout'
 
 export const Property = ({ nextStep, backStep }) => {
   const { advanced, accessToken } = useContext(CalculatorContext)
-  const { loading, setLoading } = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const {
     formData,
@@ -32,7 +32,16 @@ export const Property = ({ nextStep, backStep }) => {
 
   const handleNext = () => {
     const data = {
-      'monthly_spend_on_goods': formData?.monthlySpendOnGoods,
+      ...(!advanced && { 'monthly_spend_on_goods': formData?.monthlySpendOnGoods }),
+      ...(advanced && {
+        'furniture_household_appliances': formData?.furnitureAppliances,
+        'clothes': formData?.clothes,
+        'entertainment': formData?.entertainment,
+        'paper_office_reading': formData?.paperOffice,
+        'personal_hygiene_cleaning': formData?.personalHygiene,
+        'spare_parts_car': formData?.spareParts,
+        'medical_supplies': formData?.medicalSupplies,
+      }),
       'services': advanced ? 'Detallada' : 'Simplificada',
       'bearerToken': accessToken,
     }

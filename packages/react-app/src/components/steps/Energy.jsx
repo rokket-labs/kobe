@@ -34,7 +34,7 @@ export const Energy = ({ nextStep, backStep }) => {
       'people_live': formData?.peopleLive,
       'home_big': formData?.homeBig,
       'electricity_consume': formData?.electricityConsume,
-      'liquified_gas_consume': formData?.liquifiedGasConsume,
+      'liquefied_gas_consume': formData?.liquefiedGasConsume,
       'natural_gas_consume': formData?.naturalGasConsume,
       'water_consume': formData?.waterConsume,
       'food_type': advanced ? 'Detallada' : 'Simplificada',

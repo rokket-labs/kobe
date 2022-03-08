@@ -36,8 +36,16 @@ export const Transport = ({ nextStep, backStep }) => {
       'fuel_type_auto': formData?.fuelType,
       'weekly_kms_by_bus': formData?.weeklyBusKms,
       'plane_trips_per_year': formData?.planeTrips,
-      'airplane_trips_per_year': formData.airplaneTrips,
+      ...(!advanced && { 'airplane_trips_per_year': formData.airplaneTrips }),
       'bearerToken': accessToken,
+      ...(advanced && {
+        'average_consumption': formData?.averageConsumption,
+        'weekly_kms_in_uber_taxi_or_similar': formData?.weeklyTaxiKms,
+        'weekly_kms_by_metro_or_train': formData?.weeklyTrainKms,
+        'airplane_trips_per_year_1': formData.airplaneTripsA,
+        'air_travel_per_year_2': formData.airplaneTripsB,
+        'airplane_trips_per_year_3': formData.airplaneTripsC,
+      }),
     }
 
     setLoading(true)

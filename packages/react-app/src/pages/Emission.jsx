@@ -41,17 +41,20 @@ const Wallet = () => {
   useEffect(() => {
     setDataWallet(walletMock)
 
-    const irlData = {
-      data: {
-        info: [
-          { id: 1, quantity: irlStoredData.Home_Emissions, type: 'house' },
-          { id: 1, quantity: irlStoredData.Transportation_Emissions, type: 'car' },
-          { id: 1, quantity: irlStoredData.Diet_Emissions, type: 'burger' },
-          { id: 1, quantity: irlStoredData.Goods_Emissions, type: 'house' },
-          { id: 1, quantity: irlStoredData.Services_Emissions, type: 'work' },
-        ],
-      },
-    }
+    if (irlStoredData)
+      setDataIrl({
+        data: {
+          info: [
+            { id: 1, quantity: irlStoredData.Home_Emissions, type: 'house' },
+            { id: 1, quantity: irlStoredData.Transportation_Emissions, type: 'car' },
+            { id: 1, quantity: irlStoredData.Diet_Emissions, type: 'burger' },
+            { id: 1, quantity: irlStoredData.Goods_Emissions, type: 'house' },
+            { id: 1, quantity: irlStoredData.Services_Emissions, type: 'work' },
+          ],
+        },
+      })
+    else
+      setDataIrl(null)
   }, [irlStoredData])
 
   return (

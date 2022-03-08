@@ -14,7 +14,7 @@ const CalculatorContext = React.createContext({
 export const CalculatorProvider = ({ children }) => {
   const [email, setEmail] = useState(null)
   const [country, setCountry] = useState('Chile')
-  const [advanced, setAdvanced] = useState(false)
+  const [advanced, setAdvanced] = useState(true)
   const [accessToken, setToken] = useState(null)
 
   const value = {

@@ -47,7 +47,7 @@ const EmailSection = ({ email }) => {
     }).then(async res => {
       const responseData = await res.json()
 
-      handleHasCalculator(responseData.stringify())
+      handleHasCalculator(JSON.stringify(responseData))
       router.push(url)
     }).catch(err => {
       console.log(err)
