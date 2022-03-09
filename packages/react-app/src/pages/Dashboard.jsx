@@ -19,8 +19,7 @@ const { Text } = Typography
 const Dashboard = () => {
   const router = useHistory()
   const { address, isLoadingAccount } = useContext(NetworkContext)
-  const { USDPrices, walletBalance, tonsPledged, isPledged, yourKTBalance, CO2TokenBalance, isLoadingBalances } =
-    useContext(WalletContext)
+  const { USDPrices, walletBalance, tonsPledged, isPledged, yourKTBalance, CO2TokenBalance } = useContext(WalletContext)
   const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance } = walletBalance
   const [fightData, setFightData] = useState([])
   const [plightData, setPlightData] = useState([])
@@ -63,7 +62,16 @@ const Dashboard = () => {
         : 0,
     )
     setPledged(isPledged)
-  }, [isLoadingBalances])
+  }, [
+    CO2TokenBalance,
+    USDPrices,
+    isPledged,
+    polygonBCTBalance,
+    polygonMCO2Balance,
+    polygonNCTBalance,
+    tonsPledged,
+    yourKTBalance,
+  ])
 
   return (
     <Row justify="center" className="my-sm">
