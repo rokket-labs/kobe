@@ -22,8 +22,8 @@ export const IsPledgedContext = React.createContext({
 export const IsPledgedProvider = ({ children }) => {
   const [isPledged, setIsPledged] = useState(false)
   const [co2, setCo2] = useState(0)
-  const [hasCalculator, setHasCalculator] = useState(false)
   const { getItem, setItem } = useStorage('localStorage')
+  const [hasCalculator, setHasCalculator] = useState(null)
 
   const handleIsPledged = pledged => {
     if (setItem('isPledged', `${pledged}`)) setIsPledged(pledged)
@@ -46,7 +46,7 @@ export const IsPledgedProvider = ({ children }) => {
   }, [getItem])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') setHasCalculator(!!getItem('hasCalculator'))
+    if (typeof window !== 'undefined') setHasCalculator(getItem('hasCalculator'))
   }, [getItem])
 
   const value = {

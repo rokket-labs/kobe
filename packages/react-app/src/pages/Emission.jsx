@@ -29,33 +29,38 @@ import walletMock from './wallet-data.json'
 const Wallet = () => {
   const router = useHistory()
   const { hasCalculator } = useContext(IsPledgedContext)
+  const [irlStoredData, setIrlStoredData] = useState(null)
 
   const handleMenu = url => {
     router.push(url)
   }
 
   const [dataWallet, setDataWallet] = useState()
-  const [dataIrl, setDataIrl] = useState()
-  const irlStoredData = hasCalculator && JSON.parse(irlStoredData)
+  const [dataIrl, setDataIrl] = useState(null)
 
   useEffect(() => {
     setDataWallet(walletMock)
+  }, [])
+
+  useEffect(() => {
+    console.log(`HERE ${irlStoredData}`)
+
+    if (hasCalculator && !irlStoredData)
+      setIrlStoredData(JSON.parse(hasCalculator))
 
     if (irlStoredData)
       setDataIrl({
         data: {
           info: [
-            { id: 1, quantity: irlStoredData.Home_Emissions, type: 'house' },
-            { id: 1, quantity: irlStoredData.Transportation_Emissions, type: 'car' },
-            { id: 1, quantity: irlStoredData.Diet_Emissions, type: 'burger' },
-            { id: 1, quantity: irlStoredData.Goods_Emissions, type: 'house' },
-            { id: 1, quantity: irlStoredData.Services_Emissions, type: 'work' },
+            { id: 1, quantity: parseFloat(irlStoredData.Home_Emissions).toFixed(2), type: 'house' },
+            { id: 1, quantity: parseFloat(irlStoredData.Transportation_Emissions).toFixed(2), type: 'car' },
+            { id: 1, quantity: parseFloat(irlStoredData.Diet_Emissions).toFixed(2), type: 'burger' },
+            { id: 1, quantity: parseFloat(irlStoredData.Goods_Emissions).toFixed(2), type: 'house' },
+            { id: 1, quantity: parseFloat(irlStoredData.Services_Emissions).toFixed(2), type: 'work' },
           ],
         },
       })
-    else
-      setDataIrl(null)
-  }, [irlStoredData])
+  }, [hasCalculator, irlStoredData])
 
   return (
     <Row className="my-sm">
