@@ -108,11 +108,6 @@ export const Ready = ({ nextStep }) => {
               </Text>
             </Col>
           </StyledRow>
-          <StyledRow>
-            <Col>
-              <Text>Te recomendamos que puedas hacer la detallada.</Text>
-            </Col>
-          </StyledRow>
           <StyledRow justify="space-between">
             <Col>
               <StyledTitle level={4}>

@@ -21,17 +21,6 @@ const VehicleSection = ({
 
   return (
     <RowLayout align="middle" icon="icon/car.svg" title="Automóvil">
-      <Row>
-        <Col span={12}>
-          <Text>¿Tienes vehículo?</Text>
-        </Col>
-        <Col span={12}>
-          <Radio.Group>
-            <Radio value={1}>Sí</Radio>
-            <Radio value={2}>No</Radio>
-          </Radio.Group>
-        </Col>
-      </Row>
       <Row style={{ margin: '12px 0 ' }}>
         <Col span={12}>
           <SelectLayout label="Tipo de combustible">
@@ -42,8 +31,8 @@ const VehicleSection = ({
               value={fuelType}
               onChange={value => onChange(value, 'fuelType')}
             >
-              <Option value="one">One</Option>
-              <Option value="two">Two</Option>
+              <Option value="Gasolina">Gasolina</Option>
+              <Option value="Diesel">Diesel</Option>
             </Select>
           </SelectLayout>
         </Col>

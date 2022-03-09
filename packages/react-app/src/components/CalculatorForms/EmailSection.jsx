@@ -45,7 +45,10 @@ const EmailSection = ({ email }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 'bearerToken': accessToken }),
     }).then(async res => {
-      const responseData = await res.json()
+      let responseData = await res.json()
+
+      if (Array.isArray(responseData))
+        responseData = responseData[0]
 
       handleHasCalculator(JSON.stringify(responseData))
       router.push(url)
