@@ -13,9 +13,6 @@ import { WalletContext } from '../contexts/WalletContext'
 
 const { ethers } = require('ethers')
 
-import mock from './ranking-data.json'
-import fakeData from './ranking-data-chain.json'
-
 const { Title, Text } = Typography
 
 const StyledRow = styled(Row)`
@@ -32,9 +29,6 @@ const StyledText = styled(Text)`
 
 const RankingTitle = () => {
   const { mainnetProvider, address } = useContext(NetworkContext)
-  const { contracts, polygonContracts, localProvider, pledged } = useContext(WalletContext)
-
-  const pledgeEvents = useEventListener(contracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
 
   return (
     <Col span={24}>
@@ -87,15 +81,6 @@ const Ranking = () => {
   const readContracts = useContractLoader(localProvider, contractConfig)
 
   const pledgeEvents = useEventListener(readContracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
-
-  /*   console.log('polyProviderUrl', polyProviderUrl)
-  console.log('polyProvider', polyProvider)
-  console.log('contractConfig', contractConfig)
-  console.log('polyContracts', polyContracts)
-  console.log('readContracts', readContracts)
-  console.log('📟 pledge events:', pledgeEvents)
-  // Provider for Polygon Network */
-  // console.log('pledgeEvents', pledgeEvents)
 
   const [data, setData] = useState()
 

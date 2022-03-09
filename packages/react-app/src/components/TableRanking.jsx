@@ -1,8 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Image, Row, Table, Typography } from 'antd'
-import { useContractLoader, useContractReader } from 'eth-hooks'
-import { useEventListener } from 'eth-hooks/events/useEventListener'
+import React, { useContext } from 'react'
+import { Row, Table, Typography } from 'antd'
+import { useContractLoader } from 'eth-hooks'
 import styled from 'styled-components'
 
 import { TokenBalance } from '../components'
@@ -11,7 +9,7 @@ import { HOOK_OPTIONS, NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 
-import { Balance, Dripped, Emmited, Pledge } from './balance'
+import { Balance, Pledge, Staked, TokenTotal } from './balance'
 
 const { ethers } = require('ethers')
 
@@ -30,8 +28,8 @@ const getData = data => {
 
 // eslint-disable-next-line max-lines-per-function
 export const TableRanking = ({ rankingData }) => {
-  const { contractConfig, contracts, walletBalance } = useContext(WalletContext)
-  const { mainnetProvider, address, localProvider } = useContext(NetworkContext)
+  const { contractConfig } = useContext(WalletContext)
+  const { mainnetProvider, localProvider } = useContext(NetworkContext)
 
   const polyNetwork = NETWORKS.polygon
 
@@ -126,17 +124,18 @@ export const TableRanking = ({ rankingData }) => {
       ),
     },
 
-    /*     {
+    {
       title: 'Staked',
       dataIndex: 'args',
       key: 'blockNumber',
       align: 'center',
       render: args => (
         <Row justify="space-around" align="middle">
-          <TokenBalance contracts={readContracts} name={'PMCO2'} address={args[0]} />
+          {/* <TokenBalance contracts={polyContracts} name={'sKLIMA'} address={args[0]} /> */}
+          <Staked address={args[0]} polyContracts={polyContracts} />
         </Row>
       ),
-    }, */
+    },
     {
       title: 'Dripped',
       dataIndex: 'args',
@@ -144,7 +143,7 @@ export const TableRanking = ({ rankingData }) => {
       align: 'center',
       render: args => (
         <Row justify="space-around" align="middle">
-          <Dripped contracts={readContracts} name={'CO2TokenContract'} address={args[0]} />
+          <TokenTotal contracts={readContracts} name={'CO2TokenContract'} address={args[0]} />
         </Row>
       ),
     },
@@ -155,7 +154,8 @@ export const TableRanking = ({ rankingData }) => {
       align: 'center',
       render: args => (
         <Row justify="space-around" align="middle">
-          <Emmited contracts={readContracts} name={'CO2TokenContract'} address={args[0]} />
+          {/* <CarbonFYI currentAddress={args[0]} /> */}
+          {/* <Emmited contracts={readContracts} name={'CO2TokenContract'} address={args[0]} /> */}
         </Row>
       ),
     },
