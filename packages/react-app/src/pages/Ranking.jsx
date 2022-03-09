@@ -1,16 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Col, Image, List, Row, Typography } from 'antd'
+import { useContractLoader, useContractReader } from 'eth-hooks'
 import { useEventListener } from 'eth-hooks/events/useEventListener'
 import styled from 'styled-components'
 
 import { TokenBalance } from '../components'
 import Address from '../components/common/Address'
 import { TableRanking } from '../components/TableRanking'
-import { HOOK_OPTIONS } from '../constants'
+import { HOOK_OPTIONS, NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 
+const { ethers } = require('ethers')
+
 import mock from './ranking-data.json'
+import fakeData from './ranking-data-chain.json'
 
 const { Title, Text } = Typography
 
@@ -27,17 +31,15 @@ const StyledText = styled(Text)`
 `
 
 const RankingTitle = () => {
-  /*   const { mainnetProvider, address } = useContext(NetworkContext)
-  const { contracts, polygonContracts, localProvider, isPledged } = useContext(WalletContext)
+  const { mainnetProvider, address } = useContext(NetworkContext)
+  const { contracts, polygonContracts, localProvider, pledged } = useContext(WalletContext)
 
   const pledgeEvents = useEventListener(contracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
-
-  console.log('test address', address) */
 
   return (
     <Col span={24}>
       <Row justify="center">
-        <Col xs={{ span: 24 }} sm={{ span: 16 }} md={{ span: 7 }}>
+        <Col xs={{ span: 24 }} sm={{ span: 16 }} md={{ span: 5 }}>
           <Col>
             <Row justify="space-around">
               <Col span={8} style={{ textAlign: 'center' }}>
@@ -45,7 +47,7 @@ const RankingTitle = () => {
               </Col>
               <Col span={16}>
                 <StyledText $isBold={false} $isTitle={false}>
-                  User 0xB44f
+                  User <Address value={address} ensProvider={mainnetProvider} fontSize={16} />
                 </StyledText>
               </Col>
             </Row>
@@ -72,19 +74,58 @@ const RankingTitle = () => {
 }
 
 const Ranking = () => {
+  const { contractConfig, contracts } = useContext(WalletContext)
+  const { mainnetProvider, localProvider } = useContext(NetworkContext)
+
+  const polyNetwork = NETWORKS.polygon
+  // const polyNetwork = NETWORKS.goerli
+
+  const polyProviderUrl = polyNetwork.rpcUrl
+  const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
+
+  const polyContracts = useContractLoader(polyProvider, contractConfig)
+  const readContracts = useContractLoader(localProvider, contractConfig)
+
+  const pledgeEvents = useEventListener(readContracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
+
+  /*   console.log('polyProviderUrl', polyProviderUrl)
+  console.log('polyProvider', polyProvider)
+  console.log('contractConfig', contractConfig)
+  console.log('polyContracts', polyContracts)
+  console.log('readContracts', readContracts)
+  console.log('📟 pledge events:', pledgeEvents)
+  // Provider for Polygon Network */
+  // console.log('pledgeEvents', pledgeEvents)
+
   const [data, setData] = useState()
 
   useEffect(() => {
-    setData(mock)
-  }, [])
+    setData(pledgeEvents)
+  }, [pledgeEvents])
 
   return (
     <Row>
-      <Row>
-        <Title level={2}>Rankings</Title>
-        <RankingTitle />
-        <StyledRow justify="center">{data && <TableRanking rankingData={data} />}</StyledRow>
-      </Row>
+      {/*       <div style={{ width: 500, margin: 'auto', marginTop: 64 }}>
+        <div>Ranking:</div>
+
+        <List
+          dataSource={data}
+          renderItem={item => {
+            return (
+              <List.Item key={item.blockNumber}>
+                <Address value={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
+                | <TokenBalance contracts={readContracts} name={'CO2TokenContract'} address={item.args[0]} /> CO2 tons
+                emmitted | &nbsp;{(item.args[1].toString() * 1) / 10 ** 9} CO2e tons/year committed |{' '}
+                <TokenBalance contracts={polyContracts} name={'PBCT'} address={item.args[0]} /> BCT |{' '}
+                <TokenBalance contracts={polyContracts} name={'PMCO2'} address={item.args[0]} /> MCO2
+              </List.Item>
+            )
+          }}
+        />
+      </div> */}
+      <Title level={2}>Rankings</Title>
+      <RankingTitle />
+      <StyledRow justify="center">{data && <TableRanking rankingData={data} />}</StyledRow>
     </Row>
   )
 }
@@ -114,6 +155,6 @@ const Ranking = () => {
       />
     </div>
   )
-} */
-
+}
+ */
 export default Ranking
