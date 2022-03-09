@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
 import { Row, Table, Typography } from 'antd'
-import { useContractLoader, useContractReader } from 'eth-hooks'
+import { useContractLoader } from 'eth-hooks'
 import styled from 'styled-components'
 
 import { TokenBalance } from '../components'
 import Address from '../components/common/Address'
-import { HOOK_OPTIONS, NETWORKS } from '../constants'
+import CarbonFYI from '../components/common/CarbonFYI'
+import { NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 
@@ -84,12 +85,12 @@ export const TableRanking = ({ rankingData }) => {
     },
     {
       title: 'Ranking',
-      dataIndex: 'blockNumber',
-      key: 'blockNumber',
+      dataIndex: 'key',
+      key: 'key',
       align: 'center',
-      render: blockNumber => (
+      render: key => (
         <Row justify="center">
-          <Text style={{ fontWeight: 'bold', fontSize: '24px' }}>{blockNumber}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: '24px' }}>{key + 1}</Text>
         </Row>
       ),
     },
@@ -132,11 +133,10 @@ export const TableRanking = ({ rankingData }) => {
       dataIndex: 'args',
       key: 'blockNumber',
       align: 'center',
-      sorter: (a, b) => a.firstName.localeCompare(b.firstName),
       render: args => (
         <Row justify="space-around" align="middle">
           {/* <TokenBalance contracts={polyContracts} name={'sKLIMA'} address={args[0]} /> */}
-          <Staked address={args[0]} polyContracts={polyContracts} />
+          <Staked address={args[0]} polyContracts={polyContracts} /> BCT
         </Row>
       ),
     },
@@ -151,7 +151,7 @@ export const TableRanking = ({ rankingData }) => {
         </Row>
       ),
     },
-    /*    {
+    /*     {
       title: 'Emmited',
       dataIndex: 'args',
       key: 'blockNumber',
@@ -161,7 +161,7 @@ export const TableRanking = ({ rankingData }) => {
            <CarbonFYI currentAddress={args[0]} />
         </Row>
       ),
-    },  */
+    }, */
     {
       title: 'Balance',
       dataIndex: 'args',

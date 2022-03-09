@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { ConsoleSqlOutlined } from '@ant-design/icons'
 import { Typography } from 'antd'
 import { useContractLoader, useContractReader } from 'eth-hooks'
 import { useTokenBalance } from 'eth-hooks/erc/erc-20/useTokenBalance'
@@ -80,7 +81,8 @@ export const Staked = ({ address, polyContracts }) => {
     (myPolyKlimaBalance && myPolyKlimaBalance > 0 ? myPolyKlimaBalance : 0) / Math.pow(10, 18)
   ).toFixed(4)
 
-  return <Text>{skilmaBalance} BCT</Text>
+  //  return <Text>{skilmaBalance} BCT</Text>
+  return skilmaBalance
 }
 
 export const TokenTotal = props => {

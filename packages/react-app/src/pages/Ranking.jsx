@@ -5,6 +5,7 @@ import { useEventListener } from 'eth-hooks/events/useEventListener'
 import styled from 'styled-components'
 
 import { TokenBalance } from '../components'
+import { Staked } from '../components/Balance'
 import Address from '../components/common/Address'
 import { TableRanking } from '../components/TableRanking'
 import { HOOK_OPTIONS, NETWORKS } from '../constants'
@@ -27,8 +28,10 @@ const StyledText = styled(Text)`
   ${prop => (prop.ml ? `margin-left: ${prop.ml}` : '')};
 `
 
-const RankingTitle = () => {
+const RankingTitle = position => {
   const { mainnetProvider, address } = useContext(NetworkContext)
+
+  console.log('tesposition', position)
 
   return (
     <Col span={24}>
@@ -37,7 +40,7 @@ const RankingTitle = () => {
           <Col>
             <Row justify="space-around">
               <Col span={8} style={{ textAlign: 'center' }}>
-                <Image src={'/icon/user.svg'} preview={false} width={50} />
+                {/*                 <Image src={'/icon/user.svg'} preview={false} width={50} /> */}
               </Col>
               <Col span={16}>
                 <StyledText $isBold={false} $isTitle={false}>
@@ -56,7 +59,7 @@ const RankingTitle = () => {
                   Your Position
                 </StyledText>
                 <StyledText $isBold $isTitle ml="20px">
-                  No. 8
+                  {position.position}
                 </StyledText>
               </Col>
             </Row>
@@ -68,8 +71,11 @@ const RankingTitle = () => {
 }
 
 const Ranking = () => {
+  const [data, setData] = useState()
+  const [position, setPosition] = useState(1)
+
   const { contractConfig, contracts } = useContext(WalletContext)
-  const { mainnetProvider, localProvider } = useContext(NetworkContext)
+  const { mainnetProvider, localProvider, address } = useContext(NetworkContext)
 
   const polyNetwork = NETWORKS.polygon
   // const polyNetwork = NETWORKS.goerli
@@ -82,10 +88,16 @@ const Ranking = () => {
 
   const pledgeEvents = useEventListener(readContracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
 
-  const [data, setData] = useState()
-
   useEffect(() => {
-    setData(pledgeEvents)
+    const newData = [...pledgeEvents]
+
+    newData.forEach((item, index) => {
+      if (!item.ranking) item.key = index
+
+      if (item.args[0] === address) setPosition(index + 1)
+    })
+
+    setData(newData)
   }, [pledgeEvents])
 
   return (
@@ -109,7 +121,7 @@ const Ranking = () => {
         />
       </div> */}
       <Title level={2}>Rankings</Title>
-      <RankingTitle />
+      <RankingTitle position={position} />
       <StyledRow justify="center">{data && <TableRanking rankingData={data} />}</StyledRow>
     </Row>
   )
