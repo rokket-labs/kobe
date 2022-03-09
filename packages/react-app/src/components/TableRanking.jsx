@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Row, Table, Typography } from 'antd'
-import { useContractLoader } from 'eth-hooks'
+import { useContractLoader, useContractReader } from 'eth-hooks'
 import styled from 'styled-components'
 
 import { TokenBalance } from '../components'
@@ -9,7 +9,9 @@ import { HOOK_OPTIONS, NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 
-import { Balance, Pledge, Staked, TokenTotal } from './balance'
+import { Balance, Pledge, Staked, TokenTotal } from './Balance'
+
+import '../styles/ranking.css'
 
 const { ethers } = require('ethers')
 
@@ -20,6 +22,7 @@ const StyledTable = styled(Table)`
   border-radius: 10px;
   overflow: hidden;
   width: 100%;
+  background: #9ae6b4;
 `
 
 const getData = data => {
@@ -29,7 +32,7 @@ const getData = data => {
 // eslint-disable-next-line max-lines-per-function
 export const TableRanking = ({ rankingData }) => {
   const { contractConfig } = useContext(WalletContext)
-  const { mainnetProvider, localProvider } = useContext(NetworkContext)
+  const { mainnetProvider, localProvider, address } = useContext(NetworkContext)
 
   const polyNetwork = NETWORKS.polygon
 
@@ -129,6 +132,7 @@ export const TableRanking = ({ rankingData }) => {
       dataIndex: 'args',
       key: 'blockNumber',
       align: 'center',
+      sorter: (a, b) => a.firstName.localeCompare(b.firstName),
       render: args => (
         <Row justify="space-around" align="middle">
           {/* <TokenBalance contracts={polyContracts} name={'sKLIMA'} address={args[0]} /> */}
@@ -147,18 +151,17 @@ export const TableRanking = ({ rankingData }) => {
         </Row>
       ),
     },
-    {
+    /*    {
       title: 'Emmited',
       dataIndex: 'args',
       key: 'blockNumber',
       align: 'center',
       render: args => (
         <Row justify="space-around" align="middle">
-          {/* <CarbonFYI currentAddress={args[0]} /> */}
-          {/* <Emmited contracts={readContracts} name={'CO2TokenContract'} address={args[0]} /> */}
+           <CarbonFYI currentAddress={args[0]} />
         </Row>
       ),
-    },
+    },  */
     {
       title: 'Balance',
       dataIndex: 'args',
@@ -173,5 +176,12 @@ export const TableRanking = ({ rankingData }) => {
   ]
   const data = getData(rankingData)
 
-  return <StyledTable columns={columns} dataSource={data} pagination={false} />
+  return (
+    <StyledTable
+      columns={columns}
+      dataSource={data}
+      pagination={false}
+      rowClassName={(record, index) => (record.args[0] === address ? 'ranking-color' : '')}
+    />
+  )
 }
