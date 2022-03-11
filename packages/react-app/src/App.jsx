@@ -20,37 +20,39 @@ import './styles/index.css'
 const App = () => {
   return (
     <WalletContextProvider>
-      <MainLayout NETWORKCHECK>
-        <Switch>
-          <Route exact path="/">
-            <Dashboard />
-          </Route>
-          <Route exact path="/ranking">
-            <Ranking />
-          </Route>
-          <Route exact path="/regen-art">
-            <RegenArt />
-          </Route>
-          <Route exact path="/pledge">
-            <Pledge />
-          </Route>
-          <Route exact path="/journey">
-            <Journey />
-          </Route>
-          <Route path="/regen-defi">
-            <ReFi />
-          </Route>
-          <Route exact path="/debug">
-            <DebugPage />
-          </Route>
-          <Route exact path="/emission">
-            <EmissionPage />
-          </Route>
-          <Route exact path="/calculator">
-            <CalculatorPage />
-          </Route>
-        </Switch>
-      </MainLayout>
+      <IsPledgedProvider>
+        <MainLayout NETWORKCHECK>
+          <Switch>
+            <Route exact path="/">
+              <Dashboard />
+            </Route>
+            <Route exact path="/ranking">
+              <Ranking />
+            </Route>
+            <Route exact path="/regen-art">
+              <RegenArt />
+            </Route>
+            <Route exact path="/pledge">
+              <Pledge />
+            </Route>
+            <Route exact path="/journey">
+              <Journey />
+            </Route>
+            <Route path="/regen-defi">
+              <ReFi />
+            </Route>
+            <Route exact path="/debug">
+              <DebugPage />
+            </Route>
+            <Route exact path="/emission">
+              <EmissionPage />
+            </Route>
+            <Route exact path="/calculator">
+              <CalculatorPage />
+            </Route>
+          </Switch>
+        </MainLayout>
+      </IsPledgedProvider>
     </WalletContextProvider>
   )
 }

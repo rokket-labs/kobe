@@ -11,7 +11,6 @@ import CardEmission from '../components/CardEmission'
 import { StyledButton } from '../components/common/StyledButton'
 import { IsPledgedContext } from '../contexts/IsPledgedContext'
 
-import irlMock from './irl-data.json'
 import walletMock from './wallet-data.json'
 
 /**
@@ -26,22 +25,42 @@ import walletMock from './wallet-data.json'
   }
 */
 
+// eslint-disable-next-line max-lines-per-function
 const Wallet = () => {
   const router = useHistory()
   const { hasCalculator } = useContext(IsPledgedContext)
+  const [irlStoredData, setIrlStoredData] = useState(null)
 
   const handleMenu = url => {
     router.push(url)
   }
 
   const [dataWallet, setDataWallet] = useState()
-  const [dataIrl, setDataIrl] = useState()
-  const showIrl = hasCalculator
+  const [dataIrl, setDataIrl] = useState(null)
 
   useEffect(() => {
     setDataWallet(walletMock)
-    setDataIrl(irlMock)
   }, [])
+
+  useEffect(() => {
+    console.log(`HERE ${irlStoredData}`)
+
+    if (hasCalculator && !irlStoredData)
+      setIrlStoredData(JSON.parse(hasCalculator))
+
+    if (irlStoredData)
+      setDataIrl({
+        data: {
+          info: [
+            { id: 1, quantity: parseFloat(irlStoredData.Home_Emissions).toFixed(2), type: 'house' },
+            { id: 1, quantity: parseFloat(irlStoredData.Transportation_Emissions).toFixed(2), type: 'car' },
+            { id: 1, quantity: parseFloat(irlStoredData.Diet_Emissions).toFixed(2), type: 'burger' },
+            { id: 1, quantity: parseFloat(irlStoredData.Goods_Emissions).toFixed(2), type: 'house' },
+            { id: 1, quantity: parseFloat(irlStoredData.Services_Emissions).toFixed(2), type: 'work' },
+          ],
+        },
+      })
+  }, [hasCalculator, irlStoredData])
 
   return (
     <Row className="my-sm">
@@ -56,9 +75,12 @@ const Wallet = () => {
             <Col xs={24} md={11}>
               {dataWallet && <CardCustom title="Wallet Sessions" cardType="wallet" items={dataWallet.data.info} />}
             </Col>
-            {!showIrl && <Col md={9}></Col>}
-            {!showIrl && (
-              <Col xs={{ span: 24 }} md={{ span: 11 }} style={{ marginTop: '20px' }}>
+            {!irlStoredData && <Col md={9}></Col>}
+            {!irlStoredData && (
+              <Col
+                xs={{ span: 24 }}
+                md={{ span: 11 }}
+                style={{ marginTop: '20px' }}>
                 <Card title="IRL emissions" className="card-info">
                   <Row justify="center">
                     <Col xs={{ span: 22 }} style={{ marginBottom: '30px' }}>
@@ -78,10 +100,16 @@ const Wallet = () => {
               </Col>
             )}
             <Col xs={{ span: 24 }} md={{ span: 11 }}>
-              {showIrl && dataIrl && <CardCustom title="IRL emissions" cardType="irl" items={dataIrl.data.info} />}
+              {irlStoredData && dataIrl && (
+                <CardCustom
+                  title="IRL emissions"
+                  cardType="irl"
+                  items={dataIrl.data.info}
+                />
+              )}
             </Col>
           </Row>
-          {showIrl && (
+          {irlStoredData && (
             <Row justify="space-between" className="my-md">
               <Col span={24}>
                 <Title>Commit your actions and take the pledge</Title>

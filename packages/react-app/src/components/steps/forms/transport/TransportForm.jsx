@@ -8,7 +8,19 @@ import { SelectLayout } from '../../layouts/SelectLayout'
 
 const { Option } = Select
 
-export const TransportForm = () => {
+// eslint-disable-next-line max-lines-per-function
+export const TransportForm = ({
+  formData,
+  onChange,
+}) => {
+  const {
+    monthlyKms,
+    fuelType,
+    weeklyBusKms,
+    planeTrips,
+    airplaneTrips,
+  } = formData
+
   return (
     <>
       <RowLayout align="middle" icon="icon/car.svg" title="Automóvil">
@@ -18,7 +30,10 @@ export const TransportForm = () => {
               <Select
                 placeholder="Selecciona tipo"
                 style={{ width: '100%' }}
-                size="large">
+                size="large"
+                value={fuelType}
+                onChange={value => onChange(value, 'fuelType')}
+              >
                 <Option value="1">Gasolina</Option>
                 <Option value="2">Diésel</Option>
                 <Option value="3">Eléctrico</Option>
@@ -33,6 +48,8 @@ export const TransportForm = () => {
                   placeholder="1.000 kms"
                   size="large"
                   style={{ width: '100%' }}
+                  value={monthlyKms}
+                  onChange={value => onChange(value, 'monthlyKms')}
                 />
               </InputLayout>
             </Col>
@@ -47,6 +64,8 @@ export const TransportForm = () => {
             placeholder="100 kms"
             size="large"
             style={{ width: '100%' }}
+            value={weeklyBusKms}
+            onChange={value => onChange(value, 'weeklyBusKms')}
           />
         </InputLayout>
       </RowLayout>
@@ -67,6 +86,8 @@ export const TransportForm = () => {
               placeholder="4"
               size="large"
               style={{ width: '100%' }}
+              value={planeTrips}
+              onChange={value => onChange(value, 'planeTrips')}
             />
           </Col>
         </InputLayout>
@@ -83,6 +104,8 @@ export const TransportForm = () => {
               placeholder="10"
               size="large"
               style={{ width: '100%' }}
+              value={airplaneTrips}
+              onChange={value => onChange(value, 'airplaneTrips')}
             />
           </Col>
         </InputLayout>

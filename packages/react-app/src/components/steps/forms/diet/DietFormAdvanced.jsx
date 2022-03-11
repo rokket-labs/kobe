@@ -8,23 +8,19 @@ const { Option } = Select
 import { RowLayout } from '../../layouts/RowLayout'
 import { SelectLayout } from '../../layouts/SelectLayout'
 
-const FirstForm = () => {
+const FirstForm = ({
+  formData,
+  onChange,
+}) => {
+  const {
+    timesEatMeat,
+    timesEatFish,
+    timesEatProcessedMeat,
+    timesEatChickenTurkey,
+  } = formData
+
   return (
     <>
-      <RowLayout align="middle" icon="icon/diet.svg" title="Dieta">
-        <Col span={24}>
-          <SelectLayout label="¿Cuál es tu tipo de dieta?">
-            <Select
-              placeholder="Selecciona tu tipo de alimentación"
-              style={{ width: '100%' }}
-              size="large">
-              <Option value="one">One</Option>
-              <Option value="two">Two</Option>
-            </Select>
-          </SelectLayout>
-        </Col>
-      </RowLayout>
-      <StyledDivider />
       <RowLayout align="middle" icon="icon/meat.svg" title="Carnes rojas">
         <InputLayout
           label="¿Cuántas veces consumes carne a la semana? (vacuno, cordero, cerdo)"
@@ -35,6 +31,8 @@ const FirstForm = () => {
             placeholder="2"
             size="large"
             style={{ width: '100%' }}
+            value={timesEatMeat}
+            onChange={value => onChange(value, 'timesEatMeat')}
           />
         </InputLayout>
       </RowLayout>
@@ -49,6 +47,8 @@ const FirstForm = () => {
             placeholder="4"
             size="large"
             style={{ width: '100%' }}
+            value={timesEatChickenTurkey}
+            onChange={value => onChange(value, 'timesEatChickenTurkey')}
           />
         </InputLayout>
       </RowLayout>
@@ -66,6 +66,8 @@ const FirstForm = () => {
             placeholder="1"
             size="large"
             style={{ width: '100%' }}
+            value={timesEatFish}
+            onChange={value => onChange(value, 'timesEatFish')}
           />
         </InputLayout>
       </RowLayout>
@@ -83,6 +85,8 @@ const FirstForm = () => {
             placeholder="1"
             size="large"
             style={{ width: '100%' }}
+            value={timesEatProcessedMeat}
+            onChange={value => onChange(value, 'timesEatProcessedMeat')}
           />
         </InputLayout>
       </RowLayout>
@@ -90,10 +94,22 @@ const FirstForm = () => {
   )
 }
 
-export const DietFormAdvanced = () => {
+// eslint-disable-next-line max-lines-per-function
+export const DietFormAdvanced = ({
+  formData,
+  onChange,
+}) => {
+  const {
+    timesEatEggs,
+    muchEatCereal,
+    timesConsumeDairy,
+    muchEatFruitVegetables,
+    manyConsumeSnacks,
+  } = formData
+
   return (
     <>
-      <FirstForm />
+      <FirstForm formData={formData} onChange={onChange} />
       <StyledDivider />
       <RowLayout align="middle" icon="icon/eggs.svg" title="Huevos">
         <InputLayout
@@ -105,6 +121,8 @@ export const DietFormAdvanced = () => {
             placeholder="30"
             size="large"
             style={{ width: '100%' }}
+            value={timesEatEggs}
+            onChange={value => onChange(value, 'timesEatEggs')}
           />
         </InputLayout>
       </RowLayout>
@@ -119,6 +137,8 @@ export const DietFormAdvanced = () => {
             placeholder="12"
             size="large"
             style={{ width: '100%' }}
+            value={muchEatCereal}
+            onChange={value => onChange(value, 'muchEatCereal')}
           />
         </InputLayout>
       </RowLayout>
@@ -133,6 +153,8 @@ export const DietFormAdvanced = () => {
             placeholder="12"
             size="large"
             style={{ width: '100%' }}
+            value={timesConsumeDairy}
+            onChange={value => onChange(value, 'timesConsumeDairy')}
           />
         </InputLayout>
       </RowLayout>
@@ -150,6 +172,8 @@ export const DietFormAdvanced = () => {
             placeholder="12"
             size="large"
             style={{ width: '100%' }}
+            value={muchEatFruitVegetables}
+            onChange={value => onChange(value, 'muchEatFruitVegetables')}
           />
         </InputLayout>
       </RowLayout>
@@ -167,6 +191,8 @@ export const DietFormAdvanced = () => {
             placeholder="12"
             size="large"
             style={{ width: '100%' }}
+            value={manyConsumeSnacks}
+            onChange={value => onChange(value, 'manyConsumeSnacks')}
           />
         </InputLayout>
       </RowLayout>

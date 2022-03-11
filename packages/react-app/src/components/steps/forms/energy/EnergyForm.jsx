@@ -4,7 +4,20 @@ import { StyledDivider } from '../../components/StyledDivider'
 import { InputLayout } from '../../layouts/InputLayout'
 import { RowLayout } from '../../layouts/RowLayout'
 
-export const EnergyForm = () => {
+// eslint-disable-next-line max-lines-per-function
+export const EnergyForm = ({
+  formData,
+  onChange,
+}) => {
+  const {
+    peopleLive,
+    homeBig,
+    electricityConsume,
+    liquefiedGasConsume,
+    naturalGasConsume,
+    waterConsume,
+  } = formData
+
   return (
     <>
       <RowLayout icon="icon/house.svg" title="Hogar">
@@ -16,6 +29,8 @@ export const EnergyForm = () => {
                 placeholder="2"
                 size="large"
                 style={{ width: '100%' }}
+                value={peopleLive}
+                onChange={value => onChange(value, 'peopleLive')}
               />
             </InputLayout>
           </Col>
@@ -29,6 +44,8 @@ export const EnergyForm = () => {
                   placeholder="200 kms"
                   size="large"
                   style={{ width: '100%' }}
+                  value={homeBig}
+                  onChange={value => onChange(value, 'homeBig')}
                 />
               </InputLayout>
             </Col>
@@ -49,6 +66,8 @@ export const EnergyForm = () => {
             placeholder="200 kw"
             size="large"
             style={{ width: '100%' }}
+            value={electricityConsume}
+            onChange={value => onChange(value, 'electricityConsume')}
           />
         </InputLayout>
       </RowLayout>
@@ -64,6 +83,8 @@ export const EnergyForm = () => {
             placeholder="15 kgs"
             size="large"
             style={{ width: '100%' }}
+            value={liquefiedGasConsume}
+            onChange={value => onChange(value, 'liquefiedGasConsume')}
           />
         </InputLayout>
         <InputLayout
@@ -75,6 +96,8 @@ export const EnergyForm = () => {
             placeholder="20 m3"
             size="large"
             style={{ width: '100%' }}
+            value={naturalGasConsume}
+            onChange={value => onChange(value, 'naturalGasConsume')}
           />
         </InputLayout>
       </RowLayout>
@@ -86,6 +109,8 @@ export const EnergyForm = () => {
             placeholder="12 lts"
             size="large"
             style={{ width: '100%' }}
+            value={waterConsume}
+            onChange={value => onChange(value, 'waterConsume')}
           />
         </InputLayout>
       </RowLayout>

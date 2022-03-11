@@ -14,6 +14,8 @@ export const InputPrice = ({
   size = 'large',
   prefix = '$',
   min = 0,
+  onChange,
+  value,
 }) => {
   return (
     <>
@@ -23,6 +25,8 @@ export const InputPrice = ({
         placeholder={placeholder}
         size={size}
         style={{ width: '100%' }}
+        onChange={onChange}
+        value={value}
       />
     </>
   )
