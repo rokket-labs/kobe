@@ -19,7 +19,6 @@ export const WalletContext = React.createContext({
   polygonContracts: {},
   writeContracts: {},
   isPledged: false,
-  isLoadingBalances: true,
 })
 
 export const WalletContextProvider = ({ children }) => {
@@ -27,7 +26,6 @@ export const WalletContextProvider = ({ children }) => {
     useContext(NetworkContext)
 
   const [USDPrices, setUSDPrices] = useState(null) // prices of main tokens of the app
-  const [isLoadingBalances, setIsLoadingBalances] = useState(true)
 
   // Load in your local 📝 contract and read a value from it:
   const contracts = useContractLoader(localProvider, contractConfig)
@@ -68,37 +66,6 @@ export const WalletContextProvider = ({ children }) => {
     getData()
   }, [])
 
-  useEffect(() => {
-    setIsLoadingBalances(true)
-  }, [injectedProvider && injectedProvider?._network?.chainId])
-
-  // Read the balance of the user's wallet
-  useEffect(() => {
-    if (isLoadingBalances)
-      if (
-        polygonMCO2Balance &&
-        polygonBCTBalance &&
-        polygonNCTBalance &&
-        polygonKlimaBalance &&
-        polygonSKlimaBalance &&
-        polygonWethBalance &&
-        tonsPledged
-      ) {
-        console.log('aca?')
-        setIsLoadingBalances(false)
-      }
-  }, [
-    polygonMCO2Balance,
-    polygonBCTBalance,
-    polygonNCTBalance,
-    polygonKlimaBalance,
-    polygonSKlimaBalance,
-    polygonWethBalance,
-    isLoadingBalances,
-    CO2TokenBalance,
-    tonsPledged,
-  ])
-
   const value = {
     USDPrices,
     walletBalance: {
@@ -117,7 +84,6 @@ export const WalletContextProvider = ({ children }) => {
     isPledged,
     contractConfig,
     CO2TokenBalance,
-    isLoadingBalances,
   }
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>

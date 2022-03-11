@@ -56,10 +56,9 @@ export const NetworkContextProvider = ({ children }) => {
   const disconnectWallet = useCallback(async () => {
     await web3Modal.clearCachedProvider()
 
-    if (injectedProvider && injectedProvider.provider && typeof injectedProvider.provider.disconnect === 'function') {
-      console.log('aca')
+    if (injectedProvider && injectedProvider.provider && typeof injectedProvider.provider.disconnect === 'function')
       await injectedProvider.provider.disconnect()
-    }
+
 
     setTimeout(() => {
       window.location.reload()

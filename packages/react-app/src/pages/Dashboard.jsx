@@ -19,9 +19,9 @@ const { Text } = Typography
 const Dashboard = () => {
   const router = useHistory()
   const { address, isLoadingAccount } = useContext(NetworkContext)
-  const { USDPrices, walletBalance, tonsPledged, isPledged, yourKTBalance, CO2TokenBalance, isLoadingBalances } =
-    useContext(WalletContext)
-  const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance, polygonKlimaBalance, polygonSKlimaBalance } = walletBalance
+  const { USDPrices, walletBalance, tonsPledged, isPledged, yourKTBalance, CO2TokenBalance } = useContext(WalletContext)
+  const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance, polygonKlimaBalance, polygonSKlimaBalance } =
+    walletBalance
   const [fightData, setFightData] = useState([])
   const [plightData, setPlightData] = useState([])
   const [yourPlight, setYourPlight] = useState()
@@ -65,7 +65,16 @@ const Dashboard = () => {
         : 0,
     )
     setPledged(isPledged)
-  }, [isLoadingBalances])
+  }, [
+    CO2TokenBalance,
+    USDPrices,
+    isPledged,
+    polygonBCTBalance,
+    polygonMCO2Balance,
+    polygonNCTBalance,
+    tonsPledged,
+    yourKTBalance,
+  ])
 
   return (
     <Row justify="center" className="my-sm">
@@ -81,7 +90,9 @@ const Dashboard = () => {
         <Row justify="end" className="my-md">
           {pledged ? (
             <Col>
-              <StyledButton $type="primary" onClick={() => router.push('/rart')}>Now Minting! Koywe Trees</StyledButton>
+              <StyledButton $type="primary" onClick={() => router.push('/rart')}>
+                Now Minting! Koywe Trees
+              </StyledButton>
             </Col>
           ) : (
             <Col>
