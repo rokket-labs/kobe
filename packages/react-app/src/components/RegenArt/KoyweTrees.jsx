@@ -1,18 +1,26 @@
 import { useEffect, useState } from 'react'
-import { Card, List } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
+import { List, Row, Spin, Typography } from 'antd'
 
-const KoyweTrees = props => {
-  const { address, contracts, yourKTBalance } = props
+import { StyledButton } from '../../components/common/StyledButton'
+import { Art } from '../common/Art'
 
+const { Title } = Typography
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
+
+const KoyweTrees = ({ address, contracts, yourKTBalance }) => {
+  const [showAll, setShowAll] = useState(false)
   const [yourCollectibles, setYourCollectibles] = useState()
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    setIsLoading(true)
+
     const updateYourCollectibles = async () => {
       const collectibleUpdate = []
 
       for (let tokenIndex = 0; tokenIndex < yourKTBalance; tokenIndex++)
         try {
-
           const tokenId = await contracts.KoyweCollectibles.tokenOfOwnerByIndex(address, tokenIndex)
 
           const tokenURI = await contracts.KoyweCollectibles.tokenURI(tokenId)
@@ -30,41 +38,47 @@ const KoyweTrees = props => {
         }
 
       setYourCollectibles(collectibleUpdate.reverse())
+      setIsLoading(false)
     }
 
     updateYourCollectibles()
   }, [address, contracts.KoyweCollectibles, yourKTBalance])
 
   return (
-    <div style={{ width: '100%', margin: 'auto', marginTop: 32, paddingBottom: 32 }}>
-      <List
-        grid={3}
-        dataSource={yourCollectibles}
-        renderItem={item => {
-          const id = parseInt(item.id, 16)
-          const { name } = item
-
-          return (
-            <List.Item key={id}>
-              <Card
-                title={
-                  <div>
-                    <span style={{ fontSize: 16, marginRight: 8 }}>{name}</span>
-                  </div>
-                }
-              >
-                <div>
-                  <a href={item.external_url} target="_blank">
-                    <img src={item.image} style={{ maxWidth: 150 }} />
-                  </a>
-                </div>
-                <div style={{ maxWidth: 150 }}>{item.description}</div>
-              </Card>
-            </List.Item>
-          )
-        }}
-      />
-    </div>
+    <>
+      <Row>
+        <Title level={2}>Koywe Trees</Title>
+      </Row>
+      {isLoading ? (
+        <Row justify="center" gutter={8}>
+          <Spin indicator={antIcon} />
+        </Row>
+      ) : (
+        <>
+          <Row justify="center" gutter={8}>
+            <List
+              style={{ width: '100%' }}
+              dataSource={showAll ? yourCollectibles : yourCollectibles.slice(0, 5)}
+              grid={{ gutter: 16, column: 5 }}
+              renderItem={item => {
+                return (
+                  <List.Item key={`${item.id}`}>
+                    <Art srcImg={item.image} title={item.name} />
+                  </List.Item>
+                )
+              }}
+            />
+          </Row>
+          {yourCollectibles.length > 5 && (
+            <Row justify="center" className="my-md">
+              <StyledButton $type="primary" onClick={() => setShowAll(hiddenArt => !hiddenArt)}>
+                {!showAll ? 'See all my art' : 'Hide my art'}
+              </StyledButton>
+            </Row>
+          )}
+        </>
+      )}
+    </>
   )
 }
 

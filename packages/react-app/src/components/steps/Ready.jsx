@@ -1,6 +1,8 @@
+import { useContext, useState } from 'react'
 import { Col, Image, Row, Typography } from 'antd'
 
 import { StyledButton } from '../../components/common/StyledButton'
+import CalculatorContext from '../../contexts/CalculatorContext'
 
 import { Stats } from './components/Stats'
 import { StyledRow } from './components/StyledRow'
@@ -14,7 +16,38 @@ const { Text, Title } = Typography
   }
  */
 
+// eslint-disable-next-line max-lines-per-function
 export const Ready = ({ nextStep }) => {
+  const { country, email, advanced, setToken } = useContext(CalculatorContext)
+  const [loading, setLoading] = useState(false)
+
+  const handleOnClick = () => {
+    const data = {
+      email,
+      country,
+      means_of_transport: advanced ? 'Detallada' : 'Simplificada',
+    }
+
+    setLoading(true)
+
+    fetch(`http://koywecalc.herokuapp.com/api/v1/home-detailed`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }).then(async res => {
+      const responseData = await res.json()
+
+      if (responseData['access_token']) {
+        setToken(responseData['access_token'])
+        nextStep()
+      } else return Promise.reject(responseData.message)
+    }).catch(err => {
+      console.log(err)
+    }).finally(() => {
+      setLoading(false)
+    })
+  }
+
   return (
     <>
       <StyledRow justify="center">
@@ -75,11 +108,6 @@ export const Ready = ({ nextStep }) => {
               </Text>
             </Col>
           </StyledRow>
-          <StyledRow>
-            <Col>
-              <Text>Te recomendamos que puedas hacer la detallada.</Text>
-            </Col>
-          </StyledRow>
           <StyledRow justify="space-between">
             <Col>
               <StyledTitle level={4}>
@@ -87,7 +115,7 @@ export const Ready = ({ nextStep }) => {
               </StyledTitle>
             </Col>
             <Col>
-              <StyledButton $type="primary" onClick={() => nextStep()}>
+              <StyledButton $type="primary" onClick={() => handleOnClick()} disabled={loading}>
                 Comencemos
               </StyledButton>
             </Col>
