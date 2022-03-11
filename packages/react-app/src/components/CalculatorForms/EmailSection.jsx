@@ -1,9 +1,10 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Col, Image, Input, Row, Typography } from 'antd'
 import styled from 'styled-components'
 
 import { StyledButton } from '../../components/common/StyledButton'
+import CalculatorContext from '../../contexts/CalculatorContext'
 import { IsPledgedContext } from '../../contexts/IsPledgedContext'
 
 const { Title, Text } = Typography
@@ -33,10 +34,29 @@ const StyledCol = styled(Col)`
 const EmailSection = ({ email }) => {
   const router = useHistory()
   const { handleHasCalculator } = useContext(IsPledgedContext)
+  const { accessToken } = useContext(CalculatorContext)
+  const [loading, setLoading] = useState(false)
 
   const handleGoToEmission = url => {
-    handleHasCalculator(true)
-    router.push(url)
+    setLoading(true)
+
+    fetch('http://koywecalc.herokuapp.com/api/v1/emissions-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 'bearerToken': accessToken }),
+    }).then(async res => {
+      let responseData = await res.json()
+
+      if (Array.isArray(responseData))
+        responseData = responseData[0]
+
+      handleHasCalculator(JSON.stringify(responseData))
+      router.push(url)
+    }).catch(err => {
+      console.log(err)
+    }).finally(() => {
+      setLoading(false)
+    })
   }
 
   return (
@@ -86,6 +106,7 @@ const EmailSection = ({ email }) => {
           <Col xl={10} md={24}>
             <StyledButton
               $type="primary"
+              disabled={loading}
               style={{ paddingInline: '2.2rem', float: 'right' }}
               onClick={() => handleGoToEmission('emission')}>
               Ver mis emisiones

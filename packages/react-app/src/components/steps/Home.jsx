@@ -1,6 +1,8 @@
+import { useContext } from 'react'
 import { Col, Image, Input, Row, Select, Typography } from 'antd'
 
 import { StyledButton } from '../../components/common/StyledButton'
+import CalculatorContext from '../../contexts/CalculatorContext'
 
 import { StyledCol } from './components/StyledCol'
 import { StyledRow } from './components/StyledRow'
@@ -16,6 +18,8 @@ const { Option } = Select
 */
 
 export const Home = ({ nextStep }) => {
+  const { country, setCountry, email, setEmail } = useContext(CalculatorContext)
+
   return (
     <>
       <StyledRow justify="center">
@@ -48,7 +52,11 @@ export const Home = ({ nextStep }) => {
       <StyledRow justify="center">
         <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 6 }}>
           <Text>Correo electrónico *</Text>
-          <Input placeholder="mail@mail.com" />
+          <Input
+            placeholder="mail@mail.com"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
         </Col>
       </StyledRow>
       <StyledRow justify="center">
@@ -62,9 +70,12 @@ export const Home = ({ nextStep }) => {
             <Col span={24}>
               <Select
                 placeholder="Selecciona tu país"
-                style={{ width: '100%' }}>
-                <Option value="CL">Chile</Option>
-                <Option value="ARG">Argentina</Option>
+                style={{ width: '100%' }}
+                value={country}
+                onChange={e => setCountry(e.target.value)}
+              >
+                <Option value="Chile">Chile</Option>
+                <Option value="Argentina">Argentina</Option>
               </Select>
             </Col>
           </Row>

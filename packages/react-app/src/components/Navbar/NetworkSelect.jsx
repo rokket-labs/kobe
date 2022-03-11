@@ -32,7 +32,16 @@ const NetworkSelect = ({ NETWORKCHECK }) => {
         </div>
       </div>
       {networkError && NETWORKCHECK && (
-        <div style={{ zIndex: 2, position: 'absolute', right: 0, top: 60, padding: 16 }}>
+        <div
+          style={{
+            zIndex: 2,
+            position: 'fixed',
+            right: 168,
+            width: 100,
+            top: 85,
+            padding: 16,
+          }}
+        >
           <Alert
             message={networkError.message}
             description={networkError.description}

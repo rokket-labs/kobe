@@ -20,7 +20,8 @@ const Dashboard = () => {
   const router = useHistory()
   const { address, isLoadingAccount } = useContext(NetworkContext)
   const { USDPrices, walletBalance, tonsPledged, isPledged, yourKTBalance, CO2TokenBalance } = useContext(WalletContext)
-  const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance } = walletBalance
+  const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance, polygonKlimaBalance, polygonSKlimaBalance } =
+    walletBalance
   const [fightData, setFightData] = useState([])
   const [plightData, setPlightData] = useState([])
   const [yourPlight, setYourPlight] = useState()
@@ -34,6 +35,8 @@ const Dashboard = () => {
       polygonBCTBalance,
       polygonMCO2Balance,
       polygonNCTBalance,
+      polygonKlimaBalance,
+      polygonSKlimaBalance,
       yourKTBalance,
       USDPrices,
       isPledged,
@@ -87,7 +90,9 @@ const Dashboard = () => {
         <Row justify="end" className="my-md">
           {pledged ? (
             <Col>
-              <StyledButton $type="primary">Mint living position NFT for 0.08 ETH</StyledButton>
+              <StyledButton $type="primary" onClick={() => router.push('/rart')}>
+                Now Minting! Koywe Trees
+              </StyledButton>
             </Col>
           ) : (
             <Col>

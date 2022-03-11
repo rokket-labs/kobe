@@ -59,7 +59,7 @@ const NftCard = ({ title, mintPrice, isBCTAmountApproved, buying, handleApproveB
                     CARBON TOKENS (BCT)!
                     <br />
                     <small>
-                      If you don&apos;t have BCT yet, check our ReFi tab, or go to Sushiswap Polygon, or wait for us to
+                      If you don&apos;t have BCT yet go to Sushiswap Polygon, or wait for us to
                       have a credit card ramp!
                     </small>
                     <br />
