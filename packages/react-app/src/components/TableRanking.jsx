@@ -1,12 +1,12 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Row, Table, Typography } from 'antd'
-import { useContractLoader } from 'eth-hooks'
+import { useContractLoader, useContractReader } from 'eth-hooks'
 import styled from 'styled-components'
 
 import { TokenBalance } from '../components'
 import Address from '../components/common/Address'
 import CarbonFYI from '../components/common/CarbonFYI'
-import { NETWORKS } from '../constants'
+import { HOOK_OPTIONS, NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 
@@ -31,48 +31,7 @@ const getData = data => {
 }
 
 // eslint-disable-next-line max-lines-per-function
-export const TableRanking = ({ rankingData }) => {
-  const { contractConfig } = useContext(WalletContext)
-  const { mainnetProvider, localProvider, address } = useContext(NetworkContext)
-
-  const polyNetwork = NETWORKS.polygon
-
-  const polyProviderUrl = polyNetwork.rpcUrl
-  const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
-
-  const polyContracts = useContractLoader(polyProvider, contractConfig)
-  const readContracts = useContractLoader(localProvider, contractConfig)
-  /*
-  const pledgeEvents = useEventListener(readContracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
-
-  const CO2TokenBalance = useContractReader(readContracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
-
-   const testBlanace = Balance('0x40f9bf922c23c43acdad71Ab4425280C0ffBD697')
-
-  console.log('testBlanace', testBlanace) */
-
-  /*   const vendorTokenBalance = useContractReader(
-    readContracts,
-    'PMCO2',
-    'balanceOf',
-    ['0x2760A7AC4ca336FB4B92a7225eEb0998c371580F'],
-    HOOK_OPTIONS,
-  )
-
-  // const fullBalance = Balance('0x52694167465aBAD66B9E4ED9d5e0Dfd29aB75fa4', polyContracts)
-
-  const pledged =
-    useContractReader(
-      contracts,
-      'KoywePledge',
-      'getCommitment',
-      ['0x2760A7AC4ca336FB4B92a7225eEb0998c371580F'],
-      HOOK_OPTIONS,
-    ) /
-    10 ** 9 */
-
-  // console.log('walletBalance', vendorTokenBalance)
-
+export const TableRanking = ({ rankingData, USDPrices, mainnetProvider, readContracts, polyContracts, address }) => {
   const columns = [
     {
       title: '',
@@ -88,6 +47,7 @@ export const TableRanking = ({ rankingData }) => {
       dataIndex: 'key',
       key: 'key',
       align: 'center',
+      /*       sorter: (a, b) => a.key - b.key, */
       render: key => (
         <Row justify="center">
           <Text style={{ fontWeight: 'bold', fontSize: '24px' }}>{key + 1}</Text>
@@ -147,21 +107,17 @@ export const TableRanking = ({ rankingData }) => {
       align: 'center',
       render: args => (
         <Row justify="space-around" align="middle">
-          <TokenTotal contracts={readContracts} name={'CO2TokenContract'} address={args[0]} />
+          <TokenTotal readContracts={readContracts} address={args[0]} />
         </Row>
       ),
     },
-    /*     {
+    {
       title: 'Emmited',
       dataIndex: 'args',
       key: 'blockNumber',
       align: 'center',
-      render: args => (
-        <Row justify="space-around" align="middle">
-           <CarbonFYI currentAddress={args[0]} />
-        </Row>
-      ),
-    }, */
+      render: args => <Row justify="space-around" align="middle"></Row>,
+    },
     {
       title: 'Balance',
       dataIndex: 'args',
@@ -169,7 +125,7 @@ export const TableRanking = ({ rankingData }) => {
       align: 'center',
       render: args => (
         <Row justify="space-around" align="middle">
-          <Balance address={args[0]} />
+          <Balance address={args[0]} polyContracts={polyContracts} USDPrices={USDPrices} />
         </Row>
       ),
     },

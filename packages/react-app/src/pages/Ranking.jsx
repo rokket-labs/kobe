@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Col, Image, List, Row, Typography } from 'antd'
-import { useContractLoader, useContractReader } from 'eth-hooks'
+import { Col, Image, Row, Typography } from 'antd'
+import { useContractLoader } from 'eth-hooks'
 import { useEventListener } from 'eth-hooks/events/useEventListener'
 import styled from 'styled-components'
 
-import { TokenBalance } from '../components'
-import { Staked } from '../components/Balance'
 import Address from '../components/common/Address'
 import { TableRanking } from '../components/TableRanking'
 import { HOOK_OPTIONS, NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
+
+// import rankingData from './ranking-data-chain.json'
 
 const { ethers } = require('ethers')
 
@@ -31,7 +31,7 @@ const StyledText = styled(Text)`
 const RankingTitle = position => {
   const { mainnetProvider, address } = useContext(NetworkContext)
 
-  console.log('tesposition', position)
+  console.log('posiition')
 
   return (
     <Col span={24}>
@@ -74,7 +74,7 @@ const Ranking = () => {
   const [data, setData] = useState()
   const [position, setPosition] = useState(1)
 
-  const { contractConfig, contracts } = useContext(WalletContext)
+  const { contractConfig, USDPrices } = useContext(WalletContext)
   const { mainnetProvider, localProvider, address } = useContext(NetworkContext)
 
   const polyNetwork = NETWORKS.polygon
@@ -98,10 +98,10 @@ const Ranking = () => {
     })
 
     setData(newData)
-  }, [pledgeEvents])
+  }, [address, pledgeEvents])
 
   return (
-    <Row>
+    <div>
       {/*       <div style={{ width: 500, margin: 'auto', marginTop: 64 }}>
         <div>Ranking:</div>
 
@@ -122,8 +122,19 @@ const Ranking = () => {
       </div> */}
       <Title level={2}>Rankings</Title>
       <RankingTitle position={position} />
-      <StyledRow justify="center">{data && <TableRanking rankingData={data} />}</StyledRow>
-    </Row>
+      <StyledRow justify="center">
+        {data && (
+          <TableRanking
+            rankingData={data}
+            USDPrices={USDPrices}
+            mainnetProvider={mainnetProvider}
+            readContracts={readContracts}
+            polyContracts={polyContracts}
+            address={address}
+          />
+        )}
+      </StyledRow>
+    </div>
   )
 }
 

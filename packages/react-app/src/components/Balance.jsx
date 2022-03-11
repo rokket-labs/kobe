@@ -9,8 +9,6 @@ import { HOOK_OPTIONS, NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 
-const { ethers } = require('ethers')
-
 const { Text } = Typography
 
 export const Pledge = co2tons => {
@@ -31,7 +29,7 @@ export const PledgeTotal = address => {
   return <Text>{pledged}</Text>
 }
 
-export const Emmited = props => {
+/* export const Emmited = props => {
   const { contractConfig } = useContext(WalletContext)
   const { localProvider } = useContext(NetworkContext)
   const readContracts = useContractLoader(localProvider, contractConfig)
@@ -70,33 +68,20 @@ export const Emmited = props => {
   if (props.dollarMultiplier && dollarMode) displayBalance = `$${(floatBalance * props.dollarMultiplier).toFixed(2)}`
 
   return <Text>{displayBalance} Co2</Text>
-}
+} */
 
 export const Staked = ({ address, polyContracts }) => {
   const myPolyKlimaBalance = useContractReader(polyContracts, 'PBCT', 'balanceOf', [address], HOOK_OPTIONS)
-
-  // console.log('StakedToken', address, myPolySKlimaBalance)
 
   const skilmaBalance = (
     (myPolyKlimaBalance && myPolyKlimaBalance > 0 ? myPolyKlimaBalance : 0) / Math.pow(10, 18)
   ).toFixed(4)
 
-  //  return <Text>{skilmaBalance} BCT</Text>
   return skilmaBalance
 }
 
-export const TokenTotal = props => {
-  const { contractConfig } = useContext(WalletContext)
-  const { localProvider } = useContext(NetworkContext)
-  const readContracts = useContractLoader(localProvider, contractConfig)
-
-  const CO2TokenBalance = useContractReader(
-    readContracts,
-    'CO2TokenContract',
-    'balanceOf',
-    [props.address],
-    HOOK_OPTIONS,
-  )
+export const TokenTotal = ({ address, readContracts }) => {
+  const CO2TokenBalance = useContractReader(readContracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
 
   return (
     <Text fontSize={24} padding={8}>
@@ -105,61 +90,17 @@ export const TokenTotal = props => {
   )
 }
 
-export const Balance = address => {
-  const { contractConfig, USDPrices } = useContext(WalletContext)
-  // const [prices, setPrices] = useState(null)
-
-  const polyNetwork = NETWORKS.polygon
-
-  const polyProviderUrl = polyNetwork.rpcUrl
-  const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
-
-  const polyContracts = useContractLoader(polyProvider, contractConfig)
-
-  // console.log('testAddress', typeof address)
-
+export const Balance = ({ address, polyContracts, USDPrices }) => {
   // Polybalances
-  const myPolyMCO2Balance = useContractReader(
-    polyContracts,
-    'PMCO2',
-    'balanceOf',
-    [String(address.address)],
-    HOOK_OPTIONS,
-  )
+  const myPolyMCO2Balance = useContractReader(polyContracts, 'PMCO2', 'balanceOf', [address], HOOK_OPTIONS)
 
-  const myPolyBCTBalance = useContractReader(
-    polyContracts,
-    'PBCT',
-    'balanceOf',
-    [String(address.address)],
-    HOOK_OPTIONS,
-  )
+  const myPolyBCTBalance = useContractReader(polyContracts, 'PBCT', 'balanceOf', [address], HOOK_OPTIONS)
 
   // const myPolyNCTBalance = useContractReader(polyContracts, 'NCT', 'balanceOf', [String(address.address)], HOOK_OPTIONS)
 
-  const myPolyKlimaBalance = useContractReader(
-    polyContracts,
-    'KLIMA',
-    'balanceOf',
-    [String(address.address)],
-    HOOK_OPTIONS,
-  )
+  const myPolyKlimaBalance = useContractReader(polyContracts, 'KLIMA', 'balanceOf', [address], HOOK_OPTIONS)
 
-  const myPolySKlimaBalance = useContractReader(
-    polyContracts,
-    'sKLIMA',
-    'balanceOf',
-    [String(address.address)],
-    HOOK_OPTIONS,
-  )
-
-  // const myPolyWethBalance = useContractReader(polyContracts, 'WETH', 'balanceOf', [String(address.address)], HOOK_OPTIONS)
-
-  /*   console.log('address', address.address)
-    console.log('myPolyMCO2Balance', myPolyMCO2Balance / Math.pow(10, 18))
-    console.log('myPolyBCTBalance', myPolyBCTBalance)
-    console.log('myPolyKlimaBalance', myPolyKlimaBalance)
-    console.log('myPolySKlimaBalance', myPolySKlimaBalance) */
+  const myPolySKlimaBalance = useContractReader(polyContracts, 'sKLIMA', 'balanceOf', [address], HOOK_OPTIONS)
 
   const [totalBalance, setTotalBalance] = useState(0)
 
