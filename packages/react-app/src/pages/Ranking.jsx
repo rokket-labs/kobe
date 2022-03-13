@@ -6,9 +6,11 @@ import styled from 'styled-components'
 
 import Address from '../components/common/Address'
 import { TableRanking } from '../components/TableRanking'
-import { HOOK_OPTIONS, NETWORKS } from '../constants'
+import { NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
+import externalContracts from '../contracts/external_contracts'
+import deployedContracts from '../contracts/hardhat_contracts.json'
 
 // import rankingData from './ranking-data-chain.json'
 
@@ -28,10 +30,27 @@ const StyledText = styled(Text)`
   ${prop => (prop.ml ? `margin-left: ${prop.ml}` : '')};
 `
 
-const RankingTitle = position => {
-  const { mainnetProvider, address } = useContext(NetworkContext)
+const USDPricesContext = () => {
+  const [USDPrices, setUSDPrices] = useState(null) // prices of main tokens of the app
 
-  console.log('posiition')
+  useEffect(() => {
+    const getData = async () => {
+      const response = await fetch(
+        'https://api.coingecko.com/api/v3/simple/price?ids=toucan-protocol-base-carbon-tonne,moss-carbon-credit,klima-dao,staked-klima&vs_currencies=usd',
+      )
+      const data = await response.json()
+
+      setUSDPrices(data)
+    }
+
+    getData()
+  }, [])
+
+  return USDPrices
+}
+
+const RankingTitle = ({ position, address, mainnetProvider, polyProvider }) => {
+  const { contractConfig, USDPrices } = useContext(WalletContext)
 
   return (
     <Col span={24}>
@@ -59,7 +78,7 @@ const RankingTitle = position => {
                   Your Position
                 </StyledText>
                 <StyledText $isBold $isTitle ml="20px">
-                  {position.position}
+                  {position}
                 </StyledText>
               </Col>
             </Row>
@@ -71,10 +90,19 @@ const RankingTitle = position => {
 }
 
 const Ranking = () => {
-  const [data, setData] = useState()
+  const [data, setData] = useState([])
   const [position, setPosition] = useState(1)
+  const LENGHT_RANKING = 12
 
-  const { contractConfig, USDPrices } = useContext(WalletContext)
+  const HOOK_OPTIONS = {
+    blockNumberInterval: 500,
+    query: { refetchOnWindowFocus: false },
+  }
+
+  const contractConfig = { deployedContracts: deployedContracts || {}, externalContracts: externalContracts || {} }
+
+  const USDPrices = USDPricesContext()
+
   const { mainnetProvider, localProvider, address } = useContext(NetworkContext)
 
   const polyNetwork = NETWORKS.polygon
@@ -83,10 +111,12 @@ const Ranking = () => {
   const polyProviderUrl = polyNetwork.rpcUrl
   const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
 
-  const polyContracts = useContractLoader(polyProvider, contractConfig)
+  // const polyContracts = useContractLoader(polyProvider, contractConfig)
   const readContracts = useContractLoader(localProvider, contractConfig)
 
   const pledgeEvents = useEventListener(readContracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
+
+  console.log('testingRedering')
 
   useEffect(() => {
     const newData = [...pledgeEvents]
@@ -96,6 +126,10 @@ const Ranking = () => {
 
       if (item.args[0] === address) setPosition(index + 1)
     })
+
+    /*     if (LENGHT_RANKING > newData.length){
+
+    } */
 
     setData(newData)
   }, [address, pledgeEvents])
@@ -121,7 +155,12 @@ const Ranking = () => {
         />
       </div> */}
       <Title level={2}>Rankings</Title>
-      <RankingTitle position={position} />
+      <RankingTitle
+        position={position}
+        polyProvider={polyProvider}
+        mainnetProvider={mainnetProvider}
+        address={address}
+      />
       <StyledRow justify="center">
         {data && (
           <TableRanking
@@ -129,8 +168,11 @@ const Ranking = () => {
             USDPrices={USDPrices}
             mainnetProvider={mainnetProvider}
             readContracts={readContracts}
-            polyContracts={polyContracts}
+            polyProvider={polyProvider}
+            contractConfig={contractConfig}
+            // polyContracts={polyContracts}
             address={address}
+            HOOK_OPTIONS={HOOK_OPTIONS}
           />
         )}
       </StyledRow>

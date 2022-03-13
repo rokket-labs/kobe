@@ -1,20 +1,14 @@
-import React, { useContext, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Row, Table, Typography } from 'antd'
-import { useContractLoader, useContractReader } from 'eth-hooks'
+import { useContractLoader } from 'eth-hooks'
 import styled from 'styled-components'
 
-import { TokenBalance } from '../components'
 import Address from '../components/common/Address'
 import CarbonFYI from '../components/common/CarbonFYI'
-import { HOOK_OPTIONS, NETWORKS } from '../constants'
-import { NetworkContext } from '../contexts/NetworkContext'
-import { WalletContext } from '../contexts/WalletContext'
 
-import { Balance, Pledge, Staked, TokenTotal } from './Balance'
+import { Balance, Pledge, TokenTotal } from './Balance'
 
 import '../styles/ranking.css'
-
-const { ethers } = require('ethers')
 
 const { Text } = Typography
 
@@ -26,12 +20,19 @@ const StyledTable = styled(Table)`
   background: #9ae6b4;
 `
 
-const getData = data => {
-  return data
-}
-
 // eslint-disable-next-line max-lines-per-function
-export const TableRanking = ({ rankingData, USDPrices, mainnetProvider, readContracts, polyContracts, address }) => {
+export const TableRanking = ({
+  rankingData,
+  USDPrices,
+  polyProvider,
+  contractConfig,
+  mainnetProvider,
+  readContracts,
+  address,
+  HOOK_OPTIONS,
+}) => {
+  const polyContracts = useContractLoader(polyProvider, contractConfig)
+
   const columns = [
     {
       title: '',
@@ -39,8 +40,8 @@ export const TableRanking = ({ rankingData, USDPrices, mainnetProvider, readCont
       key: 'icon',
       align: 'center',
       /*       render: iconProp => (
-        <Row justify="center">{iconProp.icon && <Image src={iconProp.icon} preview={false} height={42} />}</Row>
-      ), */
+      <Row justify="center">{iconProp.icon && <Image src={iconProp.icon} preview={false} height={42} />}</Row>
+    ), */
     },
     {
       title: 'Ranking',
@@ -62,17 +63,6 @@ export const TableRanking = ({ rankingData, USDPrices, mainnetProvider, readCont
       render: args => (
         <Row justify="space-around" align="middle">
           <Address value={args[0]} ensProvider={mainnetProvider} fontSize={16} />
-          {/*           <Link to={`/${address}`}>
-            <a>
-              <Image src={address.icon} preview={false} height={42} />
-            </a>
-          </Link>
-          <Text style={{ alignSelf: 'center', marginLeft: '10px' }}>{address}</Text>
-          <Link to={`/${address}`}>
-            <a>
-              <Image src="icon/leave.svg" preview={false} height={24} />
-            </a>
-          </Link>{' '} */}
         </Row>
       ),
     },
@@ -96,7 +86,7 @@ export const TableRanking = ({ rankingData, USDPrices, mainnetProvider, readCont
       render: args => (
         <Row justify="space-around" align="middle">
           {/* <TokenBalance contracts={polyContracts} name={'sKLIMA'} address={args[0]} /> */}
-          <Staked address={args[0]} polyContracts={polyContracts} /> BCT
+          <TokenTotal address={args[0]} tokenName="PBCT" contract={polyContracts} HOOK_OPTIONS={HOOK_OPTIONS} /> BCT
         </Row>
       ),
     },
@@ -107,7 +97,13 @@ export const TableRanking = ({ rankingData, USDPrices, mainnetProvider, readCont
       align: 'center',
       render: args => (
         <Row justify="space-around" align="middle">
-          <TokenTotal readContracts={readContracts} address={args[0]} />
+          <TokenTotal
+            contract={readContracts}
+            tokenName="CO2TokenContract"
+            address={args[0]}
+            HOOK_OPTIONS={HOOK_OPTIONS}
+          />{' '}
+          CO2e tons dripped
         </Row>
       ),
     },
@@ -116,7 +112,12 @@ export const TableRanking = ({ rankingData, USDPrices, mainnetProvider, readCont
       dataIndex: 'args',
       key: 'blockNumber',
       align: 'center',
-      render: args => <Row justify="space-around" align="middle"></Row>,
+      render: args => (
+        <Row justify="space-around" align="middle">
+          {console.log('testCallings')}
+          {/* <CarbonFYI currentAddress={args[0]} /> */}
+        </Row>
+      ),
     },
     {
       title: 'Balance',
@@ -125,17 +126,16 @@ export const TableRanking = ({ rankingData, USDPrices, mainnetProvider, readCont
       align: 'center',
       render: args => (
         <Row justify="space-around" align="middle">
-          <Balance address={args[0]} polyContracts={polyContracts} USDPrices={USDPrices} />
+          <Balance address={args[0]} polyContracts={polyContracts} USDPrices={USDPrices} HOOK_OPTIONS={HOOK_OPTIONS} />
         </Row>
       ),
     },
   ]
-  const data = getData(rankingData)
 
   return (
     <StyledTable
       columns={columns}
-      dataSource={data}
+      dataSource={rankingData}
       pagination={false}
       rowClassName={(record, index) => (record.args[0] === address ? 'ranking-color' : '')}
     />

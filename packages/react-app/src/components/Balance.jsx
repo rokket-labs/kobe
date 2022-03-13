@@ -5,7 +5,7 @@ import { useContractLoader, useContractReader } from 'eth-hooks'
 import { useTokenBalance } from 'eth-hooks/erc/erc-20/useTokenBalance'
 import { utils } from 'ethers'
 
-import { HOOK_OPTIONS, NETWORKS } from '../constants'
+// import { HOOK_OPTIONS, NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 
@@ -19,8 +19,7 @@ export const Pledge = co2tons => {
   return <Text>{valueEmmited} CO2e tons/year</Text>
 }
 
-// eslint-disable-next-line max-lines-per-function
-
+/*
 export const PledgeTotal = address => {
   const { contracts } = useContext(WalletContext)
 
@@ -29,7 +28,7 @@ export const PledgeTotal = address => {
   return <Text>{pledged}</Text>
 }
 
-/* export const Emmited = props => {
+ export const Emmited = props => {
   const { contractConfig } = useContext(WalletContext)
   const { localProvider } = useContext(NetworkContext)
   const readContracts = useContractLoader(localProvider, contractConfig)
@@ -70,7 +69,7 @@ export const PledgeTotal = address => {
   return <Text>{displayBalance} Co2</Text>
 } */
 
-export const Staked = ({ address, polyContracts }) => {
+export const Staked = ({ address, polyContracts, HOOK_OPTIONS }) => {
   const myPolyKlimaBalance = useContractReader(polyContracts, 'PBCT', 'balanceOf', [address], HOOK_OPTIONS)
 
   const skilmaBalance = (
@@ -80,17 +79,23 @@ export const Staked = ({ address, polyContracts }) => {
   return skilmaBalance
 }
 
-export const TokenTotal = ({ address, readContracts }) => {
+/* export const TokenTotal2 = ({ address, readContracts, HOOK_OPTIONS }) => {
   const CO2TokenBalance = useContractReader(readContracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
 
   return (
     <Text fontSize={24} padding={8}>
-      {(CO2TokenBalance / Math.pow(10, 18)).toFixed(2)} CO2e tons dripped
+      {(CO2TokenBalance / Math.pow(10, 18)).toFixed(2)}
     </Text>
   )
+} */
+
+export const TokenTotal = ({ address, tokenName, contract, HOOK_OPTIONS }) => {
+  const tokenBalance = useContractReader(contract, tokenName, 'balanceOf', [address], HOOK_OPTIONS)
+
+  return (tokenBalance / Math.pow(10, 18)).toFixed(2)
 }
 
-export const Balance = ({ address, polyContracts, USDPrices }) => {
+export const Balance = ({ address, polyContracts, USDPrices, HOOK_OPTIONS }) => {
   // Polybalances
   const myPolyMCO2Balance = useContractReader(polyContracts, 'PMCO2', 'balanceOf', [address], HOOK_OPTIONS)
 
