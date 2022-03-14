@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Col, Image, List, Row, Typography } from 'antd'
-import { useContractLoader, useContractReader } from 'eth-hooks'
+import { Col, Image, Row, Typography } from 'antd'
+import { useContractLoader } from 'eth-hooks'
 import { useEventListener } from 'eth-hooks/events/useEventListener'
 import styled from 'styled-components'
 
-import { TokenBalance } from '../components'
-import { Staked } from '../components/Balance'
 import Address from '../components/common/Address'
 import { TableRanking } from '../components/TableRanking'
-import { HOOK_OPTIONS, NETWORKS } from '../constants'
+import { NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
+import externalContracts from '../contracts/external_contracts'
+import deployedContracts from '../contracts/hardhat_contracts.json'
 
 const { ethers } = require('ethers')
 
@@ -28,11 +28,26 @@ const StyledText = styled(Text)`
   ${prop => (prop.ml ? `margin-left: ${prop.ml}` : '')};
 `
 
-const RankingTitle = position => {
-  const { mainnetProvider, address } = useContext(NetworkContext)
+const USDPricesContext = () => {
+  const [USDPrices, setUSDPrices] = useState(null) // prices of main tokens of the app
 
-  console.log('tesposition', position)
+  useEffect(() => {
+    const getData = async () => {
+      const response = await fetch(
+        'https://api.coingecko.com/api/v3/simple/price?ids=toucan-protocol-base-carbon-tonne,moss-carbon-credit,klima-dao,staked-klima&vs_currencies=usd',
+      )
+      const data = await response.json()
 
+      setUSDPrices(data)
+    }
+
+    getData()
+  }, [])
+
+  return USDPrices
+}
+
+const RankingTitle = ({ position, address, mainnetProvider, polyProvider }) => {
   return (
     <Col span={24}>
       <Row justify="center">
@@ -59,7 +74,7 @@ const RankingTitle = position => {
                   Your Position
                 </StyledText>
                 <StyledText $isBold $isTitle ml="20px">
-                  {position.position}
+                  {position}
                 </StyledText>
               </Col>
             </Row>
@@ -71,10 +86,20 @@ const RankingTitle = position => {
 }
 
 const Ranking = () => {
-  const [data, setData] = useState()
+  const [data, setData] = useState([])
   const [position, setPosition] = useState(1)
+  const [walletUser, setWalletUser] = useState()
+  const LENGHT_RANKING = 13
 
-  const { contractConfig, contracts } = useContext(WalletContext)
+  const HOOK_OPTIONS = {
+    blockNumberInterval: 500,
+    query: { refetchOnWindowFocus: false },
+  }
+
+  const contractConfig = { deployedContracts: deployedContracts || {}, externalContracts: externalContracts || {} }
+
+  const USDPrices = USDPricesContext()
+
   const { mainnetProvider, localProvider, address } = useContext(NetworkContext)
 
   const polyNetwork = NETWORKS.polygon
@@ -83,7 +108,7 @@ const Ranking = () => {
   const polyProviderUrl = polyNetwork.rpcUrl
   const polyProvider = new ethers.providers.StaticJsonRpcProvider(polyProviderUrl)
 
-  const polyContracts = useContractLoader(polyProvider, contractConfig)
+  // const polyContracts = useContractLoader(polyProvider, contractConfig)
   const readContracts = useContractLoader(localProvider, contractConfig)
 
   const pledgeEvents = useEventListener(readContracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
@@ -94,14 +119,24 @@ const Ranking = () => {
     newData.forEach((item, index) => {
       if (!item.ranking) item.key = index
 
-      if (item.args[0] === address) setPosition(index + 1)
+      if (item.args[0] === address) {
+        setWalletUser(item)
+        setPosition(index + 1)
+      }
     })
 
-    setData(newData)
-  }, [pledgeEvents])
+    if (LENGHT_RANKING > newData.length) {
+      const newDataRanking = newData.slice(0, LENGHT_RANKING)
+
+      setData(newData)
+      // newDataRanking.push(walletUser)
+      // console.log('newRankingData', newDataRanking)
+      // setData(newDataRanking)
+    }
+  }, [address, pledgeEvents])
 
   return (
-    <Row>
+    <div>
       {/*       <div style={{ width: 500, margin: 'auto', marginTop: 64 }}>
         <div>Ranking:</div>
 
@@ -121,37 +156,29 @@ const Ranking = () => {
         />
       </div> */}
       <Title level={2}>Rankings</Title>
-      <RankingTitle position={position} />
-      <StyledRow justify="center">{data && <TableRanking rankingData={data} />}</StyledRow>
-    </Row>
-  )
-}
-
-/* const Ranking = () => {
-  const { mainnetProvider } = useContext(NetworkContext)
-  const { contracts, polygonContracts, localProvider } = useContext(WalletContext)
-
-  const pledgeEvents = useEventListener(contracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
-
-  return (
-    <div style={{ width: 500, margin: 'auto', marginTop: 64 }}>
-      <div>Ranking test:</div>
-      <List
-        dataSource={pledgeEvents}
-        renderItem={item => {
-          return (
-            <List.Item key={item.blockNumber}>
-              <Address value={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
-              | <TokenBalance contracts={contracts} name={'CO2TokenContract'} address={item.args[0]} /> CO2 tons
-              emmitted | &nbsp;{(item.args[1].toString() * 1) / 10 ** 9} CO2e tons/year committed |{' '}
-              <TokenBalance contracts={polygonContracts} name={'PBCT'} address={item.args[0]} /> BCT |{' '}
-              <TokenBalance contracts={polygonContracts} name={'PMCO2'} address={item.args[0]} /> MCO2
-            </List.Item>
-          )
-        }}
+      <RankingTitle
+        position={position}
+        polyProvider={polyProvider}
+        mainnetProvider={mainnetProvider}
+        address={address}
       />
+      <StyledRow justify="center">
+        {data && (
+          <TableRanking
+            rankingData={data}
+            USDPrices={USDPrices}
+            mainnetProvider={mainnetProvider}
+            readContracts={readContracts}
+            polyProvider={polyProvider}
+            contractConfig={contractConfig}
+            // polyContracts={polyContracts}
+            address={address}
+            HOOK_OPTIONS={HOOK_OPTIONS}
+          />
+        )}
+      </StyledRow>
     </div>
   )
 }
- */
+
 export default Ranking
