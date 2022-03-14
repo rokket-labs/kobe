@@ -90,7 +90,7 @@ const Dashboard = () => {
         <Row justify="end" className="my-md">
           {pledged ? (
             <Col>
-              <StyledButton $type="primary" onClick={() => router.push('/rart')}>
+              <StyledButton $type="primary" onClick={() => router.push('/regen-art')}>
                 Now Minting! Koywe Trees
               </StyledButton>
             </Col>
