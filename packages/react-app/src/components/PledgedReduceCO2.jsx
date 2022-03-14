@@ -86,7 +86,7 @@ const PledgedReduceCO2 = ({ isPledged }) => {
               <Text style={{ textAlign: 'center', width: '100%' }}>or</Text>
             </Col>
             <Col md={10} xs={24}>
-              <StyledButton block onClick={() => router.push('/emissions')}>
+              <StyledButton block onClick={() => router.push('/emission')}>
                 Calculate my emissions
               </StyledButton>
             </Col>
