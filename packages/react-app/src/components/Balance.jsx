@@ -1,13 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { ConsoleSqlOutlined } from '@ant-design/icons'
+import React, { useEffect, useState } from 'react'
 import { Typography } from 'antd'
-import { useContractLoader, useContractReader } from 'eth-hooks'
-import { useTokenBalance } from 'eth-hooks/erc/erc-20/useTokenBalance'
-import { utils } from 'ethers'
-
-// import { HOOK_OPTIONS, NETWORKS } from '../constants'
-import { NetworkContext } from '../contexts/NetworkContext'
-import { WalletContext } from '../contexts/WalletContext'
+import { useContractReader } from 'eth-hooks'
 
 const { Text } = Typography
 
@@ -19,56 +12,6 @@ export const Pledge = co2tons => {
   return <Text>{valueEmmited} CO2e tons/year</Text>
 }
 
-/*
-export const PledgeTotal = address => {
-  const { contracts } = useContext(WalletContext)
-
-  const pledged = useContractReader(contracts, 'KoywePledge', 'getCommitment', [address], HOOK_OPTIONS) / 10 ** 9
-
-  return <Text>{pledged}</Text>
-}
-
- export const Emmited = props => {
-  const { contractConfig } = useContext(WalletContext)
-  const { localProvider } = useContext(NetworkContext)
-  const readContracts = useContractLoader(localProvider, contractConfig)
-
-  const CO2TokenBalance = useContractReader(
-    readContracts,
-    'CO2TokenContract',
-    'balanceOf',
-    [props.address],
-    HOOK_OPTIONS,
-  )
-
-  const [dollarMode, setDollarMode] = useState(true)
-
-  const tokenContract = props.contracts && props.contracts[props.name]
-  const balance = useTokenBalance(tokenContract, props.address, 1777).mul(
-    props.name === 'sKLIMA' || props.name === 'KLIMA' ? Math.pow(10, 9) : 1,
-    HOOK_OPTIONS,
-  )
-
-  let floatBalance = parseFloat('0.00')
-
-  let usingBalance = balance
-
-  if (typeof props.balance !== 'undefined') usingBalance = props.balance
-
-  if (usingBalance) {
-    const etherBalance = utils.formatEther(usingBalance)
-
-    parseFloat(etherBalance).toFixed(2)
-    floatBalance = parseFloat(etherBalance)
-  }
-
-  let displayBalance = floatBalance.toFixed(4)
-
-  if (props.dollarMultiplier && dollarMode) displayBalance = `$${(floatBalance * props.dollarMultiplier).toFixed(2)}`
-
-  return <Text>{displayBalance} Co2</Text>
-} */
-
 export const Staked = ({ address, polyContracts, HOOK_OPTIONS }) => {
   const myPolyKlimaBalance = useContractReader(polyContracts, 'PBCT', 'balanceOf', [address], HOOK_OPTIONS)
 
@@ -78,16 +21,6 @@ export const Staked = ({ address, polyContracts, HOOK_OPTIONS }) => {
 
   return skilmaBalance
 }
-
-/* export const TokenTotal2 = ({ address, readContracts, HOOK_OPTIONS }) => {
-  const CO2TokenBalance = useContractReader(readContracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
-
-  return (
-    <Text fontSize={24} padding={8}>
-      {(CO2TokenBalance / Math.pow(10, 18)).toFixed(2)}
-    </Text>
-  )
-} */
 
 export const TokenTotal = ({ address, tokenName, contract, HOOK_OPTIONS }) => {
   const tokenBalance = useContractReader(contract, tokenName, 'balanceOf', [address], HOOK_OPTIONS)

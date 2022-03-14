@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Row, Table, Typography } from 'antd'
 import { useContractLoader } from 'eth-hooks'
 import styled from 'styled-components'
@@ -107,7 +107,7 @@ export const TableRanking = ({
         </Row>
       ),
     },
-    {
+    /*     {
       title: 'Emmited',
       dataIndex: 'args',
       key: 'blockNumber',
@@ -115,10 +115,10 @@ export const TableRanking = ({
       render: args => (
         <Row justify="space-around" align="middle">
           {console.log('testCallings')}
-          {/* <CarbonFYI currentAddress={args[0]} /> */}
+         <CarbonFYI currentAddress={args[0]} />
         </Row>
       ),
-    },
+    }, */
     {
       title: 'Balance',
       dataIndex: 'args',

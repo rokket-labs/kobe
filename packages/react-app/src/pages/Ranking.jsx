@@ -12,8 +12,6 @@ import { WalletContext } from '../contexts/WalletContext'
 import externalContracts from '../contracts/external_contracts'
 import deployedContracts from '../contracts/hardhat_contracts.json'
 
-// import rankingData from './ranking-data-chain.json'
-
 const { ethers } = require('ethers')
 
 const { Title, Text } = Typography
@@ -50,8 +48,6 @@ const USDPricesContext = () => {
 }
 
 const RankingTitle = ({ position, address, mainnetProvider, polyProvider }) => {
-  const { contractConfig, USDPrices } = useContext(WalletContext)
-
   return (
     <Col span={24}>
       <Row justify="center">
@@ -93,7 +89,6 @@ const Ranking = () => {
   const [data, setData] = useState([])
   const [position, setPosition] = useState(1)
   const [walletUser, setWalletUser] = useState()
-  const [isLoading, setIsLoading] = useState(true)
   const LENGHT_RANKING = 13
 
   const HOOK_OPTIONS = {
@@ -186,31 +181,4 @@ const Ranking = () => {
   )
 }
 
-/* const Ranking = () => {
-  const { mainnetProvider } = useContext(NetworkContext)
-  const { contracts, polygonContracts, localProvider } = useContext(WalletContext)
-
-  const pledgeEvents = useEventListener(contracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
-
-  return (
-    <div style={{ width: 500, margin: 'auto', marginTop: 64 }}>
-      <div>Ranking test:</div>
-      <List
-        dataSource={pledgeEvents}
-        renderItem={item => {
-          return (
-            <List.Item key={item.blockNumber}>
-              <Address value={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
-              | <TokenBalance contracts={contracts} name={'CO2TokenContract'} address={item.args[0]} /> CO2 tons
-              emmitted | &nbsp;{(item.args[1].toString() * 1) / 10 ** 9} CO2e tons/year committed |{' '}
-              <TokenBalance contracts={polygonContracts} name={'PBCT'} address={item.args[0]} /> BCT |{' '}
-              <TokenBalance contracts={polygonContracts} name={'PMCO2'} address={item.args[0]} /> MCO2
-            </List.Item>
-          )
-        }}
-      />
-    </div>
-  )
-}
- */
 export default Ranking
