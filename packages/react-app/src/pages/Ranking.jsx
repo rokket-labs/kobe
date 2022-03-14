@@ -92,7 +92,9 @@ const RankingTitle = ({ position, address, mainnetProvider, polyProvider }) => {
 const Ranking = () => {
   const [data, setData] = useState([])
   const [position, setPosition] = useState(1)
-  const LENGHT_RANKING = 12
+  const [walletUser, setWalletUser] = useState()
+  const [isLoading, setIsLoading] = useState(true)
+  const LENGHT_RANKING = 13
 
   const HOOK_OPTIONS = {
     blockNumberInterval: 500,
@@ -116,22 +118,26 @@ const Ranking = () => {
 
   const pledgeEvents = useEventListener(readContracts, 'KoywePledge', 'NewPledge', localProvider, 1, HOOK_OPTIONS)
 
-  console.log('testingRedering')
-
   useEffect(() => {
     const newData = [...pledgeEvents]
 
     newData.forEach((item, index) => {
       if (!item.ranking) item.key = index
 
-      if (item.args[0] === address) setPosition(index + 1)
+      if (item.args[0] === address) {
+        setWalletUser(item)
+        setPosition(index + 1)
+      }
     })
 
-    /*     if (LENGHT_RANKING > newData.length){
+    if (LENGHT_RANKING > newData.length) {
+      const newDataRanking = newData.slice(0, LENGHT_RANKING)
 
-    } */
-
-    setData(newData)
+      setData(newData)
+      // newDataRanking.push(walletUser)
+      // console.log('newRankingData', newDataRanking)
+      // setData(newDataRanking)
+    }
   }, [address, pledgeEvents])
 
   return (
