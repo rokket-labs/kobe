@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Card, Col, InputNumber, Row, Typography } from 'antd'
 import { useContractReader, useGasPrice } from 'eth-hooks'
 
@@ -14,6 +15,7 @@ import TokenBalance from './TokenBalance'
 const { Text } = Typography
 
 const PledgedReduceCO2 = ({ isPledged }) => {
+  const router = useHistory()
   const { userSigner, targetNetwork, address } = useContext(NetworkContext)
   const { writeContracts } = useContext(WalletContext)
   const [co2, setCo2] = useState('')
@@ -84,7 +86,9 @@ const PledgedReduceCO2 = ({ isPledged }) => {
               <Text style={{ textAlign: 'center', width: '100%' }}>or</Text>
             </Col>
             <Col md={10} xs={24}>
-              <StyledButton block>Calculate my emissions</StyledButton>
+              <StyledButton block onClick={() => router.push('/emissions')}>
+                Calculate my emissions
+              </StyledButton>
             </Col>
           </Row>
           <Row justify="center" style={{ marginTop: '2rem' }}>
