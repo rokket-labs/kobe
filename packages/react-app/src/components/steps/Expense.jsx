@@ -50,7 +50,7 @@ const Expense = ({ nextStep, backStep }) => {
 
     const endpoint = advanced ? 'servicios-detailed' : 'servicios-simplificada'
 
-    fetch(`http://koywecalc.herokuapp.com/api/v1/${endpoint}`, {
+    fetch(`https://koywecalc.herokuapp.com/api/v1/${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
