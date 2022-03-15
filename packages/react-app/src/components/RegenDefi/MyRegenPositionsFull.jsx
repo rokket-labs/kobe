@@ -38,7 +38,7 @@ const MyRegenPositions = () => {
       </Row>
       <Row justify="center" className="my-md">
         <StyledButton $type="primary" onClick={() => setShowAll(showAll => !showAll)}>
-          {!showAll ? 'See all my tokens' : 'Hidden my tokens'}
+          {!showAll ? 'See all my tokens' : 'Hide some tokens'}
         </StyledButton>
       </Row>
     </>

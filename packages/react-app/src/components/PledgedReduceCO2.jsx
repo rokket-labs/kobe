@@ -17,14 +17,12 @@ const { Text } = Typography
 const PledgedReduceCO2 = ({ isPledged }) => {
   const router = useHistory()
   const { userSigner, targetNetwork, address } = useContext(NetworkContext)
-  const { writeContracts } = useContext(WalletContext)
+  const { writeContracts, CO2TokenBalance } = useContext(WalletContext)
   const [co2, setCo2] = useState('')
   const [pledging, setPledging] = useState()
   const [dripping, setDripping] = useState()
   const gasPrice = useGasPrice(targetNetwork, 'fast')
   const tx = Transactor(userSigner, gasPrice)
-
-  const CO2TokenBalance = useContractReader(writeContracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
 
   return (
     <>
