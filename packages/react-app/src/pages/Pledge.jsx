@@ -9,11 +9,11 @@ import { WalletContext } from '../contexts/WalletContext'
 const { Title, Paragraph } = Typography
 
 const Pledge = () => {
-  const { isPledged } = useContext(WalletContext)
+  const { isPledged, tonsPledged } = useContext(WalletContext)
 
   return (
     <Row justify="center" style={{ marginBottom: '5rem' }}>
-      {isPledged && <PledgeDisplay />}
+      {isPledged && tonsPledged && <PledgeDisplay tonsPledged={tonsPledged}/>}
       <Col span={24}>
         <Title style={{ textAlign: 'center', fontSize: 36 }}>First... The Pledge</Title>
       </Col>

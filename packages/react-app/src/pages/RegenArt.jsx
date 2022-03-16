@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Col, Row, Space, Typography } from 'antd'
 import { useContractReader, useGasPrice } from 'eth-hooks'
 
+import ConnectButton from '../components/common/ConnectButton'
 import MyRegenArt from '../components/dashboard/MyRegenArt'
 import KoyweTrees from '../components/RegenArt/KoyweTrees'
 import NftCard from '../components/RegenArt/NftCard'
@@ -84,6 +85,7 @@ const RegenArt = () => {
           )}
         </Space>
       </Col>
+      {isLoadingAccount && !address && <ConnectButton />}
     </Row>
   )
 }

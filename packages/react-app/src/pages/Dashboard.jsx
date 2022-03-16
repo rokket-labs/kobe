@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Col, Image, Row, Typography } from 'antd'
 
+import ConnectButton from '../components/common/ConnectButton'
 import { StyledButton } from '../components/common/StyledButton'
 import { CardInfo } from '../components/dashboard/CardInfo'
 import MyRegenArt from '../components/dashboard/MyRegenArt'
@@ -143,6 +144,7 @@ const Dashboard = () => {
         )}
         {!isLoadingAccount && address && <MyRegenPositions />}
       </Col>
+      {isLoadingAccount && !address && <ConnectButton />}
     </Row>
   )
 }

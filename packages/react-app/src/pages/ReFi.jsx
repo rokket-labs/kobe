@@ -3,7 +3,7 @@ import { Col, Row, Space, Spin, Typography } from 'antd'
 import { useContractReader, useGasPrice } from 'eth-hooks'
 import { useExchangeEthPrice } from 'eth-hooks/dapps/dex'
 
-import { BCTVendor } from '../components'
+import ConnectButton from '../components/common/ConnectButton'
 import MyRegenPositionsFull from '../components/RegenDefi/MyRegenPositionsFull'
 import PortfolioChart from '../components/RegenDefi/PortfolioChart'
 import SimpleRamp from '../components/RegenDefi/SimpleRamp'
@@ -56,7 +56,8 @@ const ReFi = () => {
         {!isLoadingAccount && address && <MyRegenPositionsFull />}
       </Col>
       <Col>
-        <SimpleRamp address={address} />
+        {!isLoadingAccount && address && <SimpleRamp address={address} />}
+        {isLoadingAccount && !address && <ConnectButton />}
       </Col>
     </Row>
   )

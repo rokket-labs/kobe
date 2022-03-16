@@ -63,7 +63,7 @@ export const getPlightData = (address, CO2 = 0, tonsPledged = 0, isPledged) => [
     id: 3,
     srcIcon: !isPledged ? '/icon/emoji-zipper.svg' : '/icon/pledge.svg',
     quantity: !isPledged ? '' : utils.formatUnits(tonsPledged, 9),
-    text: !isPledged ? 'Take the pledg' : 'CO2e tons/year Pledged ',
+    text: !isPledged ? 'Take the pledge' : 'CO2e tons/year Pledged ',
     isBold: true,
   },
 ]

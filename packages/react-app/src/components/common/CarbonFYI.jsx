@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { calculateAddressEmissions } from 'ethereum-emissions-calculator'
 // import { ETHERSCAN_KEY } from "../constants";
 
-const CarbonFYI = ({ currentAddress }) => {
+const CarbonFYI = ({ currentAddress, metric }) => {
   const [emissions, setEmissions] = useState(0)
+  const [transactions, setTransactions] = useState(0)
+  const [gas, setGas] = useState(0)
 
   const typeTransaction = ['eth', 'erc20', 'erc721']
 
@@ -12,6 +14,8 @@ const CarbonFYI = ({ currentAddress }) => {
   useEffect(() => {
     const getEmissions = async () => {
       let co2 = 0
+      let curGas = 0
+      let curTransactions = 0
 
       for (let i = 0; i < 3; i++) {
         const addr_emissions = await calculateAddressEmissions({
@@ -21,14 +25,20 @@ const CarbonFYI = ({ currentAddress }) => {
         })
 
         co2 += addr_emissions.kgCO2
+        curTransactions += addr_emissions.transactionsCount
+        curGas += addr_emissions.gasUsed
       }
       setEmissions(co2 / 1000)
+      setTransactions(curTransactions)
+      setGas(curGas)
     }
 
     getEmissions()
   }, [currentAddress])
 
-  return <>{emissions}</>
+  const results = metric === 'txs' ? transactions : metric === 'gas' ? gas : emissions
+
+  return <>{results}</>
 }
 
 export default CarbonFYI

@@ -1,11 +1,13 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { TwitterOutlined } from '@ant-design/icons'
 import { Col, Row, Typography } from 'antd'
 import styled from 'styled-components'
 
 import { StyledButton } from '../buttons/StyledButton'
 
 const { Text } = Typography
+const { utils } = require('ethers')
 
 const BackgroundPledged = styled.div`
   height: fit-content;
@@ -17,7 +19,7 @@ const BackgroundPledged = styled.div`
   background-position: center top;
 `
 
-const PledgeDisplay = () => {
+const PledgeDisplay = ({ tonsPledged }) => {
   const router = useHistory()
 
   const handleMenu = url => {
@@ -43,6 +45,19 @@ const PledgeDisplay = () => {
             Grow the forest
           </StyledButton>
         </Col>
+        {tonsPledged ?
+          <Col>
+            <StyledButton
+              href={`https://twitter.com/intent/tweet?text=🪴 I took the @koywe_eco Pledge to be in charge of ${tonsPledged?utils.formatUnits(tonsPledged,9):0} CO2e tons per year.%0A%0A🌳 We need 60 billion to reach %23NetZero! Let's fight the %23ClimateCrisis, together!%0A%0A📝 Join the %23ReFi revolution! Help grow the Koywe Forest here:: https://app.koywe.eco`}
+              target="_blank"
+              style={{ width: '100%' }}
+            >
+              <TwitterOutlined />Tweet your Pledge! <small>{tonsPledged?utils.formatUnits(tonsPledged,9):0} CO2 Tons/year</small>
+            </StyledButton>
+          </Col>
+          :
+          ''
+        }
       </Row>
     </BackgroundPledged>
   )

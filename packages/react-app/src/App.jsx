@@ -23,7 +23,7 @@ const App = () => {
       <IsPledgedProvider>
         <MainLayout NETWORKCHECK>
           <Switch>
-            <Route exact path="/">
+            <Route exact path={['/','/dashboard']}>
               <Dashboard />
             </Route>
             <Route exact path="/ranking">

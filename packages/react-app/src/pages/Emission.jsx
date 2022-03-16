@@ -3,13 +3,16 @@ import { Card, Col, Image, Row, Space, Typography } from 'antd'
 
 import { CardCustom } from '../components/CardCustom'
 
-const { Title } = Typography
+const { Title, Paragraph } = Typography
 
 import { useHistory } from 'react-router-dom'
 
 import CardEmission from '../components/CardEmission'
+import CarbonFYI from '../components/common/CarbonFYI'
+import ConnectButton from '../components/common/ConnectButton'
 import { StyledButton } from '../components/common/StyledButton'
 import { IsPledgedContext } from '../contexts/IsPledgedContext'
+import { NetworkContext } from '../contexts/NetworkContext'
 
 import walletMock from './wallet-data.json'
 
@@ -27,6 +30,7 @@ import walletMock from './wallet-data.json'
 
 // eslint-disable-next-line max-lines-per-function
 const Wallet = () => {
+  const { address, isLoadingAccount } = useContext(NetworkContext)
   const router = useHistory()
   const { hasCalculator } = useContext(IsPledgedContext)
   const [irlStoredData, setIrlStoredData] = useState(null)
@@ -39,8 +43,15 @@ const Wallet = () => {
   const [dataIrl, setDataIrl] = useState(null)
 
   useEffect(() => {
-    setDataWallet(walletMock)
-  }, [])
+    const walletInfo = walletMock
+
+    if(!isLoadingAccount) {
+      walletInfo.data.info[0].quantity = address && <CarbonFYI currentAddress={address} metric='txs' />
+      walletInfo.data.info[1].quantity = address && <CarbonFYI currentAddress={address} metric='gas'/>
+      walletInfo.data.info[2].quantity = address && <CarbonFYI currentAddress={address} />
+    }
+    setDataWallet(walletInfo)
+  }, [address, isLoadingAccount])
 
   useEffect(() => {
     console.log(`HERE ${irlStoredData}`)
@@ -66,14 +77,20 @@ const Wallet = () => {
     <Row className="my-sm">
       <Col offset={1}>
         <Space direction="vertical">
-          <Title>Calculate emissions</Title>
+          <Title>Calculate your emissions</Title>
+          <Paragraph style={{ fontSize: 18, lineHeight: '2rem', textJustify: true }}>
+            It is inaccurate to blame climate change on regular people, but it is a mistake not trying to quantify our emissions.<br />
+            This calculator is built to help you quantify the amount of CO2e you are emitting into the atmosphere, directly and indirectly.<br />
+            It is not meant to be exact, just provide a figure in the orders of magnitude of your real emissions, to hopefully inspire you to do more.<br />
+          </Paragraph>
         </Space>
       </Col>
       <Row justify="center" style={{ width: '100%', minHeight: '100vh', marginBottom: '2rem' }}>
         <Col xs={24} md={22}>
           <Row justify="space-between">
             <Col xs={24} md={11}>
-              {dataWallet && <CardCustom title="Wallet Sessions" cardType="wallet" items={dataWallet.data.info} />}
+              {dataWallet && <CardCustom title="Your Wallet Emissions" cardType="wallet" items={dataWallet.data.info} />}
+              {isLoadingAccount && !address && <ConnectButton />}
             </Col>
             {!irlStoredData && <Col md={9}></Col>}
             {!irlStoredData && (
@@ -92,8 +109,8 @@ const Wallet = () => {
                         <Image src={'/icon/world.svg'} preview={false} />
                       </Row>
                     </Col>
-                    <StyledButton $type="primary" onClick={() => handleMenu('/calculator')} block>
-                      Start calculator
+                    <StyledButton $type="primary" onClick={() => handleMenu('/calculator')} block disabled>
+                      Start calculator (coming soon)
                     </StyledButton>
                   </Row>
                 </Card>

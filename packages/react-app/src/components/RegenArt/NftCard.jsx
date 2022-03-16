@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Button, Card, Col, Image, Row, Select, Space, Typography } from 'antd'
 import styled from 'styled-components'
 
+import ConnectButton from '../common/ConnectButton'
 import { StyledButton } from '../common/StyledButton'
 
 const { Text, Title, Paragraph } = Typography
@@ -19,7 +20,7 @@ const ButtonsContainer = styled.div`
   margin-bottom: 0;
 `
 
-const NftCard = ({ title, mintPrice, isBCTAmountApproved, buying, handleApproveBCT, approving, handleMint }) => {
+const NftCard = ({ title, mintPrice, address, isBCTAmountApproved, buying, handleApproveBCT, approving, handleMint }) => {
   return (
     <Card className="card-regen-art">
       <Row gutter={[24, 8]} wrap>
@@ -93,13 +94,16 @@ const NftCard = ({ title, mintPrice, isBCTAmountApproved, buying, handleApproveB
                 <Option value="1">1</Option>
               </Select>
             </Col>
-
-            <StyledButton loading={approving} $type="primary" disabled={isBCTAmountApproved} onClick={handleApproveBCT}>
-              Approve BCT
-            </StyledButton>
-            <StyledButton $type="primary" disabled={!isBCTAmountApproved} loading={buying} onClick={handleMint}>
-              MINT
-            </StyledButton>
+            {!address ? <ConnectButton /> :
+            <>
+              <StyledButton loading={approving} $type="primary" disabled={isBCTAmountApproved} onClick={handleApproveBCT}>
+                Approve BCT
+              </StyledButton>
+              <StyledButton $type="primary" disabled={!isBCTAmountApproved} loading={buying} onClick={handleMint}>
+                MINT
+              </StyledButton>
+            </>
+            }
           </ButtonsContainer>
         </Col>
       </Row>
