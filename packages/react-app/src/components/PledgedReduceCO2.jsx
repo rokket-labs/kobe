@@ -12,19 +12,21 @@ import { StyledButton } from './buttons/StyledButton'
 import { StyledIcon } from './StyledIcon'
 import TokenBalance from './TokenBalance'
 
+const { ethers } = require('ethers')
 const { Text } = Typography
 
-const PledgedReduceCO2 = ({ isPledged }) => {
+// eslint-disable-next-line max-lines-per-function
+const PledgedReduceCO2 = ({ isPledged, address }) => {
   const router = useHistory()
-  const { userSigner, targetNetwork, address } = useContext(NetworkContext)
-  const { writeContracts } = useContext(WalletContext)
+  const { userSigner, targetNetwork } = useContext(NetworkContext)
+  const { writeContracts, contracts } = useContext(WalletContext)
   const [co2, setCo2] = useState('')
   const [pledging, setPledging] = useState()
   const [dripping, setDripping] = useState()
   const gasPrice = useGasPrice(targetNetwork, 'fast')
   const tx = Transactor(userSigner, gasPrice)
 
-  const CO2TokenBalance = useContractReader(writeContracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
+  const CO2TokenBalance = useContractReader(contracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
 
   return (
     <>
@@ -40,7 +42,7 @@ const PledgedReduceCO2 = ({ isPledged }) => {
       )}
 
       {isPledged ? (
-        CO2TokenBalance === 0 ? (
+        Number(ethers.utils.formatUnits(CO2TokenBalance || 0, 18)) === 0 ? (
           <>
             <Row justify="start" style={{ marginBottom: '2rem' }}>
               <Col>
