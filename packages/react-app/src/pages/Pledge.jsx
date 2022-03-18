@@ -4,11 +4,13 @@ import { Col, Row, Typography } from 'antd'
 import PledgeDisplay from '../components/pledge/PledgeDisplay'
 import PledgedReduceCO2 from '../components/PledgedReduceCO2'
 import { StyledIcon } from '../components/StyledIcon'
+import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 
 const { Title, Paragraph } = Typography
 
 const Pledge = () => {
+  const { address } = useContext(NetworkContext)
   const { isPledged } = useContext(WalletContext)
 
   return (
@@ -46,9 +48,11 @@ const Pledge = () => {
         </Paragraph>
       </Col>
 
-      <Col xl={13} xs={22}>
-        <PledgedReduceCO2 isPledged={isPledged} />
-      </Col>
+      {address && (
+        <Col xl={13} xs={22}>
+          <PledgedReduceCO2 isPledged={isPledged} address={address} />
+        </Col>
+      )}
     </Row>
   )
 }
