@@ -40,7 +40,7 @@ const EmailSection = ({ email }) => {
   const handleGoToEmission = url => {
     setLoading(true)
 
-    fetch('http://koywecalc.herokuapp.com/api/v1/emissions-report', {
+    fetch('https://koywecalc.herokuapp.com/api/v1/emissions-report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 'bearerToken': accessToken }),
