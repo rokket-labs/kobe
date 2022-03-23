@@ -4,7 +4,6 @@ import { useContractLoader } from 'eth-hooks'
 import styled from 'styled-components'
 
 import Address from '../components/common/Address'
-import CarbonFYI from '../components/common/CarbonFYI'
 
 import { Balance, Pledge, TokenTotal } from './Balance'
 
@@ -17,7 +16,12 @@ const StyledTable = styled(Table)`
   border-radius: 10px;
   overflow: hidden;
   width: 100%;
-  background: #9ae6b4;
+
+  .ant-table-pagination {
+    margin: 0;
+    margin-right: 20px;
+    padding: 10px 0;
+  }
 `
 
 // eslint-disable-next-line max-lines-per-function
@@ -48,12 +52,13 @@ export const TableRanking = ({
       dataIndex: 'key',
       key: 'key',
       align: 'center',
-      /*       sorter: (a, b) => a.key - b.key, */
-      render: key => (
-        <Row justify="center">
-          <Text style={{ fontWeight: 'bold', fontSize: '24px' }}>{key + 1}</Text>
-        </Row>
-      ),
+      render: (key, record) => {
+        return (
+          <Row justify="center">
+            <Text style={{ fontWeight: 'bold', fontSize: '24px' }}>{record.ranking}</Text>
+          </Row>
+        )
+      },
     },
     {
       title: 'Address/Profile',
@@ -71,6 +76,7 @@ export const TableRanking = ({
       dataIndex: 'args',
       key: 'blockNumber',
       align: 'center',
+      sorter: (a, b) => a.args[1]._hex.toString() * 1 - b.args[1]._hex.toString() * 1,
       render: args => (
         <Row justify="center" align="middle">
           <Pledge co2tons={args[1]} />
@@ -85,7 +91,6 @@ export const TableRanking = ({
       align: 'center',
       render: args => (
         <Row justify="space-around" align="middle">
-          {/* <TokenBalance contracts={polyContracts} name={'sKLIMA'} address={args[0]} /> */}
           <TokenTotal address={args[0]} tokenName="PBCT" contract={polyContracts} HOOK_OPTIONS={HOOK_OPTIONS} /> BCT
         </Row>
       ),
@@ -136,7 +141,7 @@ export const TableRanking = ({
     <StyledTable
       columns={columns}
       dataSource={rankingData}
-      pagination={false}
+      pagination={{ pageSize: 10, hideOnSinglePage: true }}
       rowClassName={(record, index) => (record.args[0] === address ? 'ranking-color' : '')}
     />
   )

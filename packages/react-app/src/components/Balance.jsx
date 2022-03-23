@@ -25,6 +25,8 @@ export const Staked = ({ address, polyContracts, HOOK_OPTIONS }) => {
 export const TokenTotal = ({ address, tokenName, contract, HOOK_OPTIONS }) => {
   const tokenBalance = useContractReader(contract, tokenName, 'balanceOf', [address], HOOK_OPTIONS)
 
+  if (!tokenBalance) return '0.00'
+
   return (tokenBalance / Math.pow(10, 18)).toFixed(2)
 }
 

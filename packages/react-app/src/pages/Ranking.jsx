@@ -8,7 +8,6 @@ import Address from '../components/common/Address'
 import { TableRanking } from '../components/TableRanking'
 import { NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
-import { WalletContext } from '../contexts/WalletContext'
 import externalContracts from '../contracts/external_contracts'
 import deployedContracts from '../contracts/hardhat_contracts.json'
 
@@ -74,7 +73,7 @@ const RankingTitle = ({ position, address, mainnetProvider, polyProvider }) => {
                   Your Position
                 </StyledText>
                 <StyledText $isBold $isTitle ml="20px">
-                  {position}
+                  {position === 0 ? '-' : position}
                 </StyledText>
               </Col>
             </Row>
@@ -87,9 +86,7 @@ const RankingTitle = ({ position, address, mainnetProvider, polyProvider }) => {
 
 const Ranking = () => {
   const [data, setData] = useState([])
-  const [position, setPosition] = useState(1)
-  const [walletUser, setWalletUser] = useState()
-  const LENGHT_RANKING = 13
+  const [position, setPosition] = useState(0)
 
   const HOOK_OPTIONS = {
     blockNumberInterval: 500,
@@ -119,42 +116,22 @@ const Ranking = () => {
     newData.forEach((item, index) => {
       if (!item.ranking) item.key = index
 
-      if (item.args[0] === address) {
-        setWalletUser(item)
-        setPosition(index + 1)
-      }
+      if (item.args[0] === address) setPosition(index + 1)
     })
 
-    if (LENGHT_RANKING > newData.length) {
-      const newDataRanking = newData.slice(0, LENGHT_RANKING)
+    newData.sort((a, b) => {
+      if (a.args[1]._hex.toString() * 1 < b.args[1]._hex.toString() * 1) return 1
 
-      setData(newData)
-      // newDataRanking.push(walletUser)
-      // console.log('newRankingData', newDataRanking)
-      // setData(newDataRanking)
-    }
+      if (a.args[1]._hex.toString() * 1 > b.args[1]._hex.toString() * 1) return -1
+
+      return 0
+    })
+
+    setData(newData.map((item, index) => ({ ...item, ranking: index + 1 })))
   }, [address, pledgeEvents])
 
   return (
     <div>
-      {/*       <div style={{ width: 500, margin: 'auto', marginTop: 64 }}>
-        <div>Ranking:</div>
-
-        <List
-          dataSource={data}
-          renderItem={item => {
-            return (
-              <List.Item key={item.blockNumber}>
-                <Address value={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
-                | <TokenBalance contracts={readContracts} name={'CO2TokenContract'} address={item.args[0]} /> CO2 tons
-                emmitted | &nbsp;{(item.args[1].toString() * 1) / 10 ** 9} CO2e tons/year committed |{' '}
-                <TokenBalance contracts={polyContracts} name={'PBCT'} address={item.args[0]} /> BCT |{' '}
-                <TokenBalance contracts={polyContracts} name={'PMCO2'} address={item.args[0]} /> MCO2
-              </List.Item>
-            )
-          }}
-        />
-      </div> */}
       <Title level={2}>Rankings</Title>
       <RankingTitle
         position={position}
