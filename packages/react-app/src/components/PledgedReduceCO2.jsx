@@ -1,9 +1,11 @@
-import React, { useContext, useState } from 'react'
+/* eslint-disable max-lines-per-function */
+import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { TwitterOutlined } from '@ant-design/icons'
 import { Card, Col, InputNumber, Row, Typography } from 'antd'
-import { useContractReader, useGasPrice } from 'eth-hooks'
+import { useGasPrice } from 'eth-hooks'
 
-import { HOOK_OPTIONS } from '../constants'
+import { EmissionsPerCapitaCountries } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
 import { Transactor } from '../helpers'
@@ -15,18 +17,31 @@ import TokenBalance from './TokenBalance'
 const { ethers } = require('ethers')
 const { Text } = Typography
 
-// eslint-disable-next-line max-lines-per-function
-const PledgedReduceCO2 = ({ isPledged, address }) => {
+const { utils } = require('ethers')
+
+const PledgedReduceCO2 = ({ isPledged }) => {
   const router = useHistory()
-  const { userSigner, targetNetwork } = useContext(NetworkContext)
-  const { writeContracts, contracts } = useContext(WalletContext)
+  const { userSigner, targetNetwork, address } = useContext(NetworkContext)
+  const { tonsPledged, writeContracts, CO2TokenBalance } = useContext(WalletContext)
   const [co2, setCo2] = useState('')
   const [pledging, setPledging] = useState()
   const [dripping, setDripping] = useState()
+  const [countryCode, setCountryCode] = useState()
+  const [country, setCountry] = useState()
   const gasPrice = useGasPrice(targetNetwork, 'fast')
   const tx = Transactor(userSigner, gasPrice)
 
-  const CO2TokenBalance = useContractReader(contracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
+  useEffect(() => {
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(response => {
+        setCountry(response.country_name)
+        setCountryCode(response.country_code_iso3)
+      })
+      .catch((data, status) => {
+        console.log('Request failed:', data)
+      })
+  }, [])
 
   return (
     <>
@@ -83,6 +98,18 @@ const PledgedReduceCO2 = ({ isPledged, address }) => {
           <Row gutter={[8, 10]} justify="space-between" align="middle">
             <Col md={10} xs={24}>
               <InputNumber onChange={value => setCo2(value)} style={{ width: '100%' }} />
+              {countryCode && EmissionsPerCapitaCountries[countryCode] ? (
+                <Text style={{ textAlign: 'center', width: '100%' }}>
+                  <small>
+                    TIP: The average person in {EmissionsPerCapitaCountries[countryCode].Country}{' '}
+                    <a href="https://ourworldindata.org/grapher/co-emissions-per-capita" target="_blank">
+                      emitted {EmissionsPerCapitaCountries[countryCode].AnnualEmissions} CO2e tons in 2020
+                    </a>
+                  </small>
+                </Text>
+              ) : (
+                ''
+              )}
             </Col>
             <Col md={4} xs={24} style={{ display: 'flex' }}>
               <Text style={{ textAlign: 'center', width: '100%' }}>or</Text>
@@ -97,7 +124,7 @@ const PledgedReduceCO2 = ({ isPledged, address }) => {
             <Col md={16} xs={24}>
               <StyledButton
                 $type="primary"
-                disabled={co2 <= 0}
+                disabled={co2 <= 0 || !userSigner}
                 loading={pledging}
                 onClick={async () => {
                   setPledging(true)
@@ -112,6 +139,27 @@ const PledgedReduceCO2 = ({ isPledged, address }) => {
           </Row>
         </>
       )}
+      <Row justify="center" style={{ marginTop: '2rem' }}>
+        <Col md={16} xs={24}>
+          <StyledButton
+            disabled={co2 <= 0 && !isPledged}
+            href={`https://twitter.com/intent/tweet?text=🪴 I took the @koywe_eco Pledge to be in charge of ${
+              isPledged && tonsPledged ? utils.formatUnits(tonsPledged, 9) : co2
+            } CO2e tons per year${
+              EmissionsPerCapitaCountries[countryCode] && co2 > EmissionsPerCapitaCountries[countryCode].AnnualEmissions
+                ? ', more than my country average!'
+                : '.'
+            }%0A%0A🌳 We need 60 billion to reach %23NetZero! Let's fight the %23ClimateCrisis, together!%0A%0A📝 Join the %23ReFi revolution! Help grow the Koywe Forest here:: https://app.koywe.eco`}
+            target="_blank"
+            style={{ width: '100%' }}
+          >
+            <TwitterOutlined />
+            Tweet your Pledge!
+            <br />
+            <small>{isPledged && tonsPledged ? utils.formatUnits(tonsPledged, 9) : co2} CO2 Tons/year</small>
+          </StyledButton>
+        </Col>
+      </Row>
     </>
   )
 }

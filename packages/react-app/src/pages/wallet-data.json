@@ -3,17 +3,17 @@
     "info": [
       {
         "id": 1,
-        "quantity": "20",
+        "quantity": "0",
         "type": "coin"
       },
       {
         "id": 2,
-        "quantity": "120",
+        "quantity": "0",
         "type": "air"
       },
       {
         "id": 3,
-        "quantity": "34",
+        "quantity": "0",
         "type": "co2"
       }
     ]

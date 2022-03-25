@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 const CalculatorContext = React.createContext({
   email: undefined,
   setEmail: () => undefined,
-  country: 'Chile',
+  country: 'Chile',// hay que usar el país determinado por IP
   setCountry: () => undefined,
   advanced: false,
   setAdvanced: () => undefined,
