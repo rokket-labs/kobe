@@ -47,9 +47,9 @@ const Dashboard = () => {
     setYourFight(
       isPledged
         ? (
-            Number(utils.formatUnits(polygonBCTBalance ? polygonBCTBalance:0 , 18)) +
-            Number(utils.formatUnits(polygonNCTBalance ? polygonNCTBalance:0 , 18)) +
-            Number(utils.formatUnits(polygonMCO2Balance ? polygonMCO2Balance:0, 18))
+            Number(utils.formatUnits(polygonBCTBalance || 0, 18)) +
+            Number(utils.formatUnits(polygonNCTBalance || 0, 18)) +
+            Number(utils.formatUnits(polygonMCO2Balance || 0, 18))
           ).toFixed(2)
         : 0,
     )

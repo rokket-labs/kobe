@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { TwitterOutlined } from '@ant-design/icons'
 import { Card, Col, InputNumber, Row, Typography } from 'antd'
-import { useContractReader, useGasPrice } from 'eth-hooks'
+import { useGasPrice } from 'eth-hooks'
 
 import { EmissionsPerCapitaCountries } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
@@ -14,6 +14,7 @@ import { StyledButton } from './buttons/StyledButton'
 import { StyledIcon } from './StyledIcon'
 import TokenBalance from './TokenBalance'
 
+const { ethers } = require('ethers')
 const { Text } = Typography
 
 const { utils } = require('ethers')
@@ -31,16 +32,16 @@ const PledgedReduceCO2 = ({ isPledged }) => {
   const tx = Transactor(userSigner, gasPrice)
 
   useEffect(() => {
-      fetch('https://ipapi.co/json/')
+    fetch('https://ipapi.co/json/')
       .then(res => res.json())
       .then(response => {
         setCountry(response.country_name)
         setCountryCode(response.country_code_iso3)
-    })
-    .catch((data, status) => {
-      console.log('Request failed:', data)
-    })
-  },[])
+      })
+      .catch((data, status) => {
+        console.log('Request failed:', data)
+      })
+  }, [])
 
   return (
     <>
@@ -56,7 +57,7 @@ const PledgedReduceCO2 = ({ isPledged }) => {
       )}
 
       {isPledged ? (
-        CO2TokenBalance === 0 ? (
+        Number(ethers.utils.formatUnits(CO2TokenBalance || 0, 18)) === 0 ? (
           <>
             <Row justify="start" style={{ marginBottom: '2rem' }}>
               <Col>
@@ -97,11 +98,18 @@ const PledgedReduceCO2 = ({ isPledged }) => {
           <Row gutter={[8, 10]} justify="space-between" align="middle">
             <Col md={10} xs={24}>
               <InputNumber onChange={value => setCo2(value)} style={{ width: '100%' }} />
-              {countryCode && EmissionsPerCapitaCountries[countryCode] ?
-                <Text style={{ textAlign: 'center', width: '100%' }}><small>TIP: The average person in {EmissionsPerCapitaCountries[countryCode].Country} <a href='https://ourworldindata.org/grapher/co-emissions-per-capita' target='_blank'>emitted {EmissionsPerCapitaCountries[countryCode].AnnualEmissions} CO2e tons in 2020</a></small></Text>
-                :
+              {countryCode && EmissionsPerCapitaCountries[countryCode] ? (
+                <Text style={{ textAlign: 'center', width: '100%' }}>
+                  <small>
+                    TIP: The average person in {EmissionsPerCapitaCountries[countryCode].Country}{' '}
+                    <a href="https://ourworldindata.org/grapher/co-emissions-per-capita" target="_blank">
+                      emitted {EmissionsPerCapitaCountries[countryCode].AnnualEmissions} CO2e tons in 2020
+                    </a>
+                  </small>
+                </Text>
+              ) : (
                 ''
-              }
+              )}
             </Col>
             <Col md={4} xs={24} style={{ display: 'flex' }}>
               <Text style={{ textAlign: 'center', width: '100%' }}>or</Text>
@@ -135,12 +143,20 @@ const PledgedReduceCO2 = ({ isPledged }) => {
         <Col md={16} xs={24}>
           <StyledButton
             disabled={co2 <= 0 && !isPledged}
-            href={`https://twitter.com/intent/tweet?text=🪴 I took the @koywe_eco Pledge to be in charge of ${isPledged&&tonsPledged?utils.formatUnits(tonsPledged,9):co2} CO2e tons per year${EmissionsPerCapitaCountries[countryCode] && co2>EmissionsPerCapitaCountries[countryCode].AnnualEmissions ? ', more than my country average!' : '.'}%0A%0A🌳 We need 60 billion to reach %23NetZero! Let's fight the %23ClimateCrisis, together!%0A%0A📝 Join the %23ReFi revolution! Help grow the Koywe Forest here:: https://app.koywe.eco`}
+            href={`https://twitter.com/intent/tweet?text=🪴 I took the @koywe_eco Pledge to be in charge of ${
+              isPledged && tonsPledged ? utils.formatUnits(tonsPledged, 9) : co2
+            } CO2e tons per year${
+              EmissionsPerCapitaCountries[countryCode] && co2 > EmissionsPerCapitaCountries[countryCode].AnnualEmissions
+                ? ', more than my country average!'
+                : '.'
+            }%0A%0A🌳 We need 60 billion to reach %23NetZero! Let's fight the %23ClimateCrisis, together!%0A%0A📝 Join the %23ReFi revolution! Help grow the Koywe Forest here:: https://app.koywe.eco`}
             target="_blank"
             style={{ width: '100%' }}
           >
-            <TwitterOutlined />Tweet your Pledge!
-            <br/><small>{isPledged&&tonsPledged?utils.formatUnits(tonsPledged,9):co2} CO2 Tons/year</small>
+            <TwitterOutlined />
+            Tweet your Pledge!
+            <br />
+            <small>{isPledged && tonsPledged ? utils.formatUnits(tonsPledged, 9) : co2} CO2 Tons/year</small>
           </StyledButton>
         </Col>
       </Row>

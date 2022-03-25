@@ -45,9 +45,9 @@ const Wallet = () => {
   useEffect(() => {
     const walletInfo = walletMock
 
-    if(!isLoadingAccount) {
-      walletInfo.data.info[0].quantity = address && <CarbonFYI currentAddress={address} metric='txs' />
-      walletInfo.data.info[1].quantity = address && <CarbonFYI currentAddress={address} metric='gas'/>
+    if (!isLoadingAccount) {
+      walletInfo.data.info[0].quantity = address && <CarbonFYI currentAddress={address} metric="txs" />
+      walletInfo.data.info[1].quantity = address && <CarbonFYI currentAddress={address} metric="gas" />
       walletInfo.data.info[2].quantity = address && <CarbonFYI currentAddress={address} />
     }
     setDataWallet(walletInfo)
@@ -56,8 +56,7 @@ const Wallet = () => {
   useEffect(() => {
     console.log(`HERE ${irlStoredData}`)
 
-    if (hasCalculator && !irlStoredData)
-      setIrlStoredData(JSON.parse(hasCalculator))
+    if (hasCalculator && !irlStoredData) setIrlStoredData(JSON.parse(hasCalculator))
 
     if (irlStoredData)
       setDataIrl({
@@ -79,9 +78,15 @@ const Wallet = () => {
         <Space direction="vertical">
           <Title>Calculate your emissions</Title>
           <Paragraph style={{ fontSize: 18, lineHeight: '2rem', textJustify: true }}>
-            It is inaccurate to blame climate change on regular people, but it is a mistake not trying to quantify our emissions.<br />
-            This calculator is built to help you quantify the amount of CO2e you are emitting into the atmosphere, directly and indirectly.<br />
-            It is not meant to be exact, just provide a figure in the orders of magnitude of your real emissions, to hopefully inspire you to do more.<br />
+            It is inaccurate to blame climate change on regular people, but it is a mistake not trying to quantify our
+            emissions.
+            <br />
+            This calculator is built to help you quantify the amount of CO2e you are emitting into the atmosphere,
+            directly and indirectly.
+            <br />
+            It is not meant to be exact, just provide a figure in the orders of magnitude of your real emissions, to
+            hopefully inspire you to do more.
+            <br />
           </Paragraph>
         </Space>
       </Col>
@@ -89,15 +94,14 @@ const Wallet = () => {
         <Col xs={24} md={22}>
           <Row justify="space-between">
             <Col xs={24} md={11}>
-              {dataWallet && <CardCustom title="Your Wallet Emissions" cardType="wallet" items={dataWallet.data.info} />}
+              {dataWallet && (
+                <CardCustom title="Your Wallet Emissions" cardType="wallet" items={dataWallet.data.info} />
+              )}
               {isLoadingAccount && !address && <ConnectButton />}
             </Col>
             {!irlStoredData && <Col md={9}></Col>}
             {!irlStoredData && (
-              <Col
-                xs={{ span: 24 }}
-                md={{ span: 11 }}
-                style={{ marginTop: '20px' }}>
+              <Col xs={{ span: 24 }} md={{ span: 11 }} style={{ marginTop: '20px' }}>
                 <Card title="IRL emissions" className="card-info">
                   <Row justify="center">
                     <Col xs={{ span: 22 }} style={{ marginBottom: '30px' }}>
@@ -118,11 +122,7 @@ const Wallet = () => {
             )}
             <Col xs={{ span: 24 }} md={{ span: 11 }}>
               {irlStoredData && dataIrl && (
-                <CardCustom
-                  title="IRL emissions"
-                  cardType="irl"
-                  items={dataIrl.data.info}
-                />
+                <CardCustom title="IRL emissions" cardType="irl" items={dataIrl.data.info} />
               )}
             </Col>
           </Row>

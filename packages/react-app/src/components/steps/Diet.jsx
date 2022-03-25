@@ -52,7 +52,7 @@ export const Diet = ({ nextStep, backStep }) => {
 
     const endpoint = advanced ? 'diet-detailed' : 'dieta-simplificada'
 
-    fetch(`http://koywecalc.herokuapp.com/api/v1/${endpoint}`, {
+    fetch(`https://koywecalc.herokuapp.com/api/v1/${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),

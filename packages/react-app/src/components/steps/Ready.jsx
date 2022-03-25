@@ -30,7 +30,7 @@ export const Ready = ({ nextStep }) => {
 
     setLoading(true)
 
-    fetch(`http://koywecalc.herokuapp.com/api/v1/home-detailed`, {
+    fetch(`https://koywecalc.herokuapp.com/api/v1/home-detailed`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),

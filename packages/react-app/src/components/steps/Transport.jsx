@@ -52,7 +52,7 @@ export const Transport = ({ nextStep, backStep }) => {
 
     const endpoint = advanced ? 'transportation-detailed' : 'transporte-simplificada'
 
-    fetch(`http://koywecalc.herokuapp.com/api/v1/${endpoint}`, {
+    fetch(`https://koywecalc.herokuapp.com/api/v1/${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
