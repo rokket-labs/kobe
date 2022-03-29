@@ -14,36 +14,26 @@ import { LeftLayout } from './layouts/content/LeftLayout'
 import { MiddleLayout } from './layouts/content/MiddleLayout'
 import { RightLayout } from './layouts/content/RightLayout'
 
-/**
-  type ExpenseProps = {
-    nextStep: (value?: number) => void
-    backStep: (value?: number) => void
-  }
-*/
-
 const Expense = ({ nextStep, backStep }) => {
   const { advanced, accessToken } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
 
-  const {
-    formData,
-    onChange,
-  } = useForm({})
+  const { formData, onChange } = useForm({})
 
   const handleNext = () => {
     const data = {
-      ...(!advanced && { 'spend_on_services_per_month': formData?.spendOnServicesPerMonth }),
+      ...(!advanced && { spend_on_services_per_month: formData?.spendOnServicesPerMonth }),
       ...(advanced && {
-        'health': formData?.health,
-        'information_telecommunications': formData?.information,
-        'visits_doctor': formData?.doctor,
-        'auto_technical_service': formData?.autoService,
-        'financial_management_services': formData?.financialServices,
-        'home_maintenance_repairs': formData?.homeMaintenance,
-        'donations': formData?.donations,
-        'other_services': formData?.otherServices,
+        health: formData?.health,
+        information_telecommunications: formData?.information,
+        visits_doctor: formData?.doctor,
+        auto_technical_service: formData?.autoService,
+        financial_management_services: formData?.financialServices,
+        home_maintenance_repairs: formData?.homeMaintenance,
+        donations: formData?.donations,
+        other_services: formData?.otherServices,
       }),
-      'bearerToken': accessToken,
+      bearerToken: accessToken,
     }
 
     setLoading(true)
@@ -54,25 +44,26 @@ const Expense = ({ nextStep, backStep }) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    }).then(async res => {
-      const responseData = await res.json()
-
-      if (responseData.success)
-        nextStep()
-      else
-        return Promise.reject(responseData.message)
-    }).catch(err => {
-      console.log(err)
-    }).finally(() => {
-      setLoading(false)
     })
+      .then(async res => {
+        const responseData = await res.json()
+
+        if (responseData.success) nextStep()
+        else return Promise.reject(responseData.message)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
     <>
       <Header
-        title="Sección N° 5 - Servicios"
-        subtitle="Igual que con los bienes, la simple sólo pregunta el gasto mensual total en CLP, mientras que la detallada es sobre cada tipo de servicio."
+        title="Section N° 5 - Services"
+        subtitle="As with goods, the simplified question only asks for the total monthly expense in USD, while the detailed one is about each type of service."
       />
       <ContentLayout>
         <LeftLayout>
