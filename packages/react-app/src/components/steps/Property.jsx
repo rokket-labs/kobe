@@ -22,28 +22,25 @@ import { RightLayout } from './layouts/content/RightLayout'
 */
 
 export const Property = ({ nextStep, backStep }) => {
-  const { advanced, accessToken } = useContext(CalculatorContext)
+  const { advanced, accessToken, setGraphValues } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
 
-  const {
-    formData,
-    onChange,
-  } = useForm({})
+  const { formData, onChange } = useForm({})
 
   const handleNext = () => {
     const data = {
-      ...(!advanced && { 'monthly_spend_on_goods': formData?.monthlySpendOnGoods }),
+      ...(!advanced && { monthly_spend_on_goods: formData?.monthlySpendOnGoods }),
       ...(advanced && {
-        'furniture_household_appliances': formData?.furnitureAppliances,
-        'clothes': formData?.clothes,
-        'entertainment': formData?.entertainment,
-        'paper_office_reading': formData?.paperOffice,
-        'personal_hygiene_cleaning': formData?.personalHygiene,
-        'spare_parts_car': formData?.spareParts,
-        'medical_supplies': formData?.medicalSupplies,
+        furniture_household_appliances: formData?.furnitureAppliances,
+        clothes: formData?.clothes,
+        entertainment: formData?.entertainment,
+        paper_office_reading: formData?.paperOffice,
+        personal_hygiene_cleaning: formData?.personalHygiene,
+        spare_parts_car: formData?.spareParts,
+        medical_supplies: formData?.medicalSupplies,
       }),
-      'services': advanced ? 'Detallada' : 'Simplificada',
-      'bearerToken': accessToken,
+      services: advanced ? 'Detallada' : 'Simplificada',
+      bearerToken: accessToken,
     }
 
     setLoading(true)
@@ -54,18 +51,21 @@ export const Property = ({ nextStep, backStep }) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    }).then(async res => {
-      const responseData = await res.json()
-
-      if (responseData.success)
-        nextStep()
-      else
-        return Promise.reject(responseData.message)
-    }).catch(err => {
-      console.log(err)
-    }).finally(() => {
-      setLoading(false)
     })
+      .then(async res => {
+        const responseData = await res.json()
+
+        if (responseData.success)
+          // setGraphValues(prevState => ({ ...prevState, property: 10 })) // reemplazar el valor por el de la api de 1 a 100
+          nextStep()
+         else return Promise.reject(responseData.message)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (

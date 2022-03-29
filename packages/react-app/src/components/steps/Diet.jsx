@@ -22,30 +22,27 @@ import { RightLayout } from './layouts/content/RightLayout'
 */
 
 export const Diet = ({ nextStep, backStep }) => {
-  const { advanced, accessToken } = useContext(CalculatorContext)
+  const { advanced, accessToken, setGraphValues } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
 
-  const {
-    formData,
-    onChange,
-  } = useForm({})
+  const { formData, onChange } = useForm({})
 
   const handleNext = () => {
     const data = {
-      ...(!advanced && { 'average_diet': formData?.averageDiet }),
+      ...(!advanced && { average_diet: formData?.averageDiet }),
       ...(advanced && {
-        'times_eat_meat': formData?.timesEatMeat,
-        'times_eat_fish': formData?.timesEatFish,
-        'times_eat_processed_meat': formData?.timesEatProcessedMeat,
-        'times_eat_chicken_turkey': formData?.timesEatChickenTurkey,
-        'times_eat_eggs': formData?.timesEatEggs,
-        'much_eat_grain_cereal_bread_baked_goods': formData?.muchEatCereal,
-        'times_consume_dairy_products': formData?.timesConsumeDairy,
-        'much_eat_fruit_vegetables': formData?.muchEatFruitVegetables,
-        'many_consume_snacks_drinks_water_packaged_things': formData?.manyConsumeSnacks,
+        times_eat_meat: formData?.timesEatMeat,
+        times_eat_fish: formData?.timesEatFish,
+        times_eat_processed_meat: formData?.timesEatProcessedMeat,
+        times_eat_chicken_turkey: formData?.timesEatChickenTurkey,
+        times_eat_eggs: formData?.timesEatEggs,
+        much_eat_grain_cereal_bread_baked_goods: formData?.muchEatCereal,
+        times_consume_dairy_products: formData?.timesConsumeDairy,
+        much_eat_fruit_vegetables: formData?.muchEatFruitVegetables,
+        many_consume_snacks_drinks_water_packaged_things: formData?.manyConsumeSnacks,
       }),
-      'goods': advanced ? 'Detallada' : 'Simplificada',
-      'bearerToken': accessToken,
+      goods: advanced ? 'Detallada' : 'Simplificada',
+      bearerToken: accessToken,
     }
 
     setLoading(true)
@@ -56,18 +53,21 @@ export const Diet = ({ nextStep, backStep }) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    }).then(async res => {
-      const responseData = await res.json()
-
-      if (responseData.success)
-        nextStep()
-      else
-        return Promise.reject(responseData.message)
-    }).catch(err => {
-      console.log(err)
-    }).finally(() => {
-      setLoading(false)
     })
+      .then(async res => {
+        const responseData = await res.json()
+
+        if (responseData.success)
+          // setGraphValues(prevState => ({ ...prevState, diet: 10 })) // reemplazar el valor por el de la api de 1 a 100
+          nextStep()
+         else return Promise.reject(responseData.message)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (

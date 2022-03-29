@@ -22,29 +22,26 @@ import { RightLayout } from './layouts/content/RightLayout'
 */
 
 export const Transport = ({ nextStep, backStep }) => {
-  const { advanced, accessToken } = useContext(CalculatorContext)
+  const { advanced, accessToken, setGraphValues, graphValues } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
 
-  const {
-    formData,
-    onChange,
-  } = useForm({})
+  const { formData, onChange } = useForm({})
 
   const handleNext = () => {
     const data = {
-      'kms_per_month': formData?.monthlyKms,
-      'fuel_type_auto': formData?.fuelType,
-      'weekly_kms_by_bus': formData?.weeklyBusKms,
-      'plane_trips_per_year': formData?.planeTrips,
-      ...(!advanced && { 'airplane_trips_per_year': formData.airplaneTrips }),
-      'bearerToken': accessToken,
+      kms_per_month: formData?.monthlyKms,
+      fuel_type_auto: formData?.fuelType,
+      weekly_kms_by_bus: formData?.weeklyBusKms,
+      plane_trips_per_year: formData?.planeTrips,
+      ...(!advanced && { airplane_trips_per_year: formData.airplaneTrips }),
+      bearerToken: accessToken,
       ...(advanced && {
-        'average_consumption': formData?.averageConsumption,
-        'weekly_kms_in_uber_taxi_or_similar': formData?.weeklyTaxiKms,
-        'weekly_kms_by_metro_or_train': formData?.weeklyTrainKms,
-        'airplane_trips_per_year_1': formData.airplaneTripsA,
-        'air_travel_per_year_2': formData.airplaneTripsB,
-        'airplane_trips_per_year_3': formData.airplaneTripsC,
+        average_consumption: formData?.averageConsumption,
+        weekly_kms_in_uber_taxi_or_similar: formData?.weeklyTaxiKms,
+        weekly_kms_by_metro_or_train: formData?.weeklyTrainKms,
+        airplane_trips_per_year_1: formData.airplaneTripsA,
+        air_travel_per_year_2: formData.airplaneTripsB,
+        airplane_trips_per_year_3: formData.airplaneTripsC,
       }),
     }
 
@@ -56,18 +53,22 @@ export const Transport = ({ nextStep, backStep }) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    }).then(async res => {
-      const responseData = await res.json()
-
-      if (responseData.success)
-        nextStep()
-      else
-        return Promise.reject(responseData.message)
-    }).catch(err => {
-      console.log(err)
-    }).finally(() => {
-      setLoading(false)
     })
+      .then(async res => {
+        const responseData = await res.json()
+
+        if (responseData.success)
+          // setGraphValues(prevState => ({ ...prevState, transport: 10 })) // reemplazar el valor por el de la api de 1 a 100
+
+          nextStep()
+         else return Promise.reject(responseData.message)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
@@ -79,7 +80,7 @@ export const Transport = ({ nextStep, backStep }) => {
       />
       <ContentLayout>
         <LeftLayout>
-          <Stats />
+          <Stats graphValues={graphValues} />
         </LeftLayout>
         <MiddleLayout>
           {!advanced && <TransportForm formData={formData} onChange={onChange} />}

@@ -47,52 +47,47 @@ const StatItem = props => {
         <Text>{text}</Text>
       </Col>
       <Col xs={{ span: 10 }} sm={{ span: 13 }} md={{ span: 11 }}>
-        <Progress
-          trailColor="#C4C4C4"
-          strokeColor={color ? color : '#25855A'}
-          percent={percent}
-          showInfo={false}
-        />
+        <Progress trailColor="#C4C4C4" strokeColor={color ? color : '#25855A'} percent={percent} showInfo={false} />
       </Col>
     </Row>
   )
 }
 
-export const Stats = () => {
+export const Stats = ({ graphValues }) => {
   const data = [
     {
       id: '1',
       icon: 'icon/emoji-car.svg',
       text: 'Transporte',
-      percent: 50,
+      percent: graphValues?.transport || 50,
       color: '#319795',
     },
     {
       id: '2',
       icon: 'icon/energy.svg',
       text: 'Energia',
-      percent: 50,
+      percent: graphValues?.energy || 50,
       color: '#D69E2E',
     },
     {
       id: '3',
       icon: 'icon/burger.svg',
       text: 'Dieta',
-      percent: 50,
+      percent: graphValues?.diet || 50,
       color: '#DD6B20',
     },
     {
       id: '4',
       icon: 'icon/emoji-house.svg',
       text: 'Bienes',
-      percent: 50,
+      percent: graphValues?.property || 50,
       color: '#00B5D8',
     },
     {
       id: '5',
       icon: 'icon/emoji-work.svg',
       text: 'Servicios',
-      percent: 50,
+      percent: graphValues?.expense || 50,
       color: '#D53F8C',
     },
   ]
@@ -106,7 +101,7 @@ export const Stats = () => {
         <Col xs={{ span: 12 }} sm={{ span: 8 }} md={{ span: 12 }}>
           <Row align="middle" justify="center">
             <Col>
-              <Title level={2}>6,5</Title>
+              <Title level={2}>{graphValues?.country || '6,5'}</Title>
             </Col>
           </Row>
           <Row align="middle" justify="center">
@@ -124,7 +119,7 @@ export const Stats = () => {
         <Col xs={{ span: 12 }} sm={{ span: 8 }} md={{ span: 12 }}>
           <Row align="middle" justify="center">
             <Col>
-              <Title level={3}>4,7</Title>
+              <Title level={3}>{graphValues?.total || '4,7'}</Title>
             </Col>
           </Row>
           <Row align="middle" justify="center">
@@ -135,12 +130,7 @@ export const Stats = () => {
         </Col>
       </Row>
       <Row style={{ margin: '12px 0' }}>
-        <Progress
-          trailColor="#C4C4C4"
-          strokeColor="#25855A"
-          percent={50}
-          showInfo={false}
-        />
+        <Progress trailColor="#C4C4C4" strokeColor="#25855A" percent={50} showInfo={false} />
       </Row>
       {data.map(item => (
         <StatItem

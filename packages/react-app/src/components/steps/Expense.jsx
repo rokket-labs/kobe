@@ -22,28 +22,25 @@ import { RightLayout } from './layouts/content/RightLayout'
 */
 
 const Expense = ({ nextStep, backStep }) => {
-  const { advanced, accessToken } = useContext(CalculatorContext)
+  const { advanced, accessToken, setGraphValues } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
 
-  const {
-    formData,
-    onChange,
-  } = useForm({})
+  const { formData, onChange } = useForm({})
 
   const handleNext = () => {
     const data = {
-      ...(!advanced && { 'spend_on_services_per_month': formData?.spendOnServicesPerMonth }),
+      ...(!advanced && { spend_on_services_per_month: formData?.spendOnServicesPerMonth }),
       ...(advanced && {
-        'health': formData?.health,
-        'information_telecommunications': formData?.information,
-        'visits_doctor': formData?.doctor,
-        'auto_technical_service': formData?.autoService,
-        'financial_management_services': formData?.financialServices,
-        'home_maintenance_repairs': formData?.homeMaintenance,
-        'donations': formData?.donations,
-        'other_services': formData?.otherServices,
+        health: formData?.health,
+        information_telecommunications: formData?.information,
+        visits_doctor: formData?.doctor,
+        auto_technical_service: formData?.autoService,
+        financial_management_services: formData?.financialServices,
+        home_maintenance_repairs: formData?.homeMaintenance,
+        donations: formData?.donations,
+        other_services: formData?.otherServices,
       }),
-      'bearerToken': accessToken,
+      bearerToken: accessToken,
     }
 
     setLoading(true)
@@ -54,18 +51,21 @@ const Expense = ({ nextStep, backStep }) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    }).then(async res => {
-      const responseData = await res.json()
-
-      if (responseData.success)
-        nextStep()
-      else
-        return Promise.reject(responseData.message)
-    }).catch(err => {
-      console.log(err)
-    }).finally(() => {
-      setLoading(false)
     })
+      .then(async res => {
+        const responseData = await res.json()
+
+        if (responseData.success)
+          // setGraphValues(prevState => ({ ...prevState, expense: 10 })) // reemplazar el valor por el de la api de 1 a 100
+          nextStep()
+         else return Promise.reject(responseData.message)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (

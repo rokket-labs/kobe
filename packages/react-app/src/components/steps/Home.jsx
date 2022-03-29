@@ -18,7 +18,7 @@ const { Option } = Select
 */
 
 export const Home = ({ nextStep }) => {
-  const { country, setCountry, email, setEmail } = useContext(CalculatorContext)
+  const { country, setCountry, email, setEmail, setGraphValues } = useContext(CalculatorContext)
 
   return (
     <>
@@ -30,9 +30,8 @@ export const Home = ({ nextStep }) => {
       <StyledRow justify="center">
         <Col>
           <Text>
-            Contesta esta breve encuesta sobre tu estilo de vida, esto nos
-            ayudará a conocerte más en detalle y que puedas saber la huella que
-            generas en relación a este.
+            Contesta esta breve encuesta sobre tu estilo de vida, esto nos ayudará a conocerte más en detalle y que
+            puedas saber la huella que generas en relación a este.
           </Text>
         </Col>
       </StyledRow>
@@ -52,11 +51,7 @@ export const Home = ({ nextStep }) => {
       <StyledRow justify="center">
         <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 6 }}>
           <Text>Correo electrónico *</Text>
-          <Input
-            placeholder="mail@mail.com"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
+          <Input placeholder="mail@mail.com" value={email} onChange={e => setEmail(e.target.value)} />
         </Col>
       </StyledRow>
       <StyledRow justify="center">
@@ -82,15 +77,15 @@ export const Home = ({ nextStep }) => {
         </Col>
       </StyledRow>
       <StyledRow justify="center">
-        <Col
-          xs={{ span: 24 }}
-          sm={{ span: 6 }}
-          md={{ span: 4 }}
-          lg={{ span: 3 }}>
+        <Col xs={{ span: 24 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 3 }}>
           <StyledButton
             $type="primary"
             style={{ width: '100%' }}
-            onClick={() => nextStep()}>
+            onClick={() => {
+              // setGraphValues(prevState => ({ ...prevState, country: '6,5', total: '4,7' })) // reemplazar por el valor del pais
+              nextStep()
+            }}
+          >
             Siguiente
           </StyledButton>
         </Col>

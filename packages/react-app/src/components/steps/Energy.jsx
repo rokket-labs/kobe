@@ -21,24 +21,21 @@ import { RightLayout } from './layouts/content/RightLayout'
  */
 
 export const Energy = ({ nextStep, backStep }) => {
-  const { advanced, accessToken } = useContext(CalculatorContext)
+  const { advanced, accessToken, setGraphValues, graphValues } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
 
-  const {
-    formData,
-    onChange,
-  } = useForm({})
+  const { formData, onChange } = useForm({})
 
   const handleNext = () => {
     const data = {
-      'people_live': formData?.peopleLive,
-      'home_big': formData?.homeBig,
-      'electricity_consume': formData?.electricityConsume,
-      'liquefied_gas_consume': formData?.liquefiedGasConsume,
-      'natural_gas_consume': formData?.naturalGasConsume,
-      'water_consume': formData?.waterConsume,
-      'food_type': advanced ? 'Detallada' : 'Simplificada',
-      'bearerToken': accessToken,
+      people_live: formData?.peopleLive,
+      home_big: formData?.homeBig,
+      electricity_consume: formData?.electricityConsume,
+      liquefied_gas_consume: formData?.liquefiedGasConsume,
+      natural_gas_consume: formData?.naturalGasConsume,
+      water_consume: formData?.waterConsume,
+      food_type: advanced ? 'Detallada' : 'Simplificada',
+      bearerToken: accessToken,
     }
 
     setLoading(true)
@@ -49,18 +46,21 @@ export const Energy = ({ nextStep, backStep }) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    }).then(async res => {
-      const responseData = await res.json()
-
-      if (responseData.success)
-        nextStep()
-      else
-        return Promise.reject(responseData.message)
-    }).catch(err => {
-      console.log(err)
-    }).finally(() => {
-      setLoading(false)
     })
+      .then(async res => {
+        const responseData = await res.json()
+
+        if (responseData.success)
+          // setGraphValues(prevState => ({ ...prevState, energy: 10 })) // reemplazar el valor por el de la api de 1 a 100
+          nextStep()
+         else return Promise.reject(responseData.message)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
@@ -74,7 +74,7 @@ export const Energy = ({ nextStep, backStep }) => {
       />
       <ContentLayout>
         <LeftLayout>
-          <Stats />
+          <Stats graphValues={graphValues} />
         </LeftLayout>
         <MiddleLayout>
           <EnergyForm formData={formData} onChange={onChange} />
