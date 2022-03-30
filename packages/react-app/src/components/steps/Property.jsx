@@ -14,36 +14,26 @@ import { LeftLayout } from './layouts/content/LeftLayout'
 import { MiddleLayout } from './layouts/content/MiddleLayout'
 import { RightLayout } from './layouts/content/RightLayout'
 
-/**
-  type PropertyProps = {
-    nextStep: (value?: number) => void
-    backStep: (value?: number) => void
-  }
-*/
-
 export const Property = ({ nextStep, backStep }) => {
   const { advanced, accessToken } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
 
-  const {
-    formData,
-    onChange,
-  } = useForm({})
+  const { formData, onChange } = useForm({})
 
   const handleNext = () => {
     const data = {
-      ...(!advanced && { 'monthly_spend_on_goods': formData?.monthlySpendOnGoods }),
+      ...(!advanced && { monthly_spend_on_goods: formData?.monthlySpendOnGoods }),
       ...(advanced && {
-        'furniture_household_appliances': formData?.furnitureAppliances,
-        'clothes': formData?.clothes,
-        'entertainment': formData?.entertainment,
-        'paper_office_reading': formData?.paperOffice,
-        'personal_hygiene_cleaning': formData?.personalHygiene,
-        'spare_parts_car': formData?.spareParts,
-        'medical_supplies': formData?.medicalSupplies,
+        furniture_household_appliances: formData?.furnitureAppliances,
+        clothes: formData?.clothes,
+        entertainment: formData?.entertainment,
+        paper_office_reading: formData?.paperOffice,
+        personal_hygiene_cleaning: formData?.personalHygiene,
+        spare_parts_car: formData?.spareParts,
+        medical_supplies: formData?.medicalSupplies,
       }),
-      'services': advanced ? 'Detallada' : 'Simplificada',
-      'bearerToken': accessToken,
+      services: advanced ? 'Detallada' : 'Simplificada',
+      bearerToken: accessToken,
     }
 
     setLoading(true)
@@ -54,25 +44,26 @@ export const Property = ({ nextStep, backStep }) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    }).then(async res => {
-      const responseData = await res.json()
-
-      if (responseData.success)
-        nextStep()
-      else
-        return Promise.reject(responseData.message)
-    }).catch(err => {
-      console.log(err)
-    }).finally(() => {
-      setLoading(false)
     })
+      .then(async res => {
+        const responseData = await res.json()
+
+        if (responseData.success) nextStep()
+        else return Promise.reject(responseData.message)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
     <>
       <Header
-        title="Sección N° 4 - Bienes"
-        subtitle="En la versión simplificada te preguntamos simplemente cuánto gastas al año en comprar bienes. Asumiremos una canasta promedio de compras. En la versión detallada, te preguntaremos cuánto gastas en cada cosa."
+        title="Section N° 4 - Goods"
+        subtitle="In the simplified version we simply ask you how much you spend per month on buying goods. We will assume an average shopping basket. In the detailed version, we will ask you how much you spend on each thing."
       />
       <ContentLayout>
         <LeftLayout>

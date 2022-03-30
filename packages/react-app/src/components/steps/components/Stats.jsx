@@ -47,12 +47,7 @@ const StatItem = props => {
         <Text>{text}</Text>
       </Col>
       <Col xs={{ span: 10 }} sm={{ span: 13 }} md={{ span: 11 }}>
-        <Progress
-          trailColor="#C4C4C4"
-          strokeColor={color ? color : '#25855A'}
-          percent={percent}
-          showInfo={false}
-        />
+        <Progress trailColor="#C4C4C4" strokeColor={color ? color : '#25855A'} percent={percent} showInfo={false} />
       </Col>
     </Row>
   )
@@ -63,35 +58,35 @@ export const Stats = () => {
     {
       id: '1',
       icon: 'icon/emoji-car.svg',
-      text: 'Transporte',
+      text: 'Transport',
       percent: 50,
       color: '#319795',
     },
     {
       id: '2',
       icon: 'icon/energy.svg',
-      text: 'Energia',
+      text: 'Energy',
       percent: 50,
       color: '#D69E2E',
     },
     {
       id: '3',
       icon: 'icon/burger.svg',
-      text: 'Dieta',
+      text: 'Diet',
       percent: 50,
       color: '#DD6B20',
     },
     {
       id: '4',
       icon: 'icon/emoji-house.svg',
-      text: 'Bienes',
+      text: 'Goods',
       percent: 50,
       color: '#00B5D8',
     },
     {
       id: '5',
       icon: 'icon/emoji-work.svg',
-      text: 'Servicios',
+      text: 'Services',
       percent: 50,
       color: '#D53F8C',
     },
@@ -111,7 +106,7 @@ export const Stats = () => {
           </Row>
           <Row align="middle" justify="center">
             <Col style={{ textAlign: 'center' }}>
-              <Text style={{ marginRight: 4 }}>veces el límite planetario</Text>
+              <Text style={{ marginRight: 4 }}>times the planetary boundaries</Text>
               <Image src="icon/alert-info.svg" height={14} preview={false} />
             </Col>
           </Row>
@@ -129,18 +124,13 @@ export const Stats = () => {
           </Row>
           <Row align="middle" justify="center">
             <Col>
-              <Text>Ton. Co2/año</Text>
+              <Text>Ton Co2e/year</Text>
             </Col>
           </Row>
         </Col>
       </Row>
       <Row style={{ margin: '12px 0' }}>
-        <Progress
-          trailColor="#C4C4C4"
-          strokeColor="#25855A"
-          percent={50}
-          showInfo={false}
-        />
+        <Progress trailColor="#C4C4C4" strokeColor="#25855A" percent={50} showInfo={false} />
       </Row>
       {data.map(item => (
         <StatItem

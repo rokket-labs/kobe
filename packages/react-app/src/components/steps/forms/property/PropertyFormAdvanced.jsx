@@ -3,115 +3,77 @@ import { StyledDivider } from '../../components/StyledDivider'
 import { InputLayout } from '../../layouts/InputLayout'
 import { RowLayout } from '../../layouts/RowLayout'
 
-export const PropertyFormFirst = ({
-  formData,
-  onChange,
-}) => {
-  const {
-    furnitureAppliances,
-    clothes,
-    entertainment,
-    paperOffice,
-  } = formData
+export const PropertyFormFirst = ({ formData, onChange }) => {
+  const { furnitureAppliances, clothes, entertainment, paperOffice } = formData
 
   return (
     <>
-      <RowLayout align="middle" icon="icon/bed.svg" title="Muebles">
-        <InputLayout
-          label="¿Cuánto gastas en muebles y electrodomésticos por mes?"
-          tooltip
-          tooltipText="">
+      <RowLayout align="middle" icon="icon/bed.svg" title="Furniture">
+        <InputLayout label="How much do you spend in furniture and home appliances per month?" tooltip tooltipText="">
           <InputPrice
-            placeholder="100.000 CLP"
+            placeholder="200 USD"
             value={furnitureAppliances}
             onChange={value => onChange(value, 'furnitureAppliances')}
           />
         </InputLayout>
       </RowLayout>
       <StyledDivider />
-      <RowLayout align="middle" icon="icon/shirt.svg" title="Ropa">
-        <InputLayout label="¿Cuánto gastas en ropa por mes?">
-          <InputPrice
-            placeholder="50.000 CLP"
-            value={clothes}
-            onChange={value => onChange(value, 'clothes')}
-          />
+      <RowLayout align="middle" icon="icon/shirt.svg" title="Clothes">
+        <InputLayout label="How much do you spend in clothes per month?">
+          <InputPrice placeholder="100 USD" value={clothes} onChange={value => onChange(value, 'clothes')} />
         </InputLayout>
       </RowLayout>
       <StyledDivider />
-      <RowLayout align="middle" icon="icon/drink.svg" title="Entretención">
-        <InputLayout
-          label="¿Cuánto gastas en entretenimiento por mes?"
-          tooltip
-          tooltipText="">
+      <RowLayout align="middle" icon="icon/drink.svg" title="Entertainment">
+        <InputLayout label="How much do you spend in entertainment per month?" tooltip tooltipText="">
           <InputPrice
-            placeholder="50.000 CLP"
+            placeholder="100 USD"
             value={entertainment}
             onChange={value => onChange(value, 'entertainment')}
           />
         </InputLayout>
       </RowLayout>
       <StyledDivider />
-      <RowLayout align="middle" icon="icon/book.svg" title="Libros y papelería">
+      <RowLayout align="middle" icon="icon/book.svg" title="Books & papers">
         <InputLayout
-          label="¿Cuánto gastas en libros y papelería al mes? (Incluye artículos de oficina)"
+          label="How much do you spend in books and papers per month? (including office goods)"
           tooltip
-          tooltipText="">
-          <InputPrice
-            placeholder="50.000 CLP"
-            value={paperOffice}
-            onChange={value => onChange(value, 'paperOffice')}
-          />
+          tooltipText=""
+        >
+          <InputPrice placeholder="50 USD" value={paperOffice} onChange={value => onChange(value, 'paperOffice')} />
         </InputLayout>
       </RowLayout>
     </>
   )
 }
 
-export const PropertyFormAdvanced = ({
-  formData,
-  onChange,
-}) => {
-  const {
-    personalHygiene,
-    spareParts,
-    medicalSupplies,
-  } = formData
+export const PropertyFormAdvanced = ({ formData, onChange }) => {
+  const { personalHygiene, spareParts, medicalSupplies } = formData
 
   return (
     <>
       <PropertyFormFirst formData={formData} onChange={onChange} />
       <StyledDivider />
-      <RowLayout align="middle" icon="icon/soap.svg" title="Aseo personal">
-        <InputLayout label="¿Cuánto gastas al mes? (Incluye aseo personal y limpieza)">
+      <RowLayout align="middle" icon="icon/soap.svg" title="Personal care">
+        <InputLayout label="How much do you spend in personal care per month?">
           <InputPrice
-            placeholder="10.000 CLP"
+            placeholder="50 USD"
             value={personalHygiene}
             onChange={value => onChange(value, 'personalHygiene')}
           />
         </InputLayout>
       </RowLayout>
       <StyledDivider />
-      <RowLayout
-        align="middle"
-        icon="icon/car-repair.svg"
-        title="Repuestos vehículo">
-        <InputLayout label="¿Cuánto gastas al mes?" tooltip tooltipText="">
-          <InputPrice
-            placeholder="50.000 CLP"
-            value={spareParts}
-            onChange={value => onChange(value, 'spareParts')}
-          />
+      <RowLayout align="middle" icon="icon/car-repair.svg" title="Car">
+        <InputLayout label="How much do you spend car replacement parts per month?" tooltip tooltipText="">
+          <InputPrice placeholder="100 USD" value={spareParts} onChange={value => onChange(value, 'spareParts')} />
         </InputLayout>
       </RowLayout>
       <StyledDivider />
-      <RowLayout
-        align="middle"
-        icon="icon/medical-kit.svg"
-        title="Insumos médicos">
-        <InputLayout label="¿Cuánto gastas al mes?" tooltip tooltipText="">
+      <RowLayout align="middle" icon="icon/medical-kit.svg" title="Medical supplies">
+        <InputLayout label="How much do you spend in medical supplies per month?" tooltip tooltipText="">
           <InputPrice
-            placeholder="15.000 CLP"
+            placeholder="40 USD"
             value={medicalSupplies}
             onChange={value => onChange(value, 'medicalSupplies')}
           />
