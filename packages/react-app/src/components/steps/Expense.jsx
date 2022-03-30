@@ -14,13 +14,6 @@ import { LeftLayout } from './layouts/content/LeftLayout'
 import { MiddleLayout } from './layouts/content/MiddleLayout'
 import { RightLayout } from './layouts/content/RightLayout'
 
-/**
-  type ExpenseProps = {
-    nextStep: (value?: number) => void
-    backStep: (value?: number) => void
-  }
-*/
-
 const Expense = ({ nextStep, backStep }) => {
   const { advanced, accessToken, setGraphValues } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
@@ -58,7 +51,7 @@ const Expense = ({ nextStep, backStep }) => {
         if (responseData.success)
           // setGraphValues(prevState => ({ ...prevState, expense: 10 })) // reemplazar el valor por el de la api de 1 a 100
           nextStep()
-         else return Promise.reject(responseData.message)
+        else return Promise.reject(responseData.message)
       })
       .catch(err => {
         console.log(err)
@@ -71,8 +64,8 @@ const Expense = ({ nextStep, backStep }) => {
   return (
     <>
       <Header
-        title="Sección N° 5 - Servicios"
-        subtitle="Igual que con los bienes, la simple sólo pregunta el gasto mensual total en CLP, mientras que la detallada es sobre cada tipo de servicio."
+        title="Section N° 5 - Services"
+        subtitle="As with goods, the simplified question only asks for the total monthly expense in USD, while the detailed one is about each type of service."
       />
       <ContentLayout>
         <LeftLayout>

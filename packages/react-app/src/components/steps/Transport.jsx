@@ -14,13 +14,6 @@ import { LeftLayout } from './layouts/content/LeftLayout'
 import { MiddleLayout } from './layouts/content/MiddleLayout'
 import { RightLayout } from './layouts/content/RightLayout'
 
-/**
-  type TransportProps = {
-    nextStep: (value?: number) => void
-    backStep: (value?: number) => void
-  }
-*/
-
 export const Transport = ({ nextStep, backStep }) => {
   const { advanced, accessToken, setGraphValues, graphValues } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
@@ -61,7 +54,7 @@ export const Transport = ({ nextStep, backStep }) => {
           // setGraphValues(prevState => ({ ...prevState, transport: 10 })) // reemplazar el valor por el de la api de 1 a 100
 
           nextStep()
-         else return Promise.reject(responseData.message)
+        else return Promise.reject(responseData.message)
       })
       .catch(err => {
         console.log(err)
@@ -74,9 +67,8 @@ export const Transport = ({ nextStep, backStep }) => {
   return (
     <>
       <Header
-        title="Sección N° 1 - Transporte"
-        subtitle="Esta sección es muy importante, los medios de transporte son los que
-            más aportan a nuestras emisiones anuales."
+        title="Section N° 1 - Transport"
+        subtitle="This section is very important because transport is usually where we emmit the most."
       />
       <ContentLayout>
         <LeftLayout>

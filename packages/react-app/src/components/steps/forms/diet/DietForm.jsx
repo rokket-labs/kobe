@@ -5,18 +5,15 @@ const { Option } = Select
 import { RowLayout } from '../../layouts/RowLayout'
 import { SelectLayout } from '../../layouts/SelectLayout'
 
-export const DietForm = ({
-  formData,
-  onChange,
-}) => {
+export const DietForm = ({ formData, onChange }) => {
   const { averageDiet } = formData
 
   return (
     <RowLayout align="middle" icon="icon/diet.svg" title="Dieta">
       <Col span={24}>
-        <SelectLayout label="¿Cuál es tu tipo de dieta?">
+        <SelectLayout label="How is your diet?">
           <Select
-            placeholder="Selecciona tu tipo de alimentación"
+            placeholder="Choose"
             style={{ width: '100%' }}
             size="large"
             value={averageDiet}

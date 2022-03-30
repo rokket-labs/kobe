@@ -11,12 +11,6 @@ import { StyledTitle } from './components/StyledTitle'
 const { Text, Title } = Typography
 const { Option } = Select
 
-/**
-  type HomeProps = {
-    nextStep: (value?: number) => void
-  }
-*/
-
 export const Home = ({ nextStep }) => {
   const { country, setCountry, email, setEmail, setGraphValues } = useContext(CalculatorContext)
 
@@ -24,14 +18,14 @@ export const Home = ({ nextStep }) => {
     <>
       <StyledRow justify="center">
         <Col>
-          <Title level={2}>Calcula tus emisiones</Title>
+          <Title level={2}>Calculate your emissions</Title>
         </Col>
       </StyledRow>
       <StyledRow justify="center">
         <Col>
           <Text>
-            Contesta esta breve encuesta sobre tu estilo de vida, esto nos ayudará a conocerte más en detalle y que
-            puedas saber la huella que generas en relación a este.
+            Answer this brief survey about your lifestyle and get to know your footprint. It will take you from 3 to 10
+            minutes.
           </Text>
         </Col>
       </StyledRow>
@@ -42,7 +36,7 @@ export const Home = ({ nextStep }) => {
       </StyledRow>
       <StyledRow justify="center" align="middle" gutter={12}>
         <StyledCol>
-          <StyledTitle level={3}>Datos de contacto</StyledTitle>
+          <StyledTitle level={3}>Contact information</StyledTitle>
         </StyledCol>
         <StyledCol>
           <Image src="icon/alert-info.svg" preview={false} />
@@ -50,7 +44,7 @@ export const Home = ({ nextStep }) => {
       </StyledRow>
       <StyledRow justify="center">
         <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 6 }}>
-          <Text>Correo electrónico *</Text>
+          <Text>Email *</Text>
           <Input placeholder="mail@mail.com" value={email} onChange={e => setEmail(e.target.value)} />
         </Col>
       </StyledRow>
@@ -58,13 +52,13 @@ export const Home = ({ nextStep }) => {
         <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 6 }}>
           <Row>
             <Col span={24}>
-              <Text>¿En qué país vives? *</Text>
+              <Text>Where do you live? *</Text>
             </Col>
           </Row>
           <Row>
             <Col span={24}>
               <Select
-                placeholder="Selecciona tu país"
+                placeholder="Choose your country"
                 style={{ width: '100%' }}
                 value={country}
                 onChange={e => setCountry(e.target.value)}
@@ -86,7 +80,7 @@ export const Home = ({ nextStep }) => {
               nextStep()
             }}
           >
-            Siguiente
+            Next
           </StyledButton>
         </Col>
       </StyledRow>

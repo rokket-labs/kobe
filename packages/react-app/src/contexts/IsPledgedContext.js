@@ -6,23 +6,18 @@ export const IsPledgedContext = React.createContext({
   isPledged: false,
   co2: 0,
   hasCalculator: false,
-  handleIsPledged: () => {
-    console.log('isPledged')
-  },
+  handleIsPledged: () => {},
 
-  handleCo2: () => {
-    console.log('co2')
-  },
+  handleCo2: () => {},
 
-  handleHasCalculator: () => {
-    console.log('hasCalculator')
-  },
+  handleHasCalculator: () => {},
+  resetCalculator: () => {},
 })
 
 export const IsPledgedProvider = ({ children }) => {
   const [isPledged, setIsPledged] = useState(false)
   const [co2, setCo2] = useState(0)
-  const { getItem, setItem } = useStorage('localStorage')
+  const { getItem, setItem, removeItem } = useStorage('localStorage')
   const [hasCalculator, setHasCalculator] = useState(null)
 
   const handleIsPledged = pledged => {
@@ -35,6 +30,10 @@ export const IsPledgedProvider = ({ children }) => {
 
   const handleHasCalculator = calculator => {
     if (setItem('hasCalculator', `${calculator}`)) setHasCalculator(calculator)
+  }
+
+  const resetCalculator = () => {
+    removeItem('hasCalculator')
   }
 
   useEffect(() => {
@@ -56,6 +55,7 @@ export const IsPledgedProvider = ({ children }) => {
     handleIsPledged,
     handleCo2,
     handleHasCalculator,
+    resetCalculator,
   }
 
   return <IsPledgedContext.Provider value={value}>{children}</IsPledgedContext.Provider>

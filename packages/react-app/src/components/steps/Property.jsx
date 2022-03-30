@@ -14,13 +14,6 @@ import { LeftLayout } from './layouts/content/LeftLayout'
 import { MiddleLayout } from './layouts/content/MiddleLayout'
 import { RightLayout } from './layouts/content/RightLayout'
 
-/**
-  type PropertyProps = {
-    nextStep: (value?: number) => void
-    backStep: (value?: number) => void
-  }
-*/
-
 export const Property = ({ nextStep, backStep }) => {
   const { advanced, accessToken, setGraphValues } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
@@ -58,7 +51,7 @@ export const Property = ({ nextStep, backStep }) => {
         if (responseData.success)
           // setGraphValues(prevState => ({ ...prevState, property: 10 })) // reemplazar el valor por el de la api de 1 a 100
           nextStep()
-         else return Promise.reject(responseData.message)
+        else return Promise.reject(responseData.message)
       })
       .catch(err => {
         console.log(err)
@@ -71,8 +64,8 @@ export const Property = ({ nextStep, backStep }) => {
   return (
     <>
       <Header
-        title="Sección N° 4 - Bienes"
-        subtitle="En la versión simplificada te preguntamos simplemente cuánto gastas al año en comprar bienes. Asumiremos una canasta promedio de compras. En la versión detallada, te preguntaremos cuánto gastas en cada cosa."
+        title="Section N° 4 - Goods"
+        subtitle="In the simplified version we simply ask you how much you spend per month on buying goods. We will assume an average shopping basket. In the detailed version, we will ask you how much you spend on each thing."
       />
       <ContentLayout>
         <LeftLayout>

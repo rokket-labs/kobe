@@ -32,7 +32,7 @@ import walletMock from './wallet-data.json'
 const Wallet = () => {
   const { address, isLoadingAccount } = useContext(NetworkContext)
   const router = useHistory()
-  const { hasCalculator } = useContext(IsPledgedContext)
+  const { hasCalculator, resetCalculator } = useContext(IsPledgedContext)
   const [irlStoredData, setIrlStoredData] = useState(null)
   const [totalEmissions, setTotalEmissions] = useState()
 
@@ -126,7 +126,7 @@ const Wallet = () => {
                         <Image src={'/icon/world.svg'} preview={false} />
                       </Row>
                     </Col>
-                    <StyledButton $type="primary" onClick={() => handleMenu('/calculator')} block disabled>
+                    <StyledButton $type="primary" onClick={() => handleMenu('/calculator')} block>
                       Start calculator (coming soon)
                     </StyledButton>
                   </Row>
@@ -183,6 +183,19 @@ const Wallet = () => {
           )}
         </Col>
       </Row>
+      {irlStoredData && (
+        <Row style={{ width: '100%', marginBottom: '2rem', marginLeft: '2.5rem' }}>
+          <StyledButton
+            $type="primary"
+            onClick={() => {
+              resetCalculator()
+              router.go(0)
+            }}
+          >
+            Restart Calculator
+          </StyledButton>
+        </Row>
+      )}
     </Row>
   )
 }
