@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Card, Col, Image, Row, Space, Typography } from 'antd'
 
 import { CardCustom } from '../components/CardCustom'
@@ -16,29 +16,21 @@ import { NetworkContext } from '../contexts/NetworkContext'
 
 import walletMock from './wallet-data.json'
 
-/**
-  type InfoData = {
-    id: number
-    quantity: number
-    type: 'coin' | 'air' | 'co2'
-  }
-
-  type CalculatorData = {
-    data: { info: InfoData[] }
-  }
-*/
-
 // eslint-disable-next-line max-lines-per-function
 const Wallet = () => {
   const { address, isLoadingAccount } = useContext(NetworkContext)
-  const router = useHistory()
+  const location = useHistory()
   const { hasCalculator, resetCalculator } = useContext(IsPledgedContext)
   const [irlStoredData, setIrlStoredData] = useState(null)
   const [totalEmissions, setTotalEmissions] = useState()
 
   const handleMenu = url => {
-    router.push(url)
+    location.push(url)
   }
+
+  const isStaging = useMemo(() => {
+    return window.location.hostname.includes('staging')
+  }, [])
 
   const [dataWallet, setDataWallet] = useState()
   const [dataIrl, setDataIrl] = useState(null)
@@ -83,7 +75,6 @@ const Wallet = () => {
       )
     }
   }, [hasCalculator, irlStoredData])
-  console.log(totalEmissions)
 
   return (
     <Row className="my-sm">
@@ -126,7 +117,7 @@ const Wallet = () => {
                         <Image src={'/icon/world.svg'} preview={false} />
                       </Row>
                     </Col>
-                    <StyledButton $type="primary" onClick={() => handleMenu('/calculator')} block>
+                    <StyledButton $type="primary" onClick={() => handleMenu('/calculator')} block disabled={!isStaging}>
                       Start calculator (coming soon)
                     </StyledButton>
                   </Row>
@@ -189,7 +180,7 @@ const Wallet = () => {
             $type="primary"
             onClick={() => {
               resetCalculator()
-              router.go(0)
+              location.go(0)
             }}
           >
             Restart Calculator
