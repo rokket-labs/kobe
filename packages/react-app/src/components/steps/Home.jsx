@@ -12,7 +12,7 @@ const { Text, Title } = Typography
 const { Option } = Select
 
 export const Home = ({ nextStep }) => {
-  const { country, setCountry, email, setEmail } = useContext(CalculatorContext)
+  const { country, setCountry, email, setEmail, setGraphValues } = useContext(CalculatorContext)
 
   return (
     <>
@@ -72,8 +72,15 @@ export const Home = ({ nextStep }) => {
       </StyledRow>
       <StyledRow justify="center">
         <Col xs={{ span: 24 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 3 }}>
-          <StyledButton $type="primary" style={{ width: '100%' }} onClick={() => nextStep()}>
-            Siguiente
+          <StyledButton
+            $type="primary"
+            style={{ width: '100%' }}
+            onClick={() => {
+              // setGraphValues(prevState => ({ ...prevState, country: '6,5', total: '4,7' })) // reemplazar por el valor del pais
+              nextStep()
+            }}
+          >
+            Next
           </StyledButton>
         </Col>
       </StyledRow>

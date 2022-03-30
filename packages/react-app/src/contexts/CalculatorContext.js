@@ -3,12 +3,14 @@ import React, { useState } from 'react'
 const CalculatorContext = React.createContext({
   email: undefined,
   setEmail: () => undefined,
-  country: 'Chile',// hay que usar el país determinado por IP
+  country: 'Chile', // hay que usar el país determinado por IP
   setCountry: () => undefined,
   advanced: false,
   setAdvanced: () => undefined,
   accessToken: undefined,
   setToken: () => undefined,
+  graphValues: {},
+  setGraphValues: () => undefined,
 })
 
 export const CalculatorProvider = ({ children }) => {
@@ -16,6 +18,7 @@ export const CalculatorProvider = ({ children }) => {
   const [country, setCountry] = useState('Chile')
   const [advanced, setAdvanced] = useState(true)
   const [accessToken, setToken] = useState(null)
+  const [graphValues, setGraphValues] = useState({})
 
   const value = {
     email,
@@ -26,13 +29,11 @@ export const CalculatorProvider = ({ children }) => {
     setAdvanced,
     accessToken,
     setToken,
+    graphValues,
+    setGraphValues,
   }
 
-  return(
-    <CalculatorContext.Provider value={value}>
-      {children}
-    </CalculatorContext.Provider>
-  )
+  return <CalculatorContext.Provider value={value}>{children}</CalculatorContext.Provider>
 }
 
 export default CalculatorContext

@@ -34,6 +34,7 @@ const Wallet = () => {
   const router = useHistory()
   const { hasCalculator, resetCalculator } = useContext(IsPledgedContext)
   const [irlStoredData, setIrlStoredData] = useState(null)
+  const [totalEmissions, setTotalEmissions] = useState()
 
   const handleMenu = url => {
     router.push(url)
@@ -58,19 +59,31 @@ const Wallet = () => {
 
     if (hasCalculator && !irlStoredData) setIrlStoredData(JSON.parse(hasCalculator))
 
-    if (irlStoredData)
+    if (irlStoredData) {
+      console.log(irlStoredData)
       setDataIrl({
         data: {
           info: [
             { id: 1, quantity: parseFloat(irlStoredData.Home_Emissions).toFixed(2), type: 'house' },
-            { id: 1, quantity: parseFloat(irlStoredData.Transportation_Emissions).toFixed(2), type: 'car' },
-            { id: 1, quantity: parseFloat(irlStoredData.Diet_Emissions).toFixed(2), type: 'burger' },
-            { id: 1, quantity: parseFloat(irlStoredData.Goods_Emissions).toFixed(2), type: 'house' },
-            { id: 1, quantity: parseFloat(irlStoredData.Services_Emissions).toFixed(2), type: 'work' },
+            { id: 2, quantity: parseFloat(irlStoredData.Transportation_Emissions).toFixed(2), type: 'car' },
+            { id: 3, quantity: parseFloat(irlStoredData.Diet_Emissions).toFixed(2), type: 'burger' },
+            { id: 4, quantity: parseFloat(irlStoredData.Goods_Emissions).toFixed(2), type: 'house' },
+            { id: 5, quantity: parseFloat(irlStoredData.Services_Emissions).toFixed(2), type: 'work' },
           ],
         },
       })
+      setTotalEmissions(
+        (
+          parseFloat(irlStoredData.Home_Emissions) +
+          parseFloat(irlStoredData.Transportation_Emissions) +
+          parseFloat(irlStoredData.Diet_Emissions) +
+          parseFloat(irlStoredData.Goods_Emissions) +
+          parseFloat(irlStoredData.Services_Emissions)
+        ).toFixed(2),
+      )
+    }
   }, [hasCalculator, irlStoredData])
+  console.log(totalEmissions)
 
   return (
     <Row className="my-sm">
@@ -126,14 +139,14 @@ const Wallet = () => {
               )}
             </Col>
           </Row>
-          {irlStoredData && (
+          {irlStoredData && totalEmissions && (
             <Row justify="space-between" className="my-md">
               <Col span={24}>
                 <Title>Commit your actions and take the pledge</Title>
               </Col>
               <Col xl={8} md={12} xs={24}>
                 <CardEmission
-                  title={'11'}
+                  value={totalEmissions}
                   context={'I want to take charge of my emissions'}
                   background={'/icon/tree-credit-card.svg'}
                   color1={'#50B60F'}
@@ -144,7 +157,7 @@ const Wallet = () => {
               </Col>
               <Col xl={8} md={12} xs={24}>
                 <CardEmission
-                  title={'22'}
+                  value={parseFloat(totalEmissions) * 2}
                   context={
                     'Not everybody is taking care of their emissions and we need to act fast. Offset for 2 individuals like you'
                   }
@@ -157,7 +170,7 @@ const Wallet = () => {
               </Col>
               <Col xl={8} md={12} xs={24}>
                 <CardEmission
-                  title={'Pledge for as many tons/year as you can take care of'}
+                  value={'Pledge for as many tons/year as you can take care of'}
                   background={'/icon/tree-business-woman-man.svg'}
                   color1={'#2A6797'}
                   color2={'#74A6D6'}

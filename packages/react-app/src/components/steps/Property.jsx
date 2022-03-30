@@ -15,7 +15,7 @@ import { MiddleLayout } from './layouts/content/MiddleLayout'
 import { RightLayout } from './layouts/content/RightLayout'
 
 export const Property = ({ nextStep, backStep }) => {
-  const { advanced, accessToken } = useContext(CalculatorContext)
+  const { advanced, accessToken, setGraphValues } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
 
   const { formData, onChange } = useForm({})
@@ -48,7 +48,9 @@ export const Property = ({ nextStep, backStep }) => {
       .then(async res => {
         const responseData = await res.json()
 
-        if (responseData.success) nextStep()
+        if (responseData.success)
+          // setGraphValues(prevState => ({ ...prevState, property: 10 })) // reemplazar el valor por el de la api de 1 a 100
+          nextStep()
         else return Promise.reject(responseData.message)
       })
       .catch(err => {

@@ -21,7 +21,7 @@ import { RightLayout } from './layouts/content/RightLayout'
  */
 
 export const Energy = ({ nextStep, backStep }) => {
-  const { advanced, accessToken } = useContext(CalculatorContext)
+  const { advanced, accessToken, setGraphValues, graphValues } = useContext(CalculatorContext)
   const [loading, setLoading] = useState(false)
 
   const { formData, onChange } = useForm({})
@@ -50,7 +50,9 @@ export const Energy = ({ nextStep, backStep }) => {
       .then(async res => {
         const responseData = await res.json()
 
-        if (responseData.success) nextStep()
+        if (responseData.success)
+          // setGraphValues(prevState => ({ ...prevState, energy: 10 })) // reemplazar el valor por el de la api de 1 a 100
+          nextStep()
         else return Promise.reject(responseData.message)
       })
       .catch(err => {
@@ -69,7 +71,7 @@ export const Energy = ({ nextStep, backStep }) => {
       />
       <ContentLayout>
         <LeftLayout>
-          <Stats />
+          <Stats graphValues={graphValues} />
         </LeftLayout>
         <MiddleLayout>
           <EnergyForm formData={formData} onChange={onChange} />

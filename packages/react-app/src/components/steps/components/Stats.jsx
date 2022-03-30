@@ -25,16 +25,6 @@ const StyledBody = styled.div`
   }
 `
 
-/**
-  type StatItemProps = {
-    id: string
-    icon: string
-    text: string
-    percent: number
-    color?: string
-  }
-*/
-
 const StatItem = props => {
   const { id, icon, text, percent, color } = props
 
@@ -53,41 +43,41 @@ const StatItem = props => {
   )
 }
 
-export const Stats = () => {
+export const Stats = ({ graphValues }) => {
   const data = [
     {
       id: '1',
       icon: 'icon/emoji-car.svg',
       text: 'Transport',
-      percent: 50,
+      percent: graphValues?.transport || 50,
       color: '#319795',
     },
     {
       id: '2',
       icon: 'icon/energy.svg',
       text: 'Energy',
-      percent: 50,
+      percent: graphValues?.energy || 50,
       color: '#D69E2E',
     },
     {
       id: '3',
       icon: 'icon/burger.svg',
       text: 'Diet',
-      percent: 50,
+      percent: graphValues?.diet || 50,
       color: '#DD6B20',
     },
     {
       id: '4',
       icon: 'icon/emoji-house.svg',
       text: 'Goods',
-      percent: 50,
+      percent: graphValues?.property || 50,
       color: '#00B5D8',
     },
     {
       id: '5',
       icon: 'icon/emoji-work.svg',
       text: 'Services',
-      percent: 50,
+      percent: graphValues?.expense || 50,
       color: '#D53F8C',
     },
   ]
@@ -101,7 +91,7 @@ export const Stats = () => {
         <Col xs={{ span: 12 }} sm={{ span: 8 }} md={{ span: 12 }}>
           <Row align="middle" justify="center">
             <Col>
-              <Title level={2}>6,5</Title>
+              <Title level={2}>{graphValues?.country || '6,5'}</Title>
             </Col>
           </Row>
           <Row align="middle" justify="center">
@@ -119,7 +109,7 @@ export const Stats = () => {
         <Col xs={{ span: 12 }} sm={{ span: 8 }} md={{ span: 12 }}>
           <Row align="middle" justify="center">
             <Col>
-              <Title level={3}>4,7</Title>
+              <Title level={3}>{graphValues?.total || '4,7'}</Title>
             </Col>
           </Row>
           <Row align="middle" justify="center">
