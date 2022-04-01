@@ -80,18 +80,7 @@ const Wallet = () => {
     <Row className="my-sm">
       <Col offset={1}>
         <Space direction="vertical">
-          <Title>Calculate your emissions</Title>
-          <Paragraph style={{ fontSize: 18, lineHeight: '2rem', textJustify: true }}>
-            It is inaccurate to blame climate change on regular people, but it is a mistake not trying to quantify our
-            emissions.
-            <br />
-            This calculator is built to help you quantify the amount of CO2e you are emitting into the atmosphere,
-            directly and indirectly.
-            <br />
-            It is not meant to be exact, just provide a figure in the orders of magnitude of your real emissions, to
-            hopefully inspire you to do more.
-            <br />
-          </Paragraph>
+          <Title>You emit {totalEmissions} CO2 tons/year, more than your country average! </Title>
         </Space>
       </Col>
       <Row justify="center" style={{ width: '100%', minHeight: '100vh', marginBottom: '2rem' }}>
