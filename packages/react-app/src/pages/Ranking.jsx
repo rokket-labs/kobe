@@ -5,11 +5,14 @@ import { useEventListener } from 'eth-hooks/events/useEventListener'
 import styled from 'styled-components'
 
 import Address from '../components/common/Address'
+import MockRanking from '../components/MockRanking'
 import { TableRanking } from '../components/TableRanking'
 import { NETWORKS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import externalContracts from '../contracts/external_contracts'
 import deployedContracts from '../contracts/hardhat_contracts.json'
+
+import mock from './ranking-data.json'
 
 const { ethers } = require('ethers')
 
@@ -87,6 +90,7 @@ const RankingTitle = ({ position, address, mainnetProvider, polyProvider }) => {
 const Ranking = () => {
   const [data, setData] = useState([])
   const [position, setPosition] = useState(0)
+  const [isMockData, setIsMockData] = useState(false)
 
   const HOOK_OPTIONS = {
     blockNumberInterval: 500,
@@ -113,6 +117,7 @@ const Ranking = () => {
   useEffect(() => {
     const newData = [...pledgeEvents]
 
+    setIsMockData(newData.length === 0)
     newData.forEach((item, index) => {
       if (!item.ranking) item.key = index
 
@@ -129,6 +134,7 @@ const Ranking = () => {
 
     setData(newData.map((item, index) => ({ ...item, ranking: index + 1 })))
   }, [address, pledgeEvents])
+  console.log(isMockData)
 
   return (
     <div>
@@ -139,20 +145,34 @@ const Ranking = () => {
         mainnetProvider={mainnetProvider}
         address={address}
       />
+      {/* Remove and delete mock component when changing the polygon rcpUrl and make ranking work */}
       <StyledRow justify="center">
-        {data && (
-          <TableRanking
-            rankingData={data}
-            USDPrices={USDPrices}
-            mainnetProvider={mainnetProvider}
-            readContracts={readContracts}
-            polyProvider={polyProvider}
-            contractConfig={contractConfig}
-            // polyContracts={polyContracts}
-            address={address}
-            HOOK_OPTIONS={HOOK_OPTIONS}
-          />
-        )}
+        {data &&
+          (isMockData ? (
+            <MockRanking
+              rankingData={mock.data}
+              USDPrices={USDPrices}
+              mainnetProvider={mainnetProvider}
+              readContracts={readContracts}
+              polyProvider={polyProvider}
+              contractConfig={contractConfig}
+              // polyContracts={polyContracts}
+              address={address}
+              HOOK_OPTIONS={HOOK_OPTIONS}
+            />
+          ) : (
+            <TableRanking
+              rankingData={data}
+              USDPrices={USDPrices}
+              mainnetProvider={mainnetProvider}
+              readContracts={readContracts}
+              polyProvider={polyProvider}
+              contractConfig={contractConfig}
+              // polyContracts={polyContracts}
+              address={address}
+              HOOK_OPTIONS={HOOK_OPTIONS}
+            />
+          ))}
       </StyledRow>
     </div>
   )
