@@ -67,7 +67,10 @@
       "**/hardhat-ts/**"
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "@uniswap/widgets": "^0.0.26-beta",
+    "react-redux": "^7.2.7"
+  },
   "devDependencies": {
     "husky": "^7.0.2"
   }
