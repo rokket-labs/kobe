@@ -22,7 +22,7 @@ const Wallet = () => {
   const location = useHistory()
   const { hasCalculator, resetCalculator } = useContext(IsPledgedContext)
   const [irlStoredData, setIrlStoredData] = useState(null)
-  const [totalEmissions, setTotalEmissions] = useState()
+  const [totalEmissions, setTotalEmissions] = useState(undefined)
 
   const handleMenu = url => {
     location.push(url)
@@ -80,7 +80,11 @@ const Wallet = () => {
     <Row className="my-sm">
       <Col offset={1}>
         <Space direction="vertical">
-          <Title>You emit {totalEmissions} CO2 tons/year, more than your country average! </Title>
+          <Title>
+            {totalEmissions
+              ? `You emit ${totalEmissions} CO2 tons/year, more than your country average!`
+              : `Calculate your emissions`}
+          </Title>
         </Space>
       </Col>
       <Row justify="center" style={{ width: '100%', minHeight: '100vh', marginBottom: '2rem' }}>
