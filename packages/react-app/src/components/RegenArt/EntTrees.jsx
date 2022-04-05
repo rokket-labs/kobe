@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
 import { List, Row, Spin, Typography } from 'antd'
 
-import { StyledButton } from '../../components/common/StyledButton'
 import { Art } from '../common/Art'
+import { StyledButton } from '../common/StyledButton'
 
 const { Title } = Typography
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
-const KoyweTrees = ({ address, contracts, yourKTBalance }) => {
+const EntTrees = ({ address, contracts, yourETBalance }) => {
   const [showAll, setShowAll] = useState(false)
   const [yourCollectibles, setYourCollectibles] = useState()
   const [isLoading, setIsLoading] = useState(true)
@@ -19,17 +19,23 @@ const KoyweTrees = ({ address, contracts, yourKTBalance }) => {
     const updateYourCollectibles = async () => {
       const collectibleUpdate = []
 
-      for (let tokenIndex = 0; tokenIndex < yourKTBalance; tokenIndex++)
+      for (let tokenIndex = 0; tokenIndex < yourETBalance; tokenIndex++)
         try {
-          const tokenId = await contracts.KoyweCollectibles.tokenOfOwnerByIndex(address, tokenIndex)
+          const tokenId = await contracts.ENT.tokenOfOwnerByIndex(address, tokenIndex)
 
-          const tokenURI = await contracts.KoyweCollectibles.tokenURI(tokenId)
-          const jsonManifestString = atob(tokenURI.substring(29))
+          const tokenURI = await contracts.ENT.tokenURI(tokenId)
+
+          console.log('tokenURI',tokenURI)
 
           try {
-            const jsonManifest = JSON.parse(jsonManifestString)
+            const response = await fetch(
+              tokenURI,
+            )
+            const data = await response.json()
 
-            collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, ...jsonManifest })
+            console.log('response',data)
+
+            collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, ...data })
           } catch (e) {
             console.log(e)
           }
@@ -42,12 +48,12 @@ const KoyweTrees = ({ address, contracts, yourKTBalance }) => {
     }
 
     updateYourCollectibles()
-  }, [address, contracts.KoyweCollectibles, yourKTBalance])
+  }, [address, contracts.ENT, yourETBalance])
 
   return (
     <>
       {/* <Row>
-        <Title level={2}>Koywe Trees</Title>
+        <Title level={2}>Ent Trees</Title>
       </Row> */}
       {isLoading ? (
         <Row justify="center" gutter={8}>
@@ -82,4 +88,4 @@ const KoyweTrees = ({ address, contracts, yourKTBalance }) => {
   )
 }
 
-export default KoyweTrees
+export default EntTrees

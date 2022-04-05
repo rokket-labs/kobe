@@ -1250,6 +1250,10 @@ module.exports = {
         address: '0xd838290e877e0188a4a44700463419ed96c16107',
         abi: ERC20ABI,
       },
+      ENT: {
+        address: '0x96C89cC7c5D2FbFA41afA10Da5917742FF35941b',
+        abi: ERC721ABI,
+      },
     },
   },
 }

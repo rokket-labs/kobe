@@ -23,7 +23,6 @@ export const getFightData = (BTC = 0, CO2 = 0, NCT = 0, KLIMA = 0, sKLIMA = 0, t
     text: 'CO2 tons extracted/compensated',
   },
   {
-    // TODO: Agregar sKLIMA y KLIMA a esta suma de precios (NCT aún no tiene precio público, queda pendiente)
     id: 3,
     srcIcon: '/icon/emoji-money.svg',
     quantity: !isPledged
@@ -33,6 +32,10 @@ export const getFightData = (BTC = 0, CO2 = 0, NCT = 0, KLIMA = 0, sKLIMA = 0, t
             (USDPrices &&
               USDPrices['toucan-protocol-base-carbon-tonne'] &&
               USDPrices['toucan-protocol-base-carbon-tonne'].usd) +
+          ((NCT && NCT > 0 ? NCT : 0) / Math.pow(10, 18)) *
+            (USDPrices &&
+              USDPrices['toucan-protocol-nature-carbon-tonne'] &&
+              USDPrices['toucan-protocol-nature-carbon-tonne'].usd) +
           ((CO2 && CO2 > 0 ? CO2 : 0) / Math.pow(10, 18)) *
             (USDPrices && USDPrices['moss-carbon-credit'] && USDPrices['moss-carbon-credit'].usd) +
             ((KLIMA && KLIMA > 0 ? KLIMA : 0) / Math.pow(10, 9)) *

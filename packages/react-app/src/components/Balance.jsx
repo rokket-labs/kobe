@@ -36,7 +36,7 @@ export const Balance = ({ address, polyContracts, USDPrices, HOOK_OPTIONS }) => 
 
   const myPolyBCTBalance = useContractReader(polyContracts, 'PBCT', 'balanceOf', [address], HOOK_OPTIONS)
 
-  // const myPolyNCTBalance = useContractReader(polyContracts, 'NCT', 'balanceOf', [String(address.address)], HOOK_OPTIONS)
+  const myPolyNCTBalance = useContractReader(polyContracts, 'NCT', 'balanceOf', [address], HOOK_OPTIONS)
 
   const myPolyKlimaBalance = useContractReader(polyContracts, 'KLIMA', 'balanceOf', [address], HOOK_OPTIONS)
 
@@ -55,6 +55,11 @@ export const Balance = ({ address, polyContracts, USDPrices, HOOK_OPTIONS }) => 
         (USDPrices &&
           USDPrices['toucan-protocol-base-carbon-tonne'] &&
           USDPrices['toucan-protocol-base-carbon-tonne'].usd)
+      sum +=
+        ((myPolyNCTBalance && myPolyNCTBalance > 0 ? myPolyNCTBalance : 0) / Math.pow(10, 18)) *
+        (USDPrices &&
+          USDPrices['toucan-protocol-nature-carbon-tonne'] &&
+          USDPrices['toucan-protocol-nature-carbon-tonne'].usd)
       sum +=
         ((myPolyMCO2Balance && myPolyMCO2Balance > 0 ? myPolyMCO2Balance : 0) / Math.pow(10, 18)) *
         (USDPrices && USDPrices['moss-carbon-credit'] && USDPrices['moss-carbon-credit'].usd)
