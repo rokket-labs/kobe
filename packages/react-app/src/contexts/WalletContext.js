@@ -52,11 +52,13 @@ export const WalletContextProvider = ({ children }) => {
 
   const koyweTreeBalance = useContractReader(contracts, 'KoyweCollectibles', 'balanceOf', [address])
   const yourKTBalance = koyweTreeBalance && koyweTreeBalance.toNumber && koyweTreeBalance.toNumber()
+  const entTreeBalance = useContractReader(contracts, 'ENT', 'balanceOf', [address])
+  const yourETBalance = entTreeBalance && entTreeBalance.toNumber && entTreeBalance.toNumber()
 
   useEffect(() => {
     const getData = async () => {
       const response = await fetch(
-        'https://api.coingecko.com/api/v3/simple/price?ids=toucan-protocol-base-carbon-tonne,moss-carbon-credit,klima-dao,staked-klima&vs_currencies=usd',
+        'https://api.coingecko.com/api/v3/simple/price?ids=toucan-protocol-base-carbon-tonne,toucan-protocol-nature-carbon-tonne,moss-carbon-credit,klima-dao,staked-klima&vs_currencies=usd',
       )
       const data = await response.json()
 
@@ -77,6 +79,7 @@ export const WalletContextProvider = ({ children }) => {
       polygonWethBalance,
     },
     yourKTBalance,
+    yourETBalance,
     tonsPledged,
     contracts,
     polygonContracts,

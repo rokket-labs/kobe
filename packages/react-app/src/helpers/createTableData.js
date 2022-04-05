@@ -10,7 +10,7 @@ export const createTableData = (USDPrices, BTC, MCO2, NCT, KLIMA, sKLIMA) => {
 
   const MCO2BalanceUSD = MCO2formated * USDPrices['moss-carbon-credit']?.usd || 0
   const BCTBalanceUSD = BTCformated * USDPrices['toucan-protocol-base-carbon-tonne']?.usd || 0
-  const NCTBalanceUSD = NCTformated * USDPrices['toucan-protocol-nature-based-carbon-tonne']?.usd || NCTformated*1
+  const NCTBalanceUSD = NCTformated * USDPrices['toucan-protocol-nature-carbon-tonne']?.usd || 0
   const KLIMABalanceUSD = KLIMAformated * USDPrices['klima-dao']?.usd || 0
   const sKLIMABalanceUSD = sKLIMAformated * USDPrices['staked-klima']?.usd || 0
 
