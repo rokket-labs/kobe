@@ -49,14 +49,6 @@ const ReFi = () => {
         }
 
         setSet(new Set(SetJsConfig))
-        // const details = await SetJsInstance
-        // .setToken
-        // .fetchSetDetailsAsync(
-        //   '0x0765425b334D7DB1f374D03f4261aC191172BEF7',
-        //   ['0x38E5462BBE6A72F79606c1A0007468aA4334A92b'],
-        // )
-
-        // console.table('details',details)
       }
     }
 
