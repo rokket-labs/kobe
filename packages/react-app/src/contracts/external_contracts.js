@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 const ERC20ABI = [
   {
     constant: true,
@@ -1253,6 +1254,14 @@ module.exports = {
       ENT: {
         address: '0x96C89cC7c5D2FbFA41afA10Da5917742FF35941b',
         abi: ERC721ABI,
+      },
+      CNBED: {
+        address: '0x0765425b334D7DB1f374D03f4261aC191172BEF7',
+        abi: ERC20ABI,
+      },
+      CBTC: {
+        address: '0x7958e9fa5cf56aebedd820df4299e733f7e8e5dd',
+        abi: ERC20ABI,
       },
     },
   },

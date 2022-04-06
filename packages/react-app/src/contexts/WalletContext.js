@@ -46,6 +46,10 @@ export const WalletContextProvider = ({ children }) => {
 
   const polygonWethBalance = useContractReader(polygonContracts, 'WETH', 'balanceOf', [address], HOOK_OPTIONS)
 
+  const polygonCNBEDBalance = useContractReader(polygonContracts, 'CNBED', 'balanceOf', [address], HOOK_OPTIONS)
+
+  const polygonCBTCBalance = useContractReader(polygonContracts, 'CBTC', 'balanceOf', [address], HOOK_OPTIONS)
+
   const isPledged = useContractReader(contracts, 'KoywePledge', 'isPledged', [address], HOOK_OPTIONS)
   const tonsPledged = useContractReader(contracts, 'KoywePledge', 'getCommitment', [address], HOOK_OPTIONS)
   const CO2TokenBalance = useContractReader(contracts, 'CO2TokenContract', 'balanceOf', [address], HOOK_OPTIONS)
@@ -77,6 +81,8 @@ export const WalletContextProvider = ({ children }) => {
       polygonKlimaBalance,
       polygonSKlimaBalance,
       polygonWethBalance,
+      polygonCNBEDBalance,
+      polygonCBTCBalance,
     },
     yourKTBalance,
     yourETBalance,

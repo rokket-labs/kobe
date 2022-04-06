@@ -31,17 +31,17 @@ export const getFightData = (BTC = 0, CO2 = 0, NCT = 0, KLIMA = 0, sKLIMA = 0, t
           ((BTC && BTC > 0 ? BTC : 0) / Math.pow(10, 18)) *
             (USDPrices &&
               USDPrices['toucan-protocol-base-carbon-tonne'] &&
-              USDPrices['toucan-protocol-base-carbon-tonne'].usd) +
+              USDPrices['toucan-protocol-base-carbon-tonne'].usd || 0) +
           ((NCT && NCT > 0 ? NCT : 0) / Math.pow(10, 18)) *
             (USDPrices &&
               USDPrices['toucan-protocol-nature-carbon-tonne'] &&
-              USDPrices['toucan-protocol-nature-carbon-tonne'].usd) +
+              USDPrices['toucan-protocol-nature-carbon-tonne'].usd || 0) +
           ((CO2 && CO2 > 0 ? CO2 : 0) / Math.pow(10, 18)) *
-            (USDPrices && USDPrices['moss-carbon-credit'] && USDPrices['moss-carbon-credit'].usd) +
+            (USDPrices && USDPrices['moss-carbon-credit'] && USDPrices['moss-carbon-credit'].usd || 0) +
             ((KLIMA && KLIMA > 0 ? KLIMA : 0) / Math.pow(10, 9)) *
-              (USDPrices && USDPrices['klima-dao'] && USDPrices['klima-dao'].usd) +
+              (USDPrices && USDPrices['klima-dao'] && USDPrices['klima-dao'].usd || 0) +
               ((sKLIMA && sKLIMA > 0 ? sKLIMA : 0) / Math.pow(10, 9)) *
-                (USDPrices && USDPrices['staked-klima'] && USDPrices['staked-klima'].usd)
+                (USDPrices && USDPrices['staked-klima'] && USDPrices['staked-klima'].usd || 0)
         ).toFixed(2),
     text: 'USD invested/staked',
     isBold: true,

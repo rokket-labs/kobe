@@ -4,6 +4,7 @@ import { useContractReader, useGasPrice } from 'eth-hooks'
 
 import ConnectButton from '../components/common/ConnectButton'
 import MyRegenArt from '../components/dashboard/MyRegenArt'
+import EntTrees from '../components/RegenArt/EntTrees'
 import KoyweTrees from '../components/RegenArt/KoyweTrees'
 import NftCard from '../components/RegenArt/NftCard'
 import { HOOK_OPTIONS } from '../constants'
@@ -16,7 +17,7 @@ const { Title, Text } = Typography
 
 const RegenArt = () => {
   const { address, targetNetwork, userSigner, isLoadingAccount } = useContext(NetworkContext)
-  const { contracts, writeContracts, yourKTBalance } = useContext(WalletContext)
+  const { contracts, writeContracts, yourKTBalance, yourETBalance } = useContext(WalletContext)
   const [isBCTAmountApproved, setIsBCTAmountApproved] = useState()
   const [buying, setBuying] = useState()
   const [approving, setApproving] = useState()
@@ -73,12 +74,26 @@ const RegenArt = () => {
           )}
           {address && (
             <>
+              <h2 style={{ padding: 8, marginTop: 32 }}>Endangered Keule Trees, by Ent Foundation</h2>
+              <p>
+                Also, check out your ENT collection.{' '}
+                <a href="https://elders.tokents.org/" target="_blank">
+                  If the list is empty or you want to get more, go here↗️
+                </a>
+                <br />This is very special project to protect endangered Keule trees in Chile. There will only be 25 NFTs, each of which represents a unique individual, ensuring its protection for a long time. Become a Keule Guardian.
+              </p>
+              <EntTrees address={'address'} yourETBalance={yourETBalance} contracts={contracts} />
+            </>
+          )}
+          {address && (
+            <>
               <h2 style={{ padding: 8, marginTop: 32 }}>Treejer Trees</h2>
               <p>
                 Also, check out your Treejer collection.{' '}
                 <a href="https://treejer.com/" target="_blank">
-                  You cant mint (more) trees here↗️
+                  If the list is empty or you want to get more, go here↗️
                 </a>
+                <br />Treejer is an open protocol to fund trees around the world, initially in Perú and Argentina.
               </p>
               {!isLoadingAccount && address && <MyRegenArt artGallery={artGallery} isLoading={isLoading} />}
             </>
