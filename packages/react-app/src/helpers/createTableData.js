@@ -1,18 +1,23 @@
+/* eslint-disable max-lines-per-function */
 const { utils } = require('ethers')
 
 // eslint-disable-next-line max-params
-export const createTableData = (USDPrices, BTC, MCO2, NCT, KLIMA, sKLIMA) => {
+export const createTableData = (USDPrices, BTC, MCO2, NCT, KLIMA, sKLIMA, CNBED, CBTC) => {
   const MCO2formated = utils.formatUnits(MCO2, 18)
   const BTCformated = utils.formatUnits(BTC, 18)
   const NCTformated = utils.formatUnits(NCT, 18)
   const KLIMAformated = utils.formatUnits(KLIMA, 9)
   const sKLIMAformated = utils.formatUnits(sKLIMA, 9)
+  const CNBEDformated = utils.formatUnits(CNBED, 18)
+  const CBTCformated = utils.formatUnits(CBTC, 18)
 
   const MCO2BalanceUSD = MCO2formated * USDPrices['moss-carbon-credit']?.usd || 0
   const BCTBalanceUSD = BTCformated * USDPrices['toucan-protocol-base-carbon-tonne']?.usd || 0
   const NCTBalanceUSD = NCTformated * USDPrices['toucan-protocol-nature-carbon-tonne']?.usd || 0
   const KLIMABalanceUSD = KLIMAformated * USDPrices['klima-dao']?.usd || 0
   const sKLIMABalanceUSD = sKLIMAformated * USDPrices['staked-klima']?.usd || 0
+  const CNBEDBalanceUSD = CNBEDformated * USDPrices.cnbed?.usd || 0
+  const CBTCBalanceUSD = CBTCformated * USDPrices.cbtc?.usd || 0
 
   const tableData = [
     {
@@ -108,6 +113,44 @@ export const createTableData = (USDPrices, BTC, MCO2, NCT, KLIMA, sKLIMA) => {
       buy: {
         title: 'Stake KLIMA',
         url: 'https://dapp.klimadao.finance/#/stake',
+      },
+    },
+    {
+      key: '6',
+      token: {
+        title: 'Carbon Negative BED',
+        icon: 'logo192.png',
+        url: 'https://koywe.eco/',
+      },
+      position: `$${CNBEDBalanceUSD.toFixed(2)}`,
+      co2: Number(CNBEDformated).toFixed(2),
+      description: 'Carbon Negative BED Index on Polygon Network. 33% WBTC, 33% WETH, 33% DeFi Pulse Index, 1% NCT.',
+      contract: {
+        title: '0x0765425b334D7DB1f374D03f4261aC191172BEF7',
+        url: 'https://polygonscan.com/address/0x0765425b334D7DB1f374D03f4261aC191172BEF7',
+      },
+      buy: {
+        title: 'Buy CNBED',
+        url: 'https://www.tokensets.com/v2/set/polygon/0x0765425b334d7db1f374d03f4261ac191172bef7',
+      },
+    },
+    {
+      key: '7',
+      token: {
+        title: 'Clean Bitcoin (CBTC)',
+        icon: 'logo192.png',
+        url: 'https://koywe.eco/',
+      },
+      position: `$${CBTCBalanceUSD.toFixed(2)}`,
+      co2: Number(CBTCformated).toFixed(2),
+      description: 'Carbon Negative Wrapped BTC Index on Polygon Network. 99% WBTC, 1% NCT.',
+      contract: {
+        title: '0x0765425b334D7DB1f374D03f4261aC191172BEF7',
+        url: 'https://polygonscan.com/address/0x7958e9fa5cf56aebedd820df4299e733f7e8e5dd',
+      },
+      buy: {
+        title: 'Buy CBTC',
+        url: 'https://www.tokensets.com/v2/set/polygon/0x7958e9fa5cf56aebedd820df4299e733f7e8e5dd',
       },
     },
   ]
