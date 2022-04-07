@@ -4,6 +4,7 @@ import { useGasPrice } from 'eth-hooks'
 import Set from 'set.js'
 
 import ConnectButton from '../components/common/ConnectButton'
+import BuySetModal from '../components/RegenDefi/BuySetModal'
 import MyRegenPositionsFull from '../components/RegenDefi/MyRegenPositionsFull'
 import SimpleRamp from '../components/RegenDefi/SimpleRamp'
 import { NetworkContext } from '../contexts/NetworkContext'
@@ -26,8 +27,6 @@ const SetJsPolygonAddresses = {
   setValuerAddress: '0x3700414Bb6716FcD8B14344fb10DDd91FdEA59eC',
 }
 
-
-
 const ReFi = () => {
   const { USDPrices, walletBalance, isPledged, isLoadingBalances } = useContext(WalletContext)
   const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance, polygonKlimaBalance, polygonSKlimaBalance } = walletBalance
@@ -35,10 +34,34 @@ const ReFi = () => {
 
   const [balance,setBalance] = useState(0)
   const [set,setSet] = useState()
-  const [modalUp, setModalUp] = useState('down')
+  const [setName,setSetName] = useState('')
+  const [modalUp, setModalUp] = useState(false)
+  const [approving, setApproving] = useState()
 
   const gasPrice = useGasPrice(targetNetwork, 'fast')
   const tx = Transactor(userSigner, gasPrice)
+
+  const handleModalUp = set => {
+    setModalUp(true)
+    setSetName(set)
+  }
+
+  const handleModalDown = () => {
+    setModalUp(false)
+    setSetName('')
+  }
+
+  const handleApproveTokens = async () => {
+    // setApproving(true)
+    // await tx(writeContracts.PBCT.approve(contracts.KoyweCollectibles.address, mintPrice))
+    // setApproving(false)
+  }
+
+  const handleIssuance = async () => {
+    // setBuying(true)
+    // await tx(writeContracts.KoyweCollectibles.mintItem())
+    // setBuying(false)
+  }
 
   useEffect(() => {
     const getSet = async () => {
@@ -73,19 +96,19 @@ const ReFi = () => {
 
   return (
     <Row justify="center" lassName="mb-md">
-      <Space>
-        <Space style={{ width: '100%' }} direction="vertical">
-          <Title level={2}>Total Portfolio Value: {balance} USD</Title>
-          {/* <PortfolioChart /> */}
-          {/* <img src={'icon/portchart.png'} width='800px' ></img> */}
-        </Space>
-        {/* <Space style={{ width: '100%' }} direction="vertical">
-          <Title level={2}>Swap Tokens</Title>
-          <img src={'icon/sushi.png'} width='300px' ></img>
-        </Space> */}
-      </Space>
+      {!isLoadingAccount && address &&
+      <BuySetModal handleApproveTokens={handleApproveTokens} modalUp={modalUp} handleModalDown={handleModalDown} setName={setName} />}
+      <Col span={24} style={{ textAlign:'center' }} >
+        <Title level={2}>Total Portfolio Value: {balance} USD</Title>
+      </Col>
+      {/* <Col>
+        {!isLoadingAccount && address && <PortfolioChart />}
+      </Col> */}
+      {/* <Col>
+        {!isLoadingAccount && address && polyTransactions && <TokenTransactions polyTransactions={polyTransactions} address={address} />}
+      </Col> */}
       <Col span={24}>
-        {!isLoadingAccount && address && <MyRegenPositionsFull />}
+        {!isLoadingAccount && address && <MyRegenPositionsFull handleModalUp={handleModalUp} />}
       </Col>
       <Col>
         {!isLoadingAccount && address && <SimpleRamp address={address} />}

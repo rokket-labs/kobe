@@ -23,7 +23,7 @@ const MyRegenPositions = () => {
   const [tableData, setTableData] = React.useState([])
 
   useEffect(() => {
-    if (USDPrices && BTC && MCO2 && NCT && KLIMA && sKLIMA) {
+    if (USDPrices && BTC && MCO2 && NCT && KLIMA && sKLIMA && CNBED && CBTC) {
       const tableData = createTableData(USDPrices, BTC, MCO2, NCT, KLIMA, sKLIMA, CNBED, CBTC)
 
       setTableData(tableData)

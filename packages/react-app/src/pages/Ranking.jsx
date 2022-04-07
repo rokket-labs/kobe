@@ -66,7 +66,7 @@ const RankingTitle = ({ position, address, mainnetProvider, polyProvider }) => {
               </Col>
             </Row>
           </Col>
-          <Col>
+          {/* <Col>
             <Row justify="space-around">
               <Col style={{ alignSelf: 'center' }}>
                 <Image src={'/icon/vector.svg'} preview={false} width={30} />
@@ -80,7 +80,7 @@ const RankingTitle = ({ position, address, mainnetProvider, polyProvider }) => {
                 </StyledText>
               </Col>
             </Row>
-          </Col>
+          </Col> */}
         </Col>
       </Row>
     </Col>
@@ -145,8 +145,14 @@ const Ranking = () => {
         mainnetProvider={mainnetProvider}
         address={address}
       />
+      <Row justify="center">
+        <Col xs={{ span: 24 }} sm={{ span: 16 }} md={{ span: 5 }}>
+          <Title level={4}>Coming Soon</Title>
+          <Text>A bird&apos;s eye view of how we&apos;re doing, collectively.</Text>
+        </Col>
+      </Row>
       {/* Remove and delete mock component when changing the polygon rcpUrl and make ranking work */}
-      <StyledRow justify="center">
+      {/* <StyledRow justify="center">
         {data &&
           (isMockData ? (
             <MockRanking
@@ -173,7 +179,7 @@ const Ranking = () => {
               HOOK_OPTIONS={HOOK_OPTIONS}
             />
           ))}
-      </StyledRow>
+      </StyledRow> */}
     </div>
   )
 }
