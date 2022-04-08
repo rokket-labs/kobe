@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import React, { useContext, useEffect, useState } from 'react'
 import { Col, Row, Space, Typography } from 'antd'
 import { useContractReader, useGasPrice } from 'eth-hooks'
@@ -7,6 +8,7 @@ import MyRegenArt from '../components/dashboard/MyRegenArt'
 import EntTrees from '../components/RegenArt/EntTrees'
 import KoyweTrees from '../components/RegenArt/KoyweTrees'
 import NftCard from '../components/RegenArt/NftCard'
+import NftCardEnt from '../components/RegenArt/NftCardEnt'
 import { HOOK_OPTIONS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
@@ -20,12 +22,18 @@ const RegenArt = () => {
   const { contracts, writeContracts, yourKTBalance, yourETBalance } = useContext(WalletContext)
   const [isBCTAmountApproved, setIsBCTAmountApproved] = useState()
   const [buying, setBuying] = useState()
+  const [buyingEnt, setBuyingEnt] = useState()
   const [approving, setApproving] = useState()
   const { collection: artGallery, isLoading } = useTreejerGraph(address)
   const treeAddress = contracts?.KoyweCollectibles?.address
 
+  console.log('contracts',contracts)
+
   const mintPrice = useContractReader(contracts, 'KoyweCollectibles', 'bctPrice', HOOK_OPTIONS)
   const isOpen = useContractReader(contracts, 'KoyweCollectibles', 'mintOpen', HOOK_OPTIONS)
+
+  const mintPriceEnt = useContractReader(contracts, 'ENT', 'mintPrice', HOOK_OPTIONS)
+  const isEntOpen = useContractReader(contracts, 'ENT', 'saleIsActive', HOOK_OPTIONS)
 
   const vendorApproval = useContractReader(contracts, 'PBCT', 'allowance', [address, treeAddress], HOOK_OPTIONS)
 
@@ -42,6 +50,12 @@ const RegenArt = () => {
     setBuying(true)
     await tx(writeContracts.KoyweCollectibles.mintItem())
     setBuying(false)
+  }
+
+  const handleMintEnt = async () => {
+    setBuyingEnt(true)
+    await tx(writeContracts.ENT.discoverEnt({ value: mintPriceEnt }))
+    setBuyingEnt(false)
   }
 
   useEffect(() => {
@@ -64,6 +78,15 @@ const RegenArt = () => {
               handleApproveBCT={handleApproveBCT}
               handleMint={handleMint}
               approving={approving}
+            />
+          </Space>
+          <Space direction="vertical" style={{ marginTop: '1rem', width: '100%' }}>
+            <NftCardEnt
+              title="Endangered Tokens"
+              mintPrice={mintPriceEnt}
+              address={address}
+              buyingEnt={buyingEnt}
+              handleMintEnt={handleMintEnt}
             />
           </Space>
           {address && (
