@@ -3,7 +3,7 @@ import { Card, Col, Image, Row, Space, Typography } from 'antd'
 
 import { CardCustom } from '../components/CardCustom'
 
-const { Title, Paragraph } = Typography
+const { Title } = Typography
 
 import { useHistory } from 'react-router-dom'
 
@@ -47,8 +47,6 @@ const Wallet = () => {
   }, [address, isLoadingAccount])
 
   useEffect(() => {
-    console.log(`HERE ${irlStoredData}`)
-
     if (hasCalculator && !irlStoredData) setIrlStoredData(JSON.parse(hasCalculator))
 
     if (irlStoredData) {
@@ -56,21 +54,21 @@ const Wallet = () => {
       setDataIrl({
         data: {
           info: [
-            { id: 1, quantity: parseFloat(irlStoredData.Home_Emissions).toFixed(2), type: 'house' },
-            { id: 2, quantity: parseFloat(irlStoredData.Transportation_Emissions).toFixed(2), type: 'car' },
-            { id: 3, quantity: parseFloat(irlStoredData.Diet_Emissions).toFixed(2), type: 'burger' },
-            { id: 4, quantity: parseFloat(irlStoredData.Goods_Emissions).toFixed(2), type: 'house' },
-            { id: 5, quantity: parseFloat(irlStoredData.Services_Emissions).toFixed(2), type: 'work' },
+            { id: 1, quantity: parseFloat(irlStoredData.Home_Emissions || 0).toFixed(2), type: 'house' },
+            { id: 2, quantity: parseFloat(irlStoredData.Transportation_Emissions || 0).toFixed(2), type: 'car' },
+            { id: 3, quantity: parseFloat(irlStoredData.Diet_Emissions || 0).toFixed(2), type: 'burger' },
+            { id: 4, quantity: parseFloat(irlStoredData.Goods_Emissions || 0).toFixed(2), type: 'house' },
+            { id: 5, quantity: parseFloat(irlStoredData.Services_Emissions || 0).toFixed(2), type: 'work' },
           ],
         },
       })
       setTotalEmissions(
         (
-          parseFloat(irlStoredData.Home_Emissions) +
-          parseFloat(irlStoredData.Transportation_Emissions) +
-          parseFloat(irlStoredData.Diet_Emissions) +
-          parseFloat(irlStoredData.Goods_Emissions) +
-          parseFloat(irlStoredData.Services_Emissions)
+          parseFloat(irlStoredData.Home_Emissions || 0) +
+          parseFloat(irlStoredData.Transportation_Emissions || 0) +
+          parseFloat(irlStoredData.Diet_Emissions || 0) +
+          parseFloat(irlStoredData.Goods_Emissions || 0) +
+          parseFloat(irlStoredData.Services_Emissions || 0)
         ).toFixed(2),
       )
     }
