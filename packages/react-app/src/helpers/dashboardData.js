@@ -38,10 +38,10 @@ export const getFightData = (BTC = 0, CO2 = 0, NCT = 0, KLIMA = 0, sKLIMA = 0, t
               USDPrices['toucan-protocol-nature-carbon-tonne'].usd) +
           ((CO2 && CO2 > 0 ? CO2 : 0) / Math.pow(10, 18)) *
             (USDPrices && USDPrices['moss-carbon-credit'] && USDPrices['moss-carbon-credit'].usd) +
-            ((KLIMA && KLIMA > 0 ? KLIMA : 0) / Math.pow(10, 9)) *
-              (USDPrices && USDPrices['klima-dao'] && USDPrices['klima-dao'].usd) +
-              ((sKLIMA && sKLIMA > 0 ? sKLIMA : 0) / Math.pow(10, 9)) *
-                (USDPrices && USDPrices['staked-klima'] && USDPrices['staked-klima'].usd)
+          ((KLIMA && KLIMA > 0 ? KLIMA : 0) / Math.pow(10, 9)) *
+            ((USDPrices && USDPrices['klima-dao'] && USDPrices['klima-dao'].usd) || 0) +
+          ((sKLIMA && sKLIMA > 0 ? sKLIMA : 0) / Math.pow(10, 9)) *
+            ((USDPrices && USDPrices['staked-klima'] && USDPrices['staked-klima'].usd) || 0)
         ).toFixed(2),
     text: 'USD invested/staked',
     isBold: true,
