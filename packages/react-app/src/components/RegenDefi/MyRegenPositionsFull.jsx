@@ -8,7 +8,7 @@ import { StyledButton } from '../common/StyledButton'
 import { TableInfo } from './TableInfo'
 
 const { Title } = Typography
-const MyRegenPositions = () => {
+const MyRegenPositions = ({ handleModalUp }) => {
   const [showAll, setShowAll] = useState(false)
   const { USDPrices, walletBalance } = useContext(WalletContext)
   const {
@@ -17,23 +17,25 @@ const MyRegenPositions = () => {
     polygonNCTBalance: NCT,
     polygonKlimaBalance: KLIMA,
     polygonSKlimaBalance: sKLIMA,
+    polygonCNBEDBalance: CNBED,
+    polygonCBTCBalance: CBTC,
   } = walletBalance
   const [tableData, setTableData] = React.useState([])
 
   useEffect(() => {
-    if (USDPrices && BTC && MCO2 && NCT && KLIMA && sKLIMA) {
-      const tableData = createTableData(USDPrices, BTC, MCO2, NCT, KLIMA, sKLIMA)
+    if (USDPrices && BTC && MCO2 && NCT && KLIMA && sKLIMA && CNBED && CBTC) {
+      const tableData = createTableData(USDPrices, BTC, MCO2, NCT, KLIMA, sKLIMA, CNBED, CBTC)
 
       setTableData(tableData)
     }
-  }, [USDPrices, BTC, MCO2, NCT, KLIMA, sKLIMA])
+  }, [USDPrices, BTC, MCO2, NCT, KLIMA, sKLIMA, CNBED, CBTC])
 
   return (
     <>
       <Row>
         <Col span={24}>
           <Title level={2}>Your regen positions</Title>
-          <TableInfo data={showAll ? tableData : tableData.slice(0, 3)} />
+          <TableInfo data={showAll ? tableData : tableData.slice(0, 3)} handleModalUp={handleModalUp} />
         </Col>
       </Row>
       <Row justify="center" className="my-md">
