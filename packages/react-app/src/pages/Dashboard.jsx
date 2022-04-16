@@ -20,7 +20,7 @@ const { Text } = Typography
 const Dashboard = () => {
   const router = useHistory()
   const { address, isLoadingAccount } = useContext(NetworkContext)
-  const { USDPrices, walletBalance, tonsPledged, isPledged, yourKTBalance, CO2TokenBalance } = useContext(WalletContext)
+  const { USDPrices, walletBalance, tonsPledged, isPledged, yourKTBalance, yourTreejerBalance, yourETBalance, CO2TokenBalance } = useContext(WalletContext)
   const { polygonMCO2Balance, polygonBCTBalance, polygonNCTBalance, polygonKlimaBalance, polygonSKlimaBalance } =
     walletBalance
   const [fightData, setFightData] = useState([])
@@ -30,6 +30,7 @@ const Dashboard = () => {
   const [pledged, setPledged] = useState(isPledged) // created to be sync with the useEffect
 
   const { collection: artGallery, isLoading } = useTreejerGraph(address)
+  const trees = yourKTBalance + yourTreejerBalance + yourETBalance
 
   useEffect(() => {
     const fightData = getFightData(
@@ -38,7 +39,7 @@ const Dashboard = () => {
       polygonNCTBalance,
       polygonKlimaBalance,
       polygonSKlimaBalance,
-      yourKTBalance,
+      trees,
       USDPrices,
       isPledged,
     )

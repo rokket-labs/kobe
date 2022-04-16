@@ -1877,6 +1877,45 @@ const ENTABI = [
   },
 ]
 
+const treejerAbi = [
+  {
+    'inputs': [
+      {
+        'internalType': 'uint256',
+        'name': '_count',
+        'type': 'uint256',
+      },
+      {
+        'internalType': 'address',
+        'name': '_referrer',
+        'type': 'address',
+      },
+      {
+        'internalType': 'address',
+        'name': '_recipient',
+        'type': 'address',
+      },
+    ],
+    'name': 'fundTree',
+    'outputs': [],
+    'stateMutability': 'nonpayable',
+    'type': 'function',
+  },
+  {
+    'inputs': [],
+    'name': 'price',
+    'outputs': [
+      {
+        'internalType': 'uint256',
+        'name': '',
+        'type': 'uint256',
+      },
+    ],
+    'stateMutability': 'view',
+    'type': 'function',
+  },
+]
+
 // Mainnet DAI, Optimism and Arbitrium Rollup Contracts with local addresses
 module.exports = {
   1: {
@@ -1918,6 +1957,10 @@ module.exports = {
         abi: ERC20ABI,
       },
       TREEJER: {
+        address: '0xFBDaB242bc3e439e0CF59F5E8C3BaF5A8ec38475',
+        abi: treejerAbi,
+      },
+      TREEJERTREES: {
         address: '0x3abbc23f3303ef36fd9f6cec0e585b2c23e47fd9',
         abi: ERC721ABI,
       },

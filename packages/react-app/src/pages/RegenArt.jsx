@@ -9,6 +9,7 @@ import EntTrees from '../components/RegenArt/EntTrees'
 import KoyweTrees from '../components/RegenArt/KoyweTrees'
 import NftCard from '../components/RegenArt/NftCard'
 import NftCardEnt from '../components/RegenArt/NftCardEnt'
+import NftCardTreejer from '../components/RegenArt/NftCardTreejer'
 import { HOOK_OPTIONS } from '../constants'
 import { NetworkContext } from '../contexts/NetworkContext'
 import { WalletContext } from '../contexts/WalletContext'
@@ -21,13 +22,15 @@ const RegenArt = () => {
   const { address, targetNetwork, userSigner, isLoadingAccount } = useContext(NetworkContext)
   const { contracts, writeContracts, yourKTBalance, yourETBalance } = useContext(WalletContext)
   const [isBCTAmountApproved, setIsBCTAmountApproved] = useState()
+  const [isDAIAmountApproved, setIsDAIAmountApproved] = useState()
   const [buying, setBuying] = useState()
   const [buyingEnt, setBuyingEnt] = useState()
-  const [approving, setApproving] = useState()
+  const [buyingTreejer, setBuyingTreejer] = useState()
+  const [approvingBCT, setApprovingBCT] = useState()
+  const [approvingDAI, setApprovingDAI] = useState()
   const { collection: artGallery, isLoading } = useTreejerGraph(address)
   const treeAddress = contracts?.KoyweCollectibles?.address
-
-  console.log('contracts',contracts)
+  const treejerAddress = contracts?.TREEJER?.address
 
   const mintPrice = useContractReader(contracts, 'KoyweCollectibles', 'bctPrice', HOOK_OPTIONS)
   const isOpen = useContractReader(contracts, 'KoyweCollectibles', 'mintOpen', HOOK_OPTIONS)
@@ -35,15 +38,24 @@ const RegenArt = () => {
   const mintPriceEnt = useContractReader(contracts, 'ENT', 'mintPrice', HOOK_OPTIONS)
   const isEntOpen = useContractReader(contracts, 'ENT', 'saleIsActive', HOOK_OPTIONS)
 
+  const mintPriceTreejer = useContractReader(contracts, 'TREEJER', 'price', HOOK_OPTIONS)
+
   const vendorApproval = useContractReader(contracts, 'PBCT', 'allowance', [address, treeAddress], HOOK_OPTIONS)
+  const vendorApprovalDAI = useContractReader(contracts, 'DAI', 'allowance', [address, treejerAddress], HOOK_OPTIONS)
 
   const gasPrice = useGasPrice(targetNetwork, 'fast')
   const tx = Transactor(userSigner, gasPrice)
 
   const handleApproveBCT = async () => {
-    setApproving(true)
+    setApprovingBCT(true)
     await tx(writeContracts.PBCT.approve(contracts.KoyweCollectibles.address, mintPrice))
-    setApproving(false)
+    setApprovingBCT(false)
+  }
+
+  const handleApproveDAI = async () => {
+    setApprovingDAI(true)
+    await tx(writeContracts.DAI.approve(contracts.TREEJER.address, mintPriceTreejer))
+    setApprovingDAI(false)
   }
 
   const handleMint = async () => {
@@ -58,9 +70,19 @@ const RegenArt = () => {
     setBuyingEnt(false)
   }
 
+  const handleMintTreejer = async () => {
+    setBuyingTreejer(true)
+    await tx(writeContracts.TREEJER.fundTree(1, '0x4218A70C7197CA24e171d5aB71Add06a48185f6a', address))
+    setBuyingTreejer(false)
+  }
+
   useEffect(() => {
     if (vendorApproval && mintPrice) setIsBCTAmountApproved(vendorApproval.gte(mintPrice))
   }, [mintPrice, vendorApproval])
+
+  useEffect(() => {
+    if (vendorApprovalDAI && mintPriceTreejer) setIsDAIAmountApproved(vendorApprovalDAI.gte(mintPriceTreejer))
+  }, [mintPriceTreejer, vendorApprovalDAI])
 
   return (
     <Row className="flex-center">
@@ -77,7 +99,7 @@ const RegenArt = () => {
               buying={buying}
               handleApproveBCT={handleApproveBCT}
               handleMint={handleMint}
-              approving={approving}
+              approving={approvingBCT}
             />
           </Space>
           <Space direction="vertical" style={{ marginTop: '1rem', width: '100%' }}>
@@ -87,6 +109,18 @@ const RegenArt = () => {
               address={address}
               buyingEnt={buyingEnt}
               handleMintEnt={handleMintEnt}
+            />
+          </Space>
+          <Space direction="vertical" style={{ marginTop: '1rem', width: '100%' }}>
+            <NftCardTreejer
+              title="Treejer Protocol"
+              mintPrice={mintPriceTreejer}
+              address={address}
+              isTokenAmountApproved={isDAIAmountApproved}
+              buying={buyingTreejer}
+              handleApproveToken={handleApproveDAI}
+              handleMint={handleMintTreejer}
+              approving={approvingDAI}
             />
           </Space>
           {address && (

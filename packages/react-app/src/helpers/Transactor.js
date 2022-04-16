@@ -12,7 +12,7 @@ const { ethers } = require('ethers')
 // https://docs.blocknative.com/notify
 const callbacks = {}
 
-const DEBUG = true
+const DEBUG = false
 
 export default function Transactor(providerOrSigner, gasPrice, etherscan) {
   if (typeof providerOrSigner !== 'undefined')
@@ -61,6 +61,8 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
 
       if (network.chainId === 100) etherscanTxUrl = 'https://blockscout.com/poa/xdai/tx/'
 
+      if (network.chainId === 137) etherscanTxUrl = 'https://polygonscan.com/tx/'
+
       try {
         let result
 
@@ -77,7 +79,7 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
         }
 
         if (DEBUG) console.log('RESULT:', result)
-        // console.log("Notify", notify);
+        // console.log('Notify', notify)
 
         if (callback) callbacks[result.hash] = callback
 
@@ -90,6 +92,8 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
               onclick: () => window.open((etherscan || etherscanTxUrl) + transaction.hash),
             }
           })
+
+          console.log('emitter',emitter)
         } else {
           notification.info({
             message: 'Transaction Sent',
@@ -102,7 +106,7 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
           if (callback) {
             const txResult = await tx
             const listeningInterval = setInterval(async () => {
-              console.log('CHECK IN ON THE TX', txResult, provider)
+              if (DEBUG) console.log('CHECK IN ON THE TX', txResult, provider)
 
               const currentTransactionReceipt = await provider.getTransactionReceipt(txResult.hash)
 

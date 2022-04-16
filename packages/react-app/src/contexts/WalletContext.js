@@ -56,6 +56,8 @@ export const WalletContextProvider = ({ children }) => {
 
   const koyweTreeBalance = useContractReader(contracts, 'KoyweCollectibles', 'balanceOf', [address])
   const yourKTBalance = koyweTreeBalance && koyweTreeBalance.toNumber && koyweTreeBalance.toNumber()
+  const treejerBalance = useContractReader(contracts, 'TREEJERTREES', 'balanceOf', [address])
+  const yourTreejerBalance = treejerBalance && treejerBalance.toNumber && treejerBalance.toNumber()
   const entTreeBalance = useContractReader(contracts, 'ENT', 'balanceOf', [address])
   const yourETBalance = entTreeBalance && entTreeBalance.toNumber && entTreeBalance.toNumber()
 
@@ -86,6 +88,7 @@ export const WalletContextProvider = ({ children }) => {
     },
     yourKTBalance,
     yourETBalance,
+    yourTreejerBalance,
     tonsPledged,
     contracts,
     polygonContracts,
