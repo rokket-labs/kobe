@@ -28,6 +28,7 @@ const SetJsPolygonAddresses = {
   setValuerAddress: '0x3700414Bb6716FcD8B14344fb10DDd91FdEA59eC',
 }
 
+
 const ReFi = () => {
   ReactGA.initialize('G-L9J2W0LSQS')
   ReactGA.send('pageview')
@@ -41,7 +42,7 @@ const ReFi = () => {
   const [setName,setSetName] = useState('')
   const [modalUp, setModalUp] = useState(false)
 
-  const gasPrice = useGasPrice(targetNetwork, 'fast')
+  const gasPrice = useGasPrice(targetNetwork, 'fastest')
   const tx = Transactor(userSigner, gasPrice)
 
   const handleModalUp = set => {
